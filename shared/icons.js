@@ -5,6 +5,10 @@ import {
   Github,
   Menu,
   X,
+  ArrowLeft,
+  ArrowUp,
+  ArrowDown,
+  Download,
 } from "@animateicons/vanilla/lucide";
 
 defineIcons({
@@ -13,6 +17,10 @@ defineIcons({
   Github,
   Menu,
   X,
+  ArrowLeft,
+  ArrowUp,
+  ArrowDown,
+  Download,
 });
 
 if (typeof document !== "undefined") {

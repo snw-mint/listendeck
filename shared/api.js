@@ -9,6 +9,9 @@ async function requestJson(url, timeout = DEFAULT_TIMEOUT) {
   const timer = setTimeout(() => controller.abort(), timeout);
   try {
     const res = await fetch(url, { signal: controller.signal });
+    if (res.status === 204) {
+      return null;
+    }
     if (!res.ok) {
       const error = new Error(`HTTP ${res.status}`);
       error.status = res.status;

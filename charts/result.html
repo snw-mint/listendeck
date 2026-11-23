@@ -40,6 +40,75 @@
     </div>
   </header>
 
+  <main class="result-main">
+    <div id="charts-report">
+      <section class="user-cover-section">
+        <div class="cover-image-container" id="coverContainer">
+          <img id="artistCover" alt="Top Artist Cover" class="cover-image" />
+        </div>
+
+        <div class="user-profile-container">
+          <div class="user-info-wrapper">
+            <div class="user-info-details">
+              <h1 id="userDisplayName" class="user-display-name">User</h1>
+
+              <div class="stats-cards-container">
+                <div class="stat-card">
+                  <span class="stat-title">Listens</span>
+                  <span id="userScrobbles" class="stat-value">—</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-title">Minutes</span>
+                  <span id="userMinutes" class="stat-value">—</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-title">Daily Avg</span>
+                  <span id="userDailyAvg" class="stat-value">—</span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-title">Vibe</span>
+                  <span id="userVibe" class="stat-value">—</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="charts-actions">
+              <div class="period-tabs" role="tablist" aria-label="Time period">
+                <button type="button" class="period-tab active" data-period="this_week">This Week</button>
+                <button type="button" class="period-tab" data-period="week">Last Week</button>
+                <button type="button" class="period-tab" data-period="this_month">This Month</button>
+                <button type="button" class="period-tab" data-period="month">Last Month</button>
+              </div>
+              <button id="export-charts-btn" type="button" class="export-btn">
+                <animate-icons name="download" size="18"></animate-icons>
+                <span>Export</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="charts-section">
+        <div class="charts-grid">
+          <section class="chart-card" id="cardArtists">
+            <h2>Top Artists</h2>
+            <div class="lista-top" id="listTopArtists"></div>
+          </section>
+
+          <section class="chart-card" id="cardTracks">
+            <h2>Top Songs</h2>
+            <div class="lista-top" id="listTopTracks"></div>
+          </section>
+
+          <section class="chart-card" id="cardAlbums">
+            <h2>Top Albums</h2>
+            <div class="lista-top" id="listTopAlbums"></div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
