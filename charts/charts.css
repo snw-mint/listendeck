@@ -404,18 +404,17 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
 }
 
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--color-border) 25%,
-    rgba(128, 128, 140, 0.18) 50%,
-    var(--color-border) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--color-border) 25%,
+      rgba(128, 128, 140, 0.18) 50%,
+      var(--color-border) 75%);
   background-size: 200% 100%;
   animation: ld-shimmer 1.5s infinite linear;
 }
@@ -850,10 +849,9 @@
 
 .story-body {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 0 80px;
-  gap: 48px;
-  flex: 1;
+  gap: 60px;
 }
 
 .story-lists-container {
@@ -861,22 +859,21 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 64px;
+  gap: 68px;
 }
 
 .story-list-block h3 {
-  font-size: 2.5rem;
+  font-size: 2.9rem;
   font-weight: 800;
   color: var(--sc-text);
-  margin-bottom: 24px;
+  margin-bottom: 22px;
   letter-spacing: -0.5px;
 }
 
 .story-items-list {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 }
 
 .story-item-row {
@@ -886,8 +883,8 @@
 }
 
 .story-item-rank {
-  width: 42px;
-  font-size: 1.8rem;
+  width: 44px;
+  font-size: 1.85rem;
   font-weight: 600;
   color: var(--sc-text-dim);
   flex-shrink: 0;
@@ -902,30 +899,30 @@
 }
 
 .story-item-name {
-  font-size: 2rem;
+  font-size: 2.15rem;
   font-weight: 700;
+  line-height: 1.15;
   color: var(--sc-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 450px;
   display: block;
 }
 
 .story-item-sub {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 500;
+  line-height: 1.2;
   color: var(--sc-text-dim);
-  margin-top: 3px;
+  margin-top: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 450px;
   display: block;
 }
 
 .story-images-container {
-  width: 500px;
+  width: 390px;
   height: 1260px;
   display: flex;
   flex-direction: column;
@@ -1005,7 +1002,7 @@
   overflow: hidden;
   background-color: var(--sc-bg);
   color: var(--sc-text);
-  padding: 56px 32px 0;
+  padding: 36px 32px 0;
   display: flex;
   flex-direction: column;
   user-select: none;
@@ -1057,7 +1054,7 @@
 
 .preview-story-period {
   text-align: center;
-  margin: 20px 0 24px;
+  margin: 16px 0 20px;
 }
 
 .preview-story-month {

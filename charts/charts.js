@@ -394,7 +394,9 @@ async function resolveVibe(topTrack, topAlbum) {
 
 async function fetchChartsData(username, period) {
   const windowInfo = getPeriodWindow(period);
-  const cacheKey = `charts:${username.toLowerCase()}:${windowInfo.period}:${windowInfo.startTs}:${windowInfo.endTs}`;
+  const cacheKey = windowInfo.isClosed
+    ? `charts:${username.toLowerCase()}:${windowInfo.period}:${windowInfo.startTs}:${windowInfo.endTs}`
+    : `charts:${username.toLowerCase()}:${windowInfo.period}:${windowInfo.startTs}`;
   const cached = getCache(cacheKey);
   if (cached) return cached;
 
@@ -509,7 +511,11 @@ function initLandingForm() {
     }
 
     try {
-      await listenbrainz.getUserCount(user);
+      const userCacheKey = `user_ok:${user.toLowerCase()}`;
+      if (!getCache(userCacheKey)) {
+        await listenbrainz.getUserCount(user);
+        setCache(userCacheKey, true, CACHE_TTL_CURRENT);
+      }
       addRecentUser("charts", user);
       window.location.href = `/charts/result.html?user=${encodeURIComponent(user)}&period=this_month`;
     } catch (err) {
@@ -574,8 +580,8 @@ function populateStoryList(containerId, items, isTrackOrAlbum) {
       const rank = index + 1;
       const rawSub = item.subtitle ? item.subtitle : `${formatNumber(item.plays)} streams`;
       const rawName = isTrackOrAlbum ? cleanReportTitle(item.title) : item.title;
-      const displayName = truncateWithEllipsis(rawName, 22);
-      const displaySub = truncateWithEllipsis(rawSub, 28);
+      const displayName = truncateWithEllipsis(rawName, 36);
+      const displaySub = truncateWithEllipsis(rawSub, 42);
       return `
         <div class="story-item-row">
           <span class="story-item-rank">${rank}</span>
@@ -642,7 +648,7 @@ function initExportModal(username) {
     if (!currentChartsData) return;
     closeModal();
 
-    const selectedBg = document.querySelector(".bg-option.selected")?.dataset.bg || "red";
+    const selectedBg = document.querySelector(".bg-option.selected")?.dataset.bg || "candy";
     const service = document.getElementById("serviceSelect")?.value || "listendeck";
     const isLight = Boolean(document.getElementById("themeToggleCheckbox")?.checked);
     const useScrobbles = Boolean(document.getElementById("useScrobblesCheckbox")?.checked);

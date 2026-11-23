@@ -2,7 +2,7 @@ const CACHE_PREFIX = "ld_cache_";
 const RECENT_PREFIX = "ld_recent_";
 const MAX_RECENT = 6;
 
-export const CACHE_TTL_CURRENT = 10 * 60 * 1000;
+export const CACHE_TTL_CURRENT = 5 * 60 * 60 * 1000;
 export const CACHE_TTL_CLOSED = 14 * 24 * 60 * 60 * 1000;
 
 export function getCache(key) {
