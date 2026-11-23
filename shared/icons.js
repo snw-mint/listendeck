@@ -9,6 +9,7 @@ import {
   Download,
   Check,
   ChevronLeft,
+  ChevronDown,
   CircleCheck,
   Calendar,
 } from "@animateicons/vanilla/lucide";
@@ -23,6 +24,7 @@ defineIcons({
   Download,
   Check,
   ChevronLeft,
+  ChevronDown,
   CircleCheck,
   Calendar,
 });

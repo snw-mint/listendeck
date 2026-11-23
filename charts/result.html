@@ -96,17 +96,17 @@
       <section class="charts-section">
         <div class="charts-grid">
           <section class="chart-card" id="cardArtists">
-            <h2>Top Artists</h2>
+            <h2>Top Artists<span class="logo-dot">.</span></h2>
             <div class="lista-top" id="listTopArtists"></div>
           </section>
 
           <section class="chart-card" id="cardTracks">
-            <h2>Top Songs</h2>
+            <h2>Top Songs<span class="logo-dot">.</span></h2>
             <div class="lista-top" id="listTopTracks"></div>
           </section>
 
           <section class="chart-card" id="cardAlbums">
-            <h2>Top Albums</h2>
+            <h2>Top Albums<span class="logo-dot">.</span></h2>
             <div class="lista-top" id="listTopAlbums"></div>
           </section>
         </div>
@@ -163,14 +163,18 @@
         </div>
 
         <label class="ld-field-label" for="serviceSelect">Service Logo</label>
-        <select id="serviceSelect" class="ld-select">
-          <option value="lastfm" selected>Last.fm</option>
-          <option value="youtubemusic">YouTube Music</option>
-          <option value="deezer">Deezer</option>
-          <option value="spotify">Spotify</option>
-          <option value="applemusic">Apple Music</option>
-          <option value="none">None</option>
-        </select>
+        <div class="ld-select-wrap">
+          <select id="serviceSelect" class="ld-select">
+            <option value="none" selected>None</option>
+            <option value="youtubemusic">YouTube Music</option>
+            <option value="deezer">Deezer</option>
+            <option value="spotify">Spotify</option>
+            <option value="applemusic">Apple Music</option>
+          </select>
+          <span class="ld-select-icon" aria-hidden="true">
+            <animate-icons name="chevron-down" size="18"></animate-icons>
+          </span>
+        </div>
 
         <label class="ld-switch-row">
           <span>Light Theme</span>
