@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
@@ -19,9 +19,9 @@
       </a>
 
       <div class="header-right">
-        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Alternar tema"></button>
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme"></button>
 
-        <nav id="header-nav" class="header-nav" aria-label="Ferramentas">
+        <nav id="header-nav" class="header-nav" aria-label="Tools">
           <a href="/" class="nav-link" data-route="/">Home</a>
           <a href="/charts/" class="nav-link" data-route="/charts">Charts</a>
           <a href="/match/" class="nav-link" data-route="/match">Match</a>
@@ -29,16 +29,40 @@
           <a href="/cards/" class="nav-link" data-route="/cards">Cards</a>
         </nav>
 
-        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="header-nav">
+        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="header-nav">
           <animate-icons name="menu" size="22"></animate-icons>
         </button>
       </div>
     </div>
 
-    <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner" aria-label="Repositório no GitHub" title="GitHub">
+    <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner" aria-label="GitHub Repository" title="GitHub">
       <animate-icons name="github" size="20"></animate-icons>
     </a>
   </header>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>listendeck<span class="logo-dot">.</span></strong>
+        <span>·</span>
+        <span>by <a href="https://github.com/snw-mint/" target="_blank" rel="noopener noreferrer">Snow Mint</a></span>
+        <span>·</span>
+        <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GPL-3.0</a>
+      </div>
+      <div class="footer-right">
+        <a href="/privacy.html">Privacy Policy</a>
+        <span>·</span>
+        <a href="/terms.html">Terms of Use</a>
+        <span>·</span>
+        <div class="footer-powered">
+          <span>Powered by</span>
+          <a href="https://listenbrainz.org" target="_blank" rel="noopener noreferrer">ListenBrainz</a><span>,</span>
+          <a href="https://lrclib.net" target="_blank" rel="noopener noreferrer">LRCLIB</a><span>&amp;</span>
+          <a href="https://developers.deezer.com" target="_blank" rel="noopener noreferrer">Deezer</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <script type="module" src="/shared/header.js"></script>
 </body>

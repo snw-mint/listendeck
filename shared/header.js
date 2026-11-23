@@ -18,7 +18,7 @@ function initTheme() {
       toggle.innerHTML = theme === "dark" ? SUN_ICON : MOON_ICON;
       toggle.setAttribute(
         "aria-label",
-        theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"
+        theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
       );
     }
   };

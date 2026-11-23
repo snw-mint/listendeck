@@ -16,6 +16,8 @@ export default defineConfig({
         lyricsResult: resolve(__dirname, "lyrics/result.html"),
         cards: resolve(__dirname, "cards/index.html"),
         cardsResult: resolve(__dirname, "cards/result.html"),
+        privacy: resolve(__dirname, "privacy.html"),
+        terms: resolve(__dirname, "terms.html"),
       },
     },
   },
