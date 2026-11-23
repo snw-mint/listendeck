@@ -73,11 +73,16 @@
             </div>
 
             <div class="charts-actions">
-              <div class="period-tabs" role="tablist" aria-label="Time period">
-                <button type="button" class="period-tab active" data-period="this_week">This Week</button>
-                <button type="button" class="period-tab" data-period="week">Last Week</button>
-                <button type="button" class="period-tab" data-period="this_month">This Month</button>
-                <button type="button" class="period-tab" data-period="month">Last Month</button>
+              <div class="period-picker" id="periodPicker">
+                <div id="periodDropdown" class="period-tabs period-dropdown" role="tablist" aria-label="Time period">
+                  <button type="button" class="period-tab" data-period="this_week">This Week</button>
+                  <button type="button" class="period-tab" data-period="week">Last Week</button>
+                  <button type="button" class="period-tab active" data-period="this_month">This Month</button>
+                  <button type="button" class="period-tab" data-period="month">Last Month</button>
+                </div>
+                <button id="periodPickerBtn" type="button" class="period-trigger-btn" aria-label="Select period" aria-expanded="false" aria-controls="periodDropdown" title="Select period">
+                  <animate-icons name="calendar" size="18"></animate-icons>
+                </button>
               </div>
               <button id="export-charts-btn" type="button" class="export-btn">
                 <animate-icons name="download" size="18"></animate-icons>

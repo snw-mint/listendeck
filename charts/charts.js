@@ -25,7 +25,7 @@ const SERVICE_LOGOS = {
 
 const lastValidResults = new Map();
 let currentChartsData = null;
-let currentActivePeriod = "this_week";
+let currentActivePeriod = "this_month";
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -81,8 +81,8 @@ function getPeriodWindow(period) {
     };
   }
 
-  if (period === "this_month") {
-    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  if (period === "this_week") {
+    const startDate = getStartOfLocalWeek(now);
     const startTs = Math.floor(startDate.getTime() / 1000);
     const endTs = Math.max(startTs + WINDOW_BUCKET_SEC, frozenNowSec);
     const monthLabel = startDate.toLocaleString("en-US", { month: "long" }).toUpperCase();
@@ -92,7 +92,7 @@ function getPeriodWindow(period) {
       endTs,
       isClosed: false,
       elapsedDays: Math.max(1, Math.ceil((endTs - startTs) / 86400)),
-      storyHeading: `${monthLabel} ${startDate.getFullYear()}`,
+      storyHeading: `${monthLabel} WEEK`,
     };
   }
 
@@ -112,17 +112,17 @@ function getPeriodWindow(period) {
     };
   }
 
-  const startDate = getStartOfLocalWeek(now);
+  const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
   const startTs = Math.floor(startDate.getTime() / 1000);
   const endTs = Math.max(startTs + WINDOW_BUCKET_SEC, frozenNowSec);
   const monthLabel = startDate.toLocaleString("en-US", { month: "long" }).toUpperCase();
   return {
-    period: "this_week",
+    period: "this_month",
     startTs,
     endTs,
     isClosed: false,
     elapsedDays: Math.max(1, Math.ceil((endTs - startTs) / 86400)),
-    storyHeading: `${monthLabel} WEEK`,
+    storyHeading: `${monthLabel} ${startDate.getFullYear()}`,
   };
 }
 
@@ -421,7 +421,7 @@ function initLandingForm() {
     const user = input.value.trim();
     if (!user) return;
     addRecentUser("charts", user);
-    window.location.href = `/charts/result.html?user=${encodeURIComponent(user)}&period=this_week`;
+    window.location.href = `/charts/result.html?user=${encodeURIComponent(user)}&period=this_month`;
   });
 }
 
@@ -604,11 +604,37 @@ function initResultPage() {
   }
 
   addRecentUser("charts", username);
-  currentActivePeriod = VALID_PERIODS.has(params.get("period")) ? params.get("period") : "this_week";
+  currentActivePeriod = VALID_PERIODS.has(params.get("period")) ? params.get("period") : "this_month";
 
   document.getElementById("userDisplayName").textContent = username;
 
+  const pickerBtn = document.getElementById("periodPickerBtn");
+  const dropdown = document.getElementById("periodDropdown");
   const tabs = document.querySelectorAll(".period-tab");
+
+  const setPickerOpen = (open) => {
+    if (!dropdown || !pickerBtn) return;
+    dropdown.classList.toggle("open", open);
+    pickerBtn.setAttribute("aria-expanded", String(open));
+  };
+
+  pickerBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    setPickerOpen(!dropdown?.classList.contains("open"));
+  });
+
+  document.addEventListener("click", (e) => {
+    if (dropdown?.classList.contains("open") && !dropdown.contains(e.target) && !pickerBtn?.contains(e.target)) {
+      setPickerOpen(false);
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && dropdown?.classList.contains("open")) {
+      setPickerOpen(false);
+    }
+  });
+
   const setActiveTab = (period) => {
     tabs.forEach((tab) => {
       tab.classList.toggle("active", tab.dataset.period === period);
@@ -622,6 +648,7 @@ function initResultPage() {
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       const nextPeriod = tab.dataset.period;
+      setPickerOpen(false);
       if (!nextPeriod || nextPeriod === currentActivePeriod) return;
       currentActivePeriod = nextPeriod;
       setActiveTab(currentActivePeriod);

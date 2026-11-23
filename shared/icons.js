@@ -10,6 +10,7 @@ import {
   Check,
   ChevronLeft,
   CircleCheck,
+  Calendar,
 } from "@animateicons/vanilla/lucide";
 
 defineIcons({
@@ -23,6 +24,7 @@ defineIcons({
   Check,
   ChevronLeft,
   CircleCheck,
+  Calendar,
 });
 
 if (typeof document !== "undefined") {
