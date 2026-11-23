@@ -74,6 +74,12 @@ function initMobileMenu() {
   });
 }
 
+document.addEventListener("dragstart", (e) => {
+  if (e.target instanceof HTMLImageElement) {
+    e.preventDefault();
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initActiveNav();
