@@ -40,6 +40,27 @@
     </div>
   </header>
 
+  <main class="tool-main">
+    <div class="tool-split">
+      <section class="tool-input-col">
+        <h1 class="tool-title">Match</h1>
+        <p class="tool-description">
+          Compare listening taste between two ListenBrainz profiles and discover your compatibility score.
+        </p>
+        <form id="match-form" class="tool-form">
+          <div class="input-pill">
+            <input type="text" id="match-user-1" placeholder="First user" autocomplete="off" required />
+            <span class="input-pill-divider">vs</span>
+            <input type="text" id="match-user-2" placeholder="Second user" autocomplete="off" required />
+            <button type="submit" class="input-pill-btn">Compare</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="tool-preview-col" aria-label="Example preview"></section>
+    </div>
+  </main>
+
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
