@@ -1,1 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
 
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Match · listendeck.</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="stylesheet" href="/shared/global.css" />
+  <link rel="stylesheet" href="/match/match.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="header-logo">
+        <img src="/logo.svg" alt="" class="header-logo-icon" />
+        <span>listendeck<span class="logo-dot">.</span></span>
+      </a>
+
+      <div class="header-right">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Alternar tema"></button>
+
+        <nav id="header-nav" class="header-nav" aria-label="Ferramentas">
+          <a href="/" class="nav-link" data-route="/">Home</a>
+          <a href="/charts/" class="nav-link" data-route="/charts">Charts</a>
+          <a href="/match/" class="nav-link" data-route="/match">Match</a>
+          <a href="/lyrics/" class="nav-link" data-route="/lyrics">Lyrics</a>
+          <a href="/cards/" class="nav-link" data-route="/cards">Cards</a>
+        </nav>
+
+        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="header-nav">
+          <animate-icons name="menu" size="22"></animate-icons>
+        </button>
+      </div>
+    </div>
+
+    <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner" aria-label="Repositório no GitHub" title="GitHub">
+      <animate-icons name="github" size="20"></animate-icons>
+    </a>
+  </header>
+
+  <script type="module" src="/shared/header.js"></script>
+  <script type="module" src="/match/match.js"></script>
+</body>
+
+</html>
