@@ -26,6 +26,7 @@ const SERVICE_LOGOS = {
 const lastValidResults = new Map();
 let currentChartsData = null;
 let currentActivePeriod = "this_month";
+let customArtistImage = null;
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -306,18 +307,30 @@ function renderEmpty(container, message) {
   container.innerHTML = `<div class="chart-item"><span class="chart-row-sub">${escapeHtml(message)}</span></div>`;
 }
 
-function renderChartList(container, items) {
+function renderChartList(container, items, { allowImageUpload = false } = {}) {
   if (!items.length) {
     renderEmpty(container, "No listens recorded for this period.");
     return;
   }
 
   const [first, ...rest] = items;
+  const effectiveCover = allowImageUpload ? (customArtistImage || first.cover) : first.cover;
   const top1Sub = first.subtitle ? `${first.subtitle} · ${formatNumber(first.plays)}` : formatNumber(first.plays);
+  const uploadActionsHtml = allowImageUpload
+    ? `
+      <div class="top1-upload-actions">
+        ${customArtistImage ? `<button type="button" class="top1-action-btn" id="artistResetBtn" aria-label="Reset custom image" title="Reset image"><animate-icons name="x" size="16"></animate-icons></button>` : ""}
+        <button type="button" class="top1-action-btn" id="artistUploadBtn" aria-label="Upload custom artist image" title="Upload custom image">
+          <animate-icons name="image-plus" size="17"></animate-icons>
+        </button>
+      </div>
+    `
+    : "";
 
   const top1Html = `
     <div class="chart-item top-1">
-      ${first.cover ? `<div class="top1-skeleton-bg skeleton"></div><img class="top1-image" src="${escapeHtml(first.cover)}" alt="" crossorigin="anonymous" />` : ""}
+      ${effectiveCover ? `<div class="top1-skeleton-bg skeleton"></div><img class="top1-image" src="${escapeHtml(effectiveCover)}" alt="" crossorigin="anonymous" />` : ""}
+      ${uploadActionsHtml}
       <div class="text-content">
         <span>${escapeHtml(first.title)}</span>
         <span>${escapeHtml(top1Sub)}</span>
@@ -348,6 +361,20 @@ function renderChartList(container, items) {
   if (top1Img) {
     attachImageFadeIn(top1Img, () => {
       top1Bg?.remove();
+    });
+  }
+
+  if (allowImageUpload) {
+    const uploadInput = document.getElementById("artistImageUploadInput");
+    document.getElementById("artistUploadBtn")?.addEventListener("click", () => {
+      if (uploadInput) {
+        uploadInput.value = "";
+        uploadInput.click();
+      }
+    });
+    document.getElementById("artistResetBtn")?.addEventListener("click", () => {
+      customArtistImage = null;
+      if (currentChartsData) applyChartsToDom(currentChartsData);
     });
   }
 }
@@ -460,11 +487,12 @@ function applyChartsToDom(data) {
   document.getElementById("userDailyAvg").textContent = data.stats.dailyAvg;
   document.getElementById("userVibe").textContent = data.stats.vibe;
 
+  const effectiveHero = customArtistImage || data.heroCover;
   const artistCoverEl = document.getElementById("artistCover");
   if (artistCoverEl) {
-    if (data.heroCover) {
+    if (effectiveHero) {
       artistCoverEl.style.display = "block";
-      artistCoverEl.src = data.heroCover;
+      artistCoverEl.src = effectiveHero;
       attachImageFadeIn(artistCoverEl);
     } else {
       artistCoverEl.removeAttribute("src");
@@ -472,9 +500,28 @@ function applyChartsToDom(data) {
     }
   }
 
-  renderChartList(document.getElementById("listTopArtists"), data.artists);
+  renderChartList(document.getElementById("listTopArtists"), data.artists, { allowImageUpload: true });
   renderChartList(document.getElementById("listTopTracks"), data.tracks);
   renderChartList(document.getElementById("listTopAlbums"), data.albums);
+}
+
+function initArtistImageUpload() {
+  const input = document.getElementById("artistImageUploadInput");
+  if (!input) return;
+
+  input.addEventListener("change", (e) => {
+    const file = e.target.files?.[0];
+    if (!file || !file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result !== "string") return;
+      customArtistImage = reader.result;
+      if (currentChartsData) {
+        applyChartsToDom(currentChartsData);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 function initLandingForm() {
@@ -676,7 +723,7 @@ function initExportModal(username) {
     const imgSong = document.getElementById("storyImageSong");
     const imgAlbum = document.getElementById("storyImageAlbum");
 
-    if (imgArtist) imgArtist.src = currentChartsData.artists[0]?.cover || "";
+    if (imgArtist) imgArtist.src = customArtistImage || currentChartsData.artists[0]?.cover || "";
     if (imgSong) imgSong.src = currentChartsData.tracks[0]?.cover || "";
     if (imgAlbum) imgAlbum.src = currentChartsData.albums[0]?.cover || "";
 
@@ -753,6 +800,7 @@ function initResultPage() {
   };
 
   setActiveTab(currentActivePeriod);
+  initArtistImageUpload();
   loadCharts(username, currentActivePeriod);
   initExportModal(username);
 
