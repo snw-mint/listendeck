@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Charts · listendeck.</title>
+  <title>ListenBrainz Charts &amp; Music Recap Generator · listendeck.</title>
+  <meta name="description" content="Turn your ListenBrainz scrobbles into aesthetic weekly and monthly music charts. Explore top artists, songs, albums, and export shareable Story recaps." />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <link rel="stylesheet" href="/shared/global.css" />
   <link rel="stylesheet" href="/charts/charts.css" />
@@ -43,19 +44,96 @@
   <main class="tool-main">
     <div class="tool-split">
       <section class="tool-input-col">
-        <h1 class="tool-title">Charts</h1>
+        <h1 class="tool-title">Turn Your ListenBrainz History Into Charts<span class="logo-dot">.</span></h1>
         <p class="tool-description">
-          Generate shareable rankings of your top artists, tracks, and albums from your ListenBrainz history.
+          Enter your ListenBrainz username to explore weekly and monthly top artists, tracks, and albums with real listening minutes and exportable Story recaps.
         </p>
         <form id="charts-form" class="tool-form">
-          <div class="input-pill">
+          <div class="input-pill" id="charts-input-pill">
             <input type="text" id="charts-user" placeholder="ListenBrainz username" autocomplete="off" required />
-            <button type="submit" class="input-pill-btn">Generate</button>
+            <button type="submit" id="charts-submit-btn" class="input-pill-btn">Generate</button>
           </div>
+          <p id="charts-error" class="form-error" role="alert" aria-live="polite"></p>
         </form>
+        <p class="signup-link">
+          Don't have a ListenBrainz account?
+          <a href="https://listenbrainz.org/login/" target="_blank" rel="noopener noreferrer">Create one!</a>
+        </p>
       </section>
 
-      <section class="tool-preview-col" aria-label="Example preview"></section>
+      <section class="tool-preview-col charts-preview-col" aria-label="Example preview">
+        <div class="preview-story-card" aria-hidden="true">
+          <div class="preview-story-top">
+            <span class="preview-story-title">Recap</span>
+            <span class="preview-story-brand">listendeck<span class="logo-dot">.</span></span>
+          </div>
+
+          <div class="preview-story-period">
+            <div class="preview-story-month">NOVEMBER 2026</div>
+            <div class="preview-story-minutes">4,210 minutes</div>
+          </div>
+
+          <div class="preview-story-body">
+            <div class="preview-story-lists">
+              <div class="preview-story-block">
+                <h3>Top Artists</h3>
+                <div class="preview-story-items">
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">1</span>
+                    <div class="preview-story-meta">
+                      <strong>The Weeknd</strong>
+                      <span>312 streams</span>
+                    </div>
+                  </div>
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">2</span>
+                    <div class="preview-story-meta">
+                      <strong>Sabrina Carpenter</strong>
+                      <span>248 streams</span>
+                    </div>
+                  </div>
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">3</span>
+                    <div class="preview-story-meta">
+                      <strong>Billie Eilish</strong>
+                      <span>195 streams</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preview-story-block">
+                <h3>Top Songs</h3>
+                <div class="preview-story-items">
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">1</span>
+                    <div class="preview-story-meta">
+                      <strong>Espresso</strong>
+                      <span>Sabrina Carpenter</span>
+                    </div>
+                  </div>
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">2</span>
+                    <div class="preview-story-meta">
+                      <strong>Blinding Lights</strong>
+                      <span>The Weeknd</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-story-images">
+              <div class="preview-story-square">
+                <img src="/assets/preview/charts-artist.webp" alt="" />
+              </div>
+              <div class="preview-story-square">
+                <img src="/assets/preview/charts-song.webp" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 
