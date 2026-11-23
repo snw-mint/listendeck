@@ -6,9 +6,10 @@ import {
   Menu,
   X,
   ArrowLeft,
-  ArrowUp,
-  ArrowDown,
   Download,
+  Check,
+  ChevronLeft,
+  CircleCheck,
 } from "@animateicons/vanilla/lucide";
 
 defineIcons({
@@ -18,9 +19,10 @@ defineIcons({
   Menu,
   X,
   ArrowLeft,
-  ArrowUp,
-  ArrowDown,
   Download,
+  Check,
+  ChevronLeft,
+  CircleCheck,
 });
 
 if (typeof document !== "undefined") {

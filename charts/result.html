@@ -109,6 +109,148 @@
     </div>
   </main>
 
+  <div id="generationSettingsModal" class="ld-modal" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="ld-modal-card">
+      <div id="step1">
+        <div class="ld-modal-header">
+          <div>
+            <h2 id="settingsModalTitle">Background</h2>
+            <p class="ld-modal-subtitle">Choose a theme for your report</p>
+          </div>
+          <button type="button" class="ld-icon-btn" id="closeSettingsModal" aria-label="Close">
+            <animate-icons name="x" size="20"></animate-icons>
+          </button>
+        </div>
+
+        <div class="bg-palette" id="bgStylePicker">
+          <button type="button" class="bg-option selected" data-bg="red" style="background-color: #B90000;" aria-label="Red" title="Red">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <button type="button" class="bg-option" data-bg="hot" style="background-color: #F37F3B;" aria-label="Hot" title="Hot">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <button type="button" class="bg-option" data-bg="nature" style="background-color: #68CA2D;" aria-label="Nature" title="Nature">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <button type="button" class="bg-option" data-bg="sea" style="background-color: #516AD9;" aria-label="Sea" title="Sea">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <button type="button" class="bg-option" data-bg="candy" style="background-color: #A24CBC;" aria-label="Candy" title="Candy">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <button type="button" class="bg-option" data-bg="neutral" style="background-color: #6E6E73;" aria-label="Neutral" title="Neutral">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+        </div>
+
+        <button type="button" id="nextStepBtn" class="ld-btn-primary">Continue</button>
+      </div>
+
+      <div id="step2" style="display: none;">
+        <div class="ld-modal-header">
+          <div>
+            <h2>Preferences</h2>
+            <p class="ld-modal-subtitle">Customize your story card</p>
+          </div>
+          <button type="button" class="ld-icon-btn" id="backStepBtn" aria-label="Back">
+            <animate-icons name="chevron-left" size="20"></animate-icons>
+          </button>
+        </div>
+
+        <label class="ld-field-label" for="serviceSelect">Service Logo</label>
+        <select id="serviceSelect" class="ld-select">
+          <option value="lastfm" selected>Last.fm</option>
+          <option value="youtubemusic">YouTube Music</option>
+          <option value="deezer">Deezer</option>
+          <option value="spotify">Spotify</option>
+          <option value="applemusic">Apple Music</option>
+          <option value="none">None</option>
+        </select>
+
+        <label class="ld-switch-row">
+          <span>Light Theme</span>
+          <span class="ld-switch">
+            <input type="checkbox" id="themeToggleCheckbox" />
+            <span class="ld-slider"></span>
+          </span>
+        </label>
+
+        <label class="ld-switch-row">
+          <span>Use Listens</span>
+          <span class="ld-switch">
+            <input type="checkbox" id="useScrobblesCheckbox" />
+            <span class="ld-slider"></span>
+          </span>
+        </label>
+
+        <button type="button" id="confirmSettingsBtn" class="ld-btn-primary">
+          <animate-icons name="download" size="18"></animate-icons>
+          <span>Generate Report</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="generationModal" class="ld-modal">
+    <div class="ld-status-pill">
+      <div id="generationStateLoading">
+        <span class="ld-loader"></span>
+      </div>
+      <div id="generationStateComplete" style="display: none;">
+        <animate-icons name="circle-check" size="64" color="#ffffff"></animate-icons>
+      </div>
+    </div>
+  </div>
+
+  <div id="storyReportContainer" class="hidden-report-container">
+    <div id="storyReport" class="theme-dark">
+      <img id="storyReportBackgroundImg" class="story-report-bg-img" crossorigin="anonymous" />
+
+      <div class="story-header">
+        <div id="storyReportTitle" class="story-title">Recap</div>
+        <div id="storyServiceLogo" class="story-service-logo"></div>
+      </div>
+
+      <div class="story-period-header">
+        <div id="storyMonthYear" class="story-month-year"></div>
+        <div id="storyTotalMinutes" class="story-total-minutes"></div>
+      </div>
+
+      <div class="story-body" id="storyBody">
+        <div class="story-lists-container">
+          <div class="story-list-block">
+            <h3>Top Artists</h3>
+            <div id="storyListArtists" class="story-items-list"></div>
+          </div>
+          <div class="story-list-block">
+            <h3>Top Songs</h3>
+            <div id="storyListSongs" class="story-items-list"></div>
+          </div>
+          <div class="story-list-block">
+            <h3>Top Albums</h3>
+            <div id="storyListAlbums" class="story-items-list"></div>
+          </div>
+        </div>
+
+        <div class="story-images-container">
+          <div class="story-square-image">
+            <img id="storyImageArtist" src="" alt="Top Artist" crossorigin="anonymous" />
+          </div>
+          <div class="story-square-image">
+            <img id="storyImageSong" src="" alt="Top Song" crossorigin="anonymous" />
+          </div>
+          <div class="story-square-image">
+            <img id="storyImageAlbum" src="" alt="Top Album" crossorigin="anonymous" />
+          </div>
+        </div>
+      </div>
+
+      <div class="story-footer">
+        <div class="story-brand">listendeck.vercel.app</div>
+      </div>
+    </div>
+  </div>
+
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
