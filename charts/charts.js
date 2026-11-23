@@ -9,6 +9,10 @@ import {
 } from "../shared/storage.js";
 
 const VALID_PERIODS = new Set(["this_week", "week", "this_month", "month"]);
+const WINDOW_BUCKET_SEC = 600;
+const FALLBACK_DURATION_MS = 3.5 * 60 * 1000;
+const MAX_LISTEN_PAGES = 15;
+const LISTENS_PAGE_SIZE = 1000;
 
 const SERVICE_LOGOS = {
   applemusic: `<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" width="200" height="50"><path d="M83.57 48.49V15.95h-.24L70.31 48.49h-5.06L52.23 15.95h-.24v32.54h-6.03V4.37h7.72l13.98 35.2h.24l13.98-35.2h7.96v44.12zm40.25 0h-6.27v-5.55h-.24c-1.68 3.86-5.06 6.03-9.88 6.03-6.99 0-11.09-4.58-11.09-12.05V16.19h6.51v19.52c0 4.82 2.41 7.48 6.75 7.48 4.82 0 7.47-3.38 7.47-8.44V16.19h6.51zm17.84-32.79c7.47 0 12.05 4.1 12.29 10.13h-6.02c-.48-3.14-2.65-5.07-6.27-5.07s-6.03 1.69-6.03 4.34c0 1.93 1.45 3.38 4.82 4.1l5.07 1.21c6.51 1.44 8.92 4.1 8.92 8.68 0 5.78-5.31 9.88-12.78 9.88-7.96 0-12.78-3.86-13.26-10.13h6.51c.48 3.38 2.89 5.07 6.75 5.07s6.27-1.69 6.27-4.34c0-2.17-1.21-3.38-4.58-4.1l-5.07-1.21c-6.02-1.44-8.91-4.33-8.91-9.16 0-5.54 4.82-9.4 12.29-9.4m17.6-7.95c0-2.17 1.68-3.86 3.85-3.86s3.86 1.69 3.86 3.86-1.69 3.85-3.86 3.85-3.85-1.68-3.85-3.85m.48 8.43h6.51v32.31h-6.51zm33.99 11.09c-.72-3.38-3.13-6.27-7.47-6.27-5.07 0-8.44 4.34-8.44 11.09 0 6.99 3.37 11.09 8.44 11.09 4.09 0 6.5-2.17 7.47-6.03H200c-.73 6.75-6.03 11.57-13.74 11.57-9.16 0-14.95-6.27-14.95-16.63 0-10.13 5.79-16.64 14.95-16.64 8.19 0 13.01 5.31 13.74 11.57zM25.95 8.71c-1.69 1.93-4.34 3.62-6.99 3.38-.48-2.89.96-5.79 2.41-7.48C23.06 2.45 25.95 1 28.36 1c.24 2.65-.72 5.54-2.41 7.71m2.41 3.86c1.45 0 5.78.48 8.68 4.82-.24.24-5.07 3.13-5.07 9.16 0 7.23 6.27 9.64 6.27 9.64 0 .24-.96 3.38-3.13 6.75-1.93 2.9-4.1 5.79-7.23 5.79-3.14 0-4.1-1.93-7.72-1.93-3.61 0-4.82 1.93-7.71 1.93-3.13 0-5.55-3.13-7.47-6.03-4.1-6.02-7.24-16.87-2.9-24.1 1.93-3.62 5.79-6.03 9.65-6.03 3.13 0 6.02 2.17 7.71 2.17s5.06-2.41 8.92-2.17" style="fill:currentColor"/></svg>`,
@@ -19,13 +23,7 @@ const SERVICE_LOGOS = {
   none: "",
 };
 
-const PERIOD_LABELS = {
-  this_week: "THIS WEEK",
-  week: "LAST WEEK",
-  this_month: "THIS MONTH",
-  month: "LAST MONTH",
-};
-
+const lastValidResults = new Map();
 let currentChartsData = null;
 let currentActivePeriod = "this_week";
 
@@ -52,6 +50,207 @@ function cleanReportTitle(str) {
   if (!str) return "";
   const cleaned = String(str).replace(/\s*\([^)]*\)/g, "").trim();
   return cleaned || String(str).trim();
+}
+
+function getStartOfLocalWeek(date) {
+  const start = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const offset = (start.getDay() + 6) % 7;
+  start.setDate(start.getDate() - offset);
+  return start;
+}
+
+function getPeriodWindow(period) {
+  const now = new Date();
+  const nowSec = Math.floor(now.getTime() / 1000);
+  const frozenNowSec = Math.ceil(nowSec / WINDOW_BUCKET_SEC) * WINDOW_BUCKET_SEC;
+
+  if (period === "week") {
+    const endDate = getStartOfLocalWeek(now);
+    const startDate = new Date(endDate);
+    startDate.setDate(startDate.getDate() - 7);
+    const startTs = Math.floor(startDate.getTime() / 1000);
+    const endTs = Math.floor(endDate.getTime() / 1000);
+    const monthLabel = startDate.toLocaleString("en-US", { month: "long" }).toUpperCase();
+    return {
+      period,
+      startTs,
+      endTs,
+      isClosed: true,
+      elapsedDays: 7,
+      storyHeading: `${monthLabel} WEEK`,
+    };
+  }
+
+  if (period === "this_month") {
+    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startTs = Math.floor(startDate.getTime() / 1000);
+    const endTs = Math.max(startTs + WINDOW_BUCKET_SEC, frozenNowSec);
+    const monthLabel = startDate.toLocaleString("en-US", { month: "long" }).toUpperCase();
+    return {
+      period,
+      startTs,
+      endTs,
+      isClosed: false,
+      elapsedDays: Math.max(1, Math.ceil((endTs - startTs) / 86400)),
+      storyHeading: `${monthLabel} ${startDate.getFullYear()}`,
+    };
+  }
+
+  if (period === "month") {
+    const endDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const startTs = Math.floor(startDate.getTime() / 1000);
+    const endTs = Math.floor(endDate.getTime() / 1000);
+    const monthLabel = startDate.toLocaleString("en-US", { month: "long" }).toUpperCase();
+    return {
+      period,
+      startTs,
+      endTs,
+      isClosed: true,
+      elapsedDays: Math.max(1, Math.round((endTs - startTs) / 86400)),
+      storyHeading: `${monthLabel} ${startDate.getFullYear()}`,
+    };
+  }
+
+  const startDate = getStartOfLocalWeek(now);
+  const startTs = Math.floor(startDate.getTime() / 1000);
+  const endTs = Math.max(startTs + WINDOW_BUCKET_SEC, frozenNowSec);
+  const monthLabel = startDate.toLocaleString("en-US", { month: "long" }).toUpperCase();
+  return {
+    period: "this_week",
+    startTs,
+    endTs,
+    isClosed: false,
+    elapsedDays: Math.max(1, Math.ceil((endTs - startTs) / 86400)),
+    storyHeading: `${monthLabel} WEEK`,
+  };
+}
+
+async function fetchWindowListens(username, startTs, endTs) {
+  const collected = [];
+  const seen = new Set();
+  let cursorMaxTs = endTs;
+
+  for (let page = 0; page < MAX_LISTEN_PAGES; page++) {
+    const response = await listenbrainz.getUserListens(username, {
+      maxTs: cursorMaxTs,
+      count: LISTENS_PAGE_SIZE,
+    });
+    const batch = response?.payload?.listens || [];
+    if (!batch.length) break;
+
+    for (const listen of batch) {
+      const ts = Number(listen?.listened_at);
+      if (!Number.isFinite(ts) || ts >= endTs || ts < startTs) continue;
+      const trackName = listen?.track_metadata?.track_name || "";
+      const artistName = listen?.track_metadata?.artist_name || "";
+      const dedupeKey = `${ts}:${trackName}:${artistName}`;
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+      collected.push(listen);
+    }
+
+    const oldestTs = Number(batch[batch.length - 1]?.listened_at);
+    if (!Number.isFinite(oldestTs) || oldestTs <= startTs || batch.length < LISTENS_PAGE_SIZE || oldestTs >= cursorMaxTs) {
+      break;
+    }
+    cursorMaxTs = oldestTs;
+  }
+
+  return collected;
+}
+
+function getListenDurationMs(listen) {
+  const info = listen?.track_metadata?.additional_info;
+  const durationMs = Number(info?.duration_ms);
+  if (Number.isFinite(durationMs) && durationMs > 0) {
+    return durationMs;
+  }
+  const durationSec = Number(info?.duration);
+  if (Number.isFinite(durationSec) && durationSec > 0) {
+    return durationSec * 1000;
+  }
+  return FALLBACK_DURATION_MS;
+}
+
+function sortAndSliceTop(map, limit = 10) {
+  return Array.from(map.values())
+    .sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title))
+    .slice(0, limit);
+}
+
+function aggregateListens(listens, elapsedDays) {
+  const artistMap = new Map();
+  const trackMap = new Map();
+  const albumMap = new Map();
+  let totalDurationMs = 0;
+
+  for (const listen of listens) {
+    totalDurationMs += getListenDurationMs(listen);
+
+    const meta = listen?.track_metadata || {};
+    const artistName = (meta.artist_name || "Unknown Artist").trim();
+    const trackName = (meta.track_name || "").trim();
+    const releaseName = (meta.release_name || "").trim();
+    const mapping = meta.mbid_mapping || {};
+
+    if (artistName) {
+      const key = artistName.toLowerCase();
+      const existing = artistMap.get(key);
+      if (existing) {
+        existing.plays += 1;
+      } else {
+        artistMap.set(key, { title: artistName, subtitle: "", plays: 1, cover: "" });
+      }
+    }
+
+    if (trackName) {
+      const key = `${trackName.toLowerCase()}::${artistName.toLowerCase()}`;
+      const existing = trackMap.get(key);
+      if (existing) {
+        existing.plays += 1;
+      } else {
+        trackMap.set(key, {
+          title: trackName,
+          subtitle: artistName,
+          plays: 1,
+          caaReleaseMbid: mapping.caa_release_mbid || "",
+          caaId: mapping.caa_id || "",
+          cover: "",
+        });
+      }
+    }
+
+    if (releaseName) {
+      const key = `${releaseName.toLowerCase()}::${artistName.toLowerCase()}`;
+      const existing = albumMap.get(key);
+      if (existing) {
+        existing.plays += 1;
+      } else {
+        albumMap.set(key, {
+          title: releaseName,
+          subtitle: artistName,
+          plays: 1,
+          caaReleaseMbid: mapping.caa_release_mbid || "",
+          caaId: mapping.caa_id || "",
+          cover: "",
+        });
+      }
+    }
+  }
+
+  const totalListens = listens.length;
+  const totalMinutes = Math.round(totalDurationMs / 60000);
+  const dailyAvg = Math.round(totalListens / Math.max(1, elapsedDays));
+
+  return {
+    totalListens,
+    totalMinutes,
+    dailyAvg,
+    artists: sortAndSliceTop(artistMap, 10),
+    tracks: sortAndSliceTop(trackMap, 10),
+    albums: sortAndSliceTop(albumMap, 10),
+  };
 }
 
 function renderSkeleton(container) {
@@ -143,48 +342,15 @@ async function resolveVibe(topTrack, topAlbum) {
 }
 
 async function fetchChartsData(username, period) {
-  const cacheKey = `charts:${username.toLowerCase()}:${period}`;
+  const windowInfo = getPeriodWindow(period);
+  const cacheKey = `charts:${username.toLowerCase()}:${windowInfo.period}:${windowInfo.startTs}:${windowInfo.endTs}`;
   const cached = getCache(cacheKey);
   if (cached) return cached;
 
-  await listenbrainz.getUserCount(username);
+  const listens = await fetchWindowListens(username, windowInfo.startTs, windowInfo.endTs);
+  const aggregated = aggregateListens(listens, windowInfo.elapsedDays);
 
-  const [artistsRes, tracksRes, albumsRes, activityRes] = await Promise.all([
-    listenbrainz.getStats(username, "artists", period, 10),
-    listenbrainz.getStats(username, "recordings", period, 10),
-    listenbrainz.getStats(username, "release-groups", period, 10),
-    listenbrainz.getListeningActivity(username, period).catch(() => null),
-  ]);
-
-  const rawArtists = artistsRes?.payload?.artists || [];
-  const rawTracks = tracksRes?.payload?.recordings || [];
-  const rawAlbums = albumsRes?.payload?.release_groups || [];
-  const activityBins = activityRes?.payload?.listening_activity || [];
-
-  const artists = rawArtists.slice(0, 10).map((a) => ({
-    title: a.artist_name,
-    subtitle: "",
-    plays: a.listen_count,
-    cover: "",
-  }));
-
-  const tracks = rawTracks.slice(0, 10).map((t) => ({
-    title: t.track_name,
-    subtitle: t.artist_name || "",
-    plays: t.listen_count,
-    caaReleaseMbid: t.caa_release_mbid,
-    caaId: t.caa_id,
-    cover: "",
-  }));
-
-  const albums = rawAlbums.slice(0, 10).map((al) => ({
-    title: al.release_group_name,
-    subtitle: al.artist_name || "",
-    plays: al.listen_count,
-    caaReleaseMbid: al.caa_release_mbid,
-    caaId: al.caa_id,
-    cover: "",
-  }));
+  const { artists, tracks, albums } = aggregated;
 
   const [artistCover, trackCover, albumCover, vibe] = await Promise.all([
     artists[0] ? resolveTopCover("artist", artists[0].title) : Promise.resolve(""),
@@ -201,20 +367,14 @@ async function fetchChartsData(username, period) {
   if (tracks[0]) tracks[0].cover = trackCover;
   if (albums[0]) albums[0].cover = albumCover;
 
-  const activityTotal = activityBins.reduce((sum, bin) => sum + (bin.listen_count || 0), 0);
-  const fallbackTotal = artists.reduce((sum, item) => sum + (item.plays || 0), 0);
-  const totalListens = activityTotal || fallbackTotal;
-  const daysCount = Math.max(1, activityBins.filter((b) => (b.listen_count || 0) > 0).length || (period.includes("month") ? 30 : 7));
-  const dailyAvg = Math.round(totalListens / daysCount);
-  const minutes = Math.round(totalListens * 3.5);
-
   const data = {
+    storyHeading: windowInfo.storyHeading,
     stats: {
-      totalListens,
-      totalMinutes: minutes,
-      listens: formatNumber(totalListens),
-      minutes: formatNumber(minutes),
-      dailyAvg: formatNumber(dailyAvg),
+      totalListens: aggregated.totalListens,
+      totalMinutes: aggregated.totalMinutes,
+      listens: formatNumber(aggregated.totalListens),
+      minutes: formatNumber(aggregated.totalMinutes),
+      dailyAvg: formatNumber(aggregated.dailyAvg),
       vibe,
     },
     heroCover: artistCover || albumCover || trackCover || "",
@@ -223,9 +383,32 @@ async function fetchChartsData(username, period) {
     albums,
   };
 
-  const isClosedPeriod = period === "week" || period === "month";
-  setCache(cacheKey, data, isClosedPeriod ? CACHE_TTL_CLOSED : CACHE_TTL_CURRENT);
+  setCache(cacheKey, data, windowInfo.isClosed ? CACHE_TTL_CLOSED : CACHE_TTL_CURRENT);
   return data;
+}
+
+function applyChartsToDom(data) {
+  currentChartsData = data;
+
+  document.getElementById("userScrobbles").textContent = data.stats.listens;
+  document.getElementById("userMinutes").textContent = data.stats.minutes;
+  document.getElementById("userDailyAvg").textContent = data.stats.dailyAvg;
+  document.getElementById("userVibe").textContent = data.stats.vibe;
+
+  const artistCoverEl = document.getElementById("artistCover");
+  if (artistCoverEl) {
+    if (data.heroCover) {
+      artistCoverEl.src = data.heroCover;
+      artistCoverEl.style.display = "block";
+    } else {
+      artistCoverEl.removeAttribute("src");
+      artistCoverEl.style.display = "none";
+    }
+  }
+
+  renderChartList(document.getElementById("listTopArtists"), data.artists);
+  renderChartList(document.getElementById("listTopTracks"), data.tracks);
+  renderChartList(document.getElementById("listTopAlbums"), data.albums);
 }
 
 function initLandingForm() {
@@ -246,6 +429,7 @@ async function loadCharts(username, periodKey) {
   const listArtists = document.getElementById("listTopArtists");
   const listTracks = document.getElementById("listTopTracks");
   const listAlbums = document.getElementById("listTopAlbums");
+  const memoryKey = `${username.toLowerCase()}:${periodKey}`;
 
   currentChartsData = null;
   document.getElementById("userScrobbles").textContent = "—";
@@ -259,28 +443,16 @@ async function loadCharts(username, periodKey) {
 
   try {
     const data = await fetchChartsData(username, periodKey);
-    currentChartsData = data;
-
-    document.getElementById("userScrobbles").textContent = data.stats.listens;
-    document.getElementById("userMinutes").textContent = data.stats.minutes;
-    document.getElementById("userDailyAvg").textContent = data.stats.dailyAvg;
-    document.getElementById("userVibe").textContent = data.stats.vibe;
-
-    const artistCoverEl = document.getElementById("artistCover");
-    if (artistCoverEl) {
-      if (data.heroCover) {
-        artistCoverEl.src = data.heroCover;
-        artistCoverEl.style.display = "block";
-      } else {
-        artistCoverEl.removeAttribute("src");
-        artistCoverEl.style.display = "none";
+    lastValidResults.set(memoryKey, data);
+    applyChartsToDom(data);
+  } catch (err) {
+    if (err?.status !== 404) {
+      const fallback = lastValidResults.get(memoryKey);
+      if (fallback) {
+        applyChartsToDom(fallback);
+        return;
       }
     }
-
-    renderChartList(listArtists, data.artists);
-    renderChartList(listTracks, data.tracks);
-    renderChartList(listAlbums, data.albums);
-  } catch (err) {
     const msg = err?.status === 404 ? `User "${username}" not found on ListenBrainz.` : "Unable to load ListenBrainz data.";
     renderEmpty(listArtists, msg);
     renderEmpty(listTracks, msg);
@@ -380,7 +552,7 @@ function initExportModal(username) {
 
     document.getElementById("storyReportTitle").textContent = "Recap";
     document.getElementById("storyServiceLogo").innerHTML = SERVICE_LOGOS[service] || "";
-    document.getElementById("storyMonthYear").textContent = PERIOD_LABELS[currentActivePeriod] || "THIS WEEK";
+    document.getElementById("storyMonthYear").textContent = currentChartsData.storyHeading || "THIS WEEK";
     document.getElementById("storyTotalMinutes").textContent = useScrobbles
       ? `${currentChartsData.stats.listens} listens`
       : `${currentChartsData.stats.minutes} minutes`;
