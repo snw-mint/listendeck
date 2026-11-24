@@ -287,20 +287,23 @@ button {
 .site-footer {
   margin-top: auto;
   width: 100%;
-  border-top: 1px solid var(--color-border);
 }
 
 .footer-inner {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 28px 20px;
+  padding: 24px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  font-size: 0.85rem;
+  font-size: 0.8125rem;
   color: var(--color-text-muted);
+}
+
+.site-footer.footer-narrow .footer-inner {
+  max-width: 640px;
 }
 
 .footer-brand {
@@ -317,14 +320,14 @@ button {
 
 .footer-brand a,
 .footer-right a {
-  color: var(--color-text);
+  color: var(--color-text-muted);
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 .footer-brand a:hover,
 .footer-right a:hover {
-  color: var(--color-accent);
+  color: var(--color-text);
 }
 
 .footer-right {
@@ -334,28 +337,11 @@ button {
   gap: 8px;
 }
 
-.footer-powered {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
 @media (max-width: 640px) {
   .footer-inner {
-    padding: 16px;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    padding: 20px 16px;
     font-size: 0.78rem;
-    gap: 6px;
-  }
-
-  .footer-brand,
-  .footer-right,
-  .footer-powered {
-    justify-content: center;
-    gap: 6px;
+    gap: 8px;
   }
 }
 

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credits &amp; Architecture · listendeck.</title>
+  <meta name="description" content="Open data sources, client-side privacy, and open-source licensing behind listendeck." />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="stylesheet" href="/shared/global.css" />
+  <link rel="stylesheet" href="/credits/credits.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="header-logo">
+        <img src="/logo.svg" alt="" class="header-logo-icon" />
+        <span>listendeck<span class="logo-dot">.</span></span>
+      </a>
+
+      <div class="header-right">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme"></button>
+
+        <nav id="header-nav" class="header-nav" aria-label="Tools">
+          <a href="/" class="nav-link" data-route="/">Home</a>
+          <a href="/charts/" class="nav-link" data-route="/charts">Charts</a>
+          <a href="/match/" class="nav-link" data-route="/match">Match</a>
+          <a href="/lyrics/" class="nav-link" data-route="/lyrics">Lyrics</a>
+          <a href="/cards/" class="nav-link" data-route="/cards">Cards</a>
+        </nav>
+
+        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="header-nav">
+          <animate-icons name="menu" size="22"></animate-icons>
+        </button>
+
+        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner" aria-label="GitHub Repository" title="GitHub">
+          <animate-icons name="github" size="20"></animate-icons>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="credits-main">
+    <div class="credits-shell">
+      <section class="credits-intro">
+        <h1 class="credits-heading">Credits &amp; Architecture<span class="logo-dot">.</span></h1>
+        <p class="credits-lead">Open data sources, client-side privacy, and open-source licensing behind listendeck.</p>
+      </section>
+
+      <div class="credits-sections">
+        <section class="credits-section">
+          <div class="credits-section-head">
+            <span class="credits-num" aria-hidden="true">01</span>
+            <h2 class="credits-section-title">Data Sources &amp; APIs<span class="logo-dot">.</span></h2>
+          </div>
+
+          <ul class="credits-api-list">
+            <li class="credits-api-item">
+              <a href="https://listenbrainz.org" target="_blank" rel="noopener noreferrer" class="credits-api-name">
+                <span>ListenBrainz (MetaBrainz Foundation)</span>
+                <span class="credits-ext-arrow" aria-hidden="true">→</span>
+              </a>
+              <p class="credits-body">Listening history, user playback counts, and artist/track comparison data for Charts and Match.</p>
+            </li>
+            <li class="credits-api-item">
+              <a href="https://lrclib.net" target="_blank" rel="noopener noreferrer" class="credits-api-name">
+                <span>LRCLIB</span>
+                <span class="credits-ext-arrow" aria-hidden="true">→</span>
+              </a>
+              <p class="credits-body">Synchronized and plain song lyrics lookup for the Lyrics card studio.</p>
+            </li>
+            <li class="credits-api-item">
+              <a href="https://developers.deezer.com" target="_blank" rel="noopener noreferrer" class="credits-api-name">
+                <span>Deezer Public API</span>
+                <span class="credits-ext-arrow" aria-hidden="true">→</span>
+              </a>
+              <p class="credits-body">Artist portraits, album covers, and track metadata resolution.</p>
+            </li>
+            <li class="credits-api-item">
+              <a href="https://coverartarchive.org" target="_blank" rel="noopener noreferrer" class="credits-api-name">
+                <span>Cover Art Archive</span>
+                <span class="credits-ext-arrow" aria-hidden="true">→</span>
+              </a>
+              <p class="credits-body">Fallback release artwork sourced from MusicBrainz identifiers.</p>
+            </li>
+          </ul>
+        </section>
+
+        <section class="credits-section">
+          <div class="credits-section-head">
+            <span class="credits-num" aria-hidden="true">02</span>
+            <h2 class="credits-section-title">Privacy &amp; Local Storage<span class="logo-dot">.</span></h2>
+          </div>
+          <p class="credits-body">
+            listendeck runs 100% in your browser as a static web application. There is no backend server, user database, or account system—no passwords or personal credentials are ever collected. Temporary API responses and recent username shortcuts are stored locally in your browser's <code>localStorage</code> and <code>sessionStorage</code> purely to improve loading speed and reduce external API requests.
+          </p>
+          <p class="credits-body">
+            Anonymous, cookieless analytics are collected via Umami strictly to measure aggregate feature usage (such as selected timeframes and export styles), without tracking personal identities, IP histories, or searched usernames.
+          </p>
+        </section>
+
+        <section class="credits-section">
+          <div class="credits-section-head">
+            <span class="credits-num" aria-hidden="true">03</span>
+            <h2 class="credits-section-title">Open Source &amp; Availability<span class="logo-dot">.</span></h2>
+          </div>
+          <p class="credits-body">
+            Developed and maintained by <a href="https://github.com/snw-mint" target="_blank" rel="noopener noreferrer" class="credits-inline-link">Snow Mint</a> as free and open-source software under the <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="credits-inline-link">GNU General Public License v3.0 (GPL-3.0)</a>. Source code, bug reports, and new tool proposals are hosted on <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="credits-inline-link">GitHub</a>.
+          </p>
+          <p class="credits-body">
+            Because this is an independent, community-driven project provided "as is" without warranties, continuous uptime or uninterrupted quality cannot be guaranteed. All features rely directly on external public APIs (such as ListenBrainz, LRCLIB, and Deezer); if any of these third-party services experience downtime, rate limits, or breaking changes, parts of listendeck may become temporarily unavailable.
+          </p>
+        </section>
+
+        <section class="credits-section">
+          <div class="credits-section-head">
+            <span class="credits-num" aria-hidden="true">04</span>
+            <h2 class="credits-section-title">Third-Party Assets &amp; Trademarks<span class="logo-dot">.</span></h2>
+          </div>
+          <p class="credits-body">
+            Album artwork, artist portraits, and song lyrics are retrieved on demand directly by your browser from their respective public APIs and are never hosted or stored on our servers (temporary local browser caching is used solely to improve responsiveness and respect API rate limits).
+          </p>
+          <p class="credits-body">
+            Streaming service logos (such as Spotify, Apple Music, YouTube Music, Deezer, and Last.fm) are disabled by default and provided strictly as optional labels for users to indicate their preferred listening platform. All trademarks, logos, artwork, and lyrics remain the property of their respective owners; listendeck is an independent open-source project with no official affiliation or endorsement from these services.
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer footer-narrow">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>listendeck<span class="logo-dot">.</span></strong>
+        <span>by <a href="https://github.com/snw-mint" target="_blank" rel="noopener noreferrer">Snow Mint</a></span>
+        <span>·</span>
+        <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GPL-3.0</a>
+      </div>
+      <div class="footer-right">
+        <a href="/credits/">Credits</a>
+        <span>·</span>
+        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/shared/header.js"></script>
+</body>
+
+</html>

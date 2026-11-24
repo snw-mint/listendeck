@@ -1,0 +1,149 @@
+.credits-main {
+  flex: 1;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 20px 36px;
+}
+
+.credits-shell {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.credits-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.credits-heading {
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+.credits-lead {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.credits-sections {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--color-border);
+}
+
+.credits-section {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.credits-section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.credits-num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.credits-section-title {
+  font-size: 1.12rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.credits-api-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.credits-api-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.credits-api-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text);
+  transition: color 0.16s ease;
+}
+
+.credits-ext-arrow {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  transition: transform 0.16s ease, color 0.16s ease;
+}
+
+.credits-api-name:hover {
+  color: var(--color-accent);
+}
+
+.credits-api-name:hover .credits-ext-arrow {
+  transform: translateX(3px);
+  color: var(--color-accent);
+}
+
+.credits-body {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.credits-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82rem;
+  color: var(--color-text);
+  padding: 1px 5px;
+  border-radius: 5px;
+  background-color: var(--color-border);
+}
+
+.credits-inline-link {
+  color: var(--color-text);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border);
+  text-underline-offset: 3px;
+  transition: color 0.16s ease, text-decoration-color 0.16s ease;
+}
+
+.credits-inline-link:hover {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+@media (max-width: 640px) {
+  .credits-main {
+    padding: 24px 16px 28px;
+  }
+
+  .credits-section {
+    padding: 20px 0;
+  }
+}
