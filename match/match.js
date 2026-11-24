@@ -1,3 +1,4 @@
+import { EVENTS, trackEvent } from "../shared/analytics.js";
 import { deezer, listenbrainz } from "../shared/api.js";
 import { exportNodeAsPng } from "../shared/export.js";
 import {
@@ -483,6 +484,7 @@ function initLandingForm() {
 
       addRecentUser("match", user1);
       addRecentUser("match", user2);
+      trackEvent(EVENTS.SEARCH_SUBMIT, { tool: "match" });
       window.location.href = `/match/result.html?user1=${encodeURIComponent(user1)}&user2=${encodeURIComponent(user2)}`;
     } catch {
       setError("Unable to reach ListenBrainz. Please try again.");
@@ -598,6 +600,12 @@ function initExportModal() {
           reportEl,
           `listendeck_match_${currentMatchData.user1}_${currentMatchData.user2}.png`
         );
+        trackEvent(EVENTS.EXPORT_CARD, {
+          tool: "match",
+          action: "download",
+          format: "story",
+          style: selectedBg,
+        });
         if (generationModal) {
           stateLoading.style.display = "none";
           stateComplete.style.display = "flex";

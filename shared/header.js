@@ -1,4 +1,5 @@
 import "./icons.js";
+import { EVENTS, initAnalytics } from "./analytics.js";
 import { initCustomSelects } from "./select.js";
 
 const SUN_ICON = `<animate-icons name="sun" size="20"></animate-icons>`;
@@ -47,6 +48,7 @@ function syncThemeColorMeta(theme) {
 }
 
 syncRobotsMeta();
+initAnalytics();
 
 function initTheme() {
   const toggle = document.getElementById("theme-toggle");
@@ -64,6 +66,8 @@ function initTheme() {
         "aria-label",
         theme === "dark" ? "Switch to light theme" : "Switch to dark theme"
       );
+      toggle.setAttribute("data-track", EVENTS.THEME_TOGGLE);
+      toggle.setAttribute("data-track-props", JSON.stringify({ theme }));
     }
   };
 
@@ -124,9 +128,32 @@ document.addEventListener("dragstart", (e) => {
   }
 });
 
+function initDeclarativeTracking() {
+  document.querySelectorAll(".header-nav .nav-link").forEach((link) => {
+    if (link.hasAttribute("data-track")) return;
+    const target = link.getAttribute("data-route") || link.getAttribute("href") || "";
+    link.setAttribute("data-track", EVENTS.NAV_CLICK);
+    link.setAttribute("data-track-props", JSON.stringify({ location: "header", target }));
+  });
+
+  const githubLink = document.querySelector(".site-header .github-corner");
+  if (githubLink && !githubLink.hasAttribute("data-track")) {
+    githubLink.setAttribute("data-track", EVENTS.NAV_CLICK);
+    githubLink.setAttribute("data-track-props", JSON.stringify({ location: "header", target: "github" }));
+  }
+
+  document.querySelectorAll(".site-footer a").forEach((link) => {
+    if (link.hasAttribute("data-track")) return;
+    const label = (link.textContent || "").trim().toLowerCase();
+    link.setAttribute("data-track", EVENTS.NAV_CLICK);
+    link.setAttribute("data-track-props", JSON.stringify({ location: "footer", target: label }));
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initActiveNav();
   initMobileMenu();
   initCustomSelects();
+  initDeclarativeTracking();
 });

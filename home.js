@@ -1,3 +1,5 @@
+import { EVENTS, trackEvent } from "./shared/analytics.js";
+
 const ROUTE_SHORTCUTS = {
   1: "/charts/",
   2: "/match/",
@@ -19,6 +21,7 @@ document.addEventListener("keydown", (e) => {
 
   const destination = ROUTE_SHORTCUTS[e.key];
   if (destination) {
+    trackEvent(EVENTS.SHORTCUT_USED, { key: e.key });
     window.location.href = destination;
   }
 });

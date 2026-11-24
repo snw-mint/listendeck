@@ -1,4 +1,5 @@
 import { toCanvas } from "html-to-image";
+import { EVENTS, trackEvent } from "../shared/analytics.js";
 import { deezer } from "../shared/api.js";
 import { exportNodeAsPng } from "../shared/export.js";
 import { getCache, setCache, CACHE_TTL_CURRENT, CACHE_TTL_CLOSED } from "../shared/storage.js";
@@ -791,6 +792,7 @@ function initLandingPage() {
     e.preventDefault();
     const query = input.value.trim();
     if (!query) return;
+    trackEvent(EVENTS.SEARCH_SUBMIT, { tool: "cards" });
 
     if (!dropdown.hidden && results.length > 0 && activeIndex >= 0) {
       selectEntry(results[activeIndex]);
@@ -1332,6 +1334,12 @@ function initResultPage() {
     state.layout = btn.dataset.layout;
     renderPreview();
     persist();
+    trackEvent(EVENTS.STYLE_CHANGE, {
+      tool: "cards",
+      format: state.mode,
+      style: state.layout,
+      watermark: state.service,
+    });
   });
 
   ctrlMode.addEventListener("click", (e) => {
@@ -1347,12 +1355,24 @@ function initResultPage() {
     state.mode = mode;
     renderPreview();
     persist();
+    trackEvent(EVENTS.STYLE_CHANGE, {
+      tool: "cards",
+      format: state.mode,
+      style: state.layout,
+      watermark: state.service,
+    });
   });
 
   ctrlService.addEventListener("change", () => {
     state.service = ctrlService.value;
     renderPreview();
     persist();
+    trackEvent(EVENTS.STYLE_CHANGE, {
+      tool: "cards",
+      format: state.mode,
+      style: state.layout,
+      watermark: state.service,
+    });
   });
 
   ctrlColors.addEventListener("click", (e) => {
@@ -1383,8 +1403,20 @@ function initResultPage() {
     try {
       if (state.mode === "animated" && state.animatedUrl) {
         await exportAnimatedMp4();
+        trackEvent(EVENTS.EXPORT_CARD, {
+          tool: "cards",
+          action: "download",
+          format: "mp4",
+          style: state.layout,
+        });
       } else {
         await exportStaticPng();
+        trackEvent(EVENTS.EXPORT_CARD, {
+          tool: "cards",
+          action: "download",
+          format: "png",
+          style: state.layout,
+        });
       }
     } finally {
       downloadBtn.disabled = false;

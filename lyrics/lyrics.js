@@ -1,3 +1,4 @@
+import { EVENTS, trackEvent } from "../shared/analytics.js";
 import { deezer, lrclib } from "../shared/api.js";
 import { exportNodeAsPng } from "../shared/export.js";
 import { getCache, setCache, CACHE_TTL_CURRENT, CACHE_TTL_CLOSED } from "../shared/storage.js";
@@ -529,6 +530,7 @@ function initLandingPage() {
     e.preventDefault();
     const query = input.value.trim();
     if (!query) return;
+    trackEvent(EVENTS.SEARCH_SUBMIT, { tool: "lyrics" });
 
     if (!dropdown.hidden && results.length > 0 && activeIndex >= 0) {
       selectTrack(results[activeIndex]);
@@ -931,6 +933,7 @@ function initResultPage() {
     }
     renderLines();
     persist();
+    trackEvent(EVENTS.LYRICS_TRANSLATE, { enabled: state.isTranslated });
   });
 
   ctrlFormat.addEventListener("click", (e) => {
@@ -939,6 +942,12 @@ function initResultPage() {
     state.format = btn.dataset.format;
     renderPreview();
     persist();
+    trackEvent(EVENTS.STYLE_CHANGE, {
+      tool: "lyrics",
+      format: state.format,
+      style: state.layout,
+      watermark: state.service,
+    });
   });
 
   ctrlLayout.addEventListener("click", (e) => {
@@ -947,6 +956,12 @@ function initResultPage() {
     state.layout = btn.dataset.layout;
     renderPreview();
     persist();
+    trackEvent(EVENTS.STYLE_CHANGE, {
+      tool: "lyrics",
+      format: state.format,
+      style: state.layout,
+      watermark: state.service,
+    });
   });
 
   ctrlText.addEventListener("click", (e) => {
@@ -961,6 +976,12 @@ function initResultPage() {
     state.service = ctrlService.value;
     renderPreview();
     persist();
+    trackEvent(EVENTS.STYLE_CHANGE, {
+      tool: "lyrics",
+      format: state.format,
+      style: state.layout,
+      watermark: state.service,
+    });
   });
 
   ctrlColors.addEventListener("click", (e) => {
@@ -1075,6 +1096,12 @@ function initResultPage() {
         pixelRatio: 3,
         width: Math.round(targetRect.width),
         height: Math.round(targetRect.height),
+      });
+      trackEvent(EVENTS.EXPORT_CARD, {
+        tool: "lyrics",
+        action: "download",
+        format: state.format,
+        style: state.layout,
       });
     } finally {
       if (exportContainer.parentNode) {

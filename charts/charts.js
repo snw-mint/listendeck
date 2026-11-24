@@ -1,3 +1,4 @@
+import { EVENTS, trackEvent } from "../shared/analytics.js";
 import { deezer, listenbrainz } from "../shared/api.js";
 import { exportNodeAsPng } from "../shared/export.js";
 import {
@@ -649,6 +650,7 @@ function initLandingForm() {
         setCache(userCacheKey, true, CACHE_TTL_CURRENT);
       }
       addRecentUser("charts", user);
+      trackEvent(EVENTS.SEARCH_SUBMIT, { tool: "charts" });
       window.location.href = `/charts/result.html?user=${encodeURIComponent(user)}&period=this_month`;
     } catch (err) {
       if (err?.status === 404) {
@@ -823,6 +825,12 @@ function initExportModal(username) {
     setTimeout(async () => {
       try {
         await exportNodeAsPng(reportEl, `listendeck_report_${username}_${currentActivePeriod}.png`);
+        trackEvent(EVENTS.EXPORT_CARD, {
+          tool: "charts",
+          action: "download",
+          format: "story",
+          style: selectedBg,
+        });
         if (generationModal) {
           stateLoading.style.display = "none";
           stateComplete.style.display = "flex";
@@ -896,6 +904,7 @@ function initResultPage() {
       if (!nextPeriod || nextPeriod === currentActivePeriod) return;
       currentActivePeriod = nextPeriod;
       setActiveTab(currentActivePeriod);
+      trackEvent(EVENTS.PERIOD_CHANGE, { period: currentActivePeriod });
       const nextUrl = new URL(window.location.href);
       nextUrl.searchParams.set("user", username);
       nextUrl.searchParams.set("period", currentActivePeriod);
