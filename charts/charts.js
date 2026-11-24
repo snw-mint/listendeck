@@ -1,6 +1,7 @@
 import { EVENTS, trackEvent } from "../shared/analytics.js";
 import { deezer, listenbrainz } from "../shared/api.js";
 import { exportNodeAsPng } from "../shared/export.js";
+import { initExportBgControls } from "../shared/export-bg.js";
 import {
   addRecentUser,
   CACHE_TTL_CLOSED,
@@ -739,9 +740,12 @@ function initExportModal(username) {
   const nextBtn = document.getElementById("nextStepBtn");
   const backBtn = document.getElementById("backStepBtn");
   const confirmBtn = document.getElementById("confirmSettingsBtn");
-  const bgOptions = document.querySelectorAll(".bg-option");
+  const bgPicker = document.getElementById("bgStylePicker");
+  const meshBgEl = document.getElementById("storyReportBackground");
 
   if (!openBtn || !settingsModal) return;
+
+  const bgControls = initExportBgControls({ pickerEl: bgPicker, targetEl: meshBgEl });
 
   const openModal = () => {
     if (!currentChartsData) return;
@@ -761,13 +765,6 @@ function initExportModal(username) {
     if (e.target === settingsModal) closeModal();
   });
 
-  bgOptions.forEach((opt) => {
-    opt.addEventListener("click", () => {
-      bgOptions.forEach((item) => item.classList.remove("selected"));
-      opt.classList.add("selected");
-    });
-  });
-
   nextBtn?.addEventListener("click", () => {
     step1.style.display = "none";
     step2.style.display = "block";
@@ -782,18 +779,14 @@ function initExportModal(username) {
     if (!currentChartsData) return;
     closeModal();
 
-    const selectedBg = document.querySelector(".bg-option.selected")?.dataset.bg || "candy";
+    const selectedBg = bgControls.getSelectedStyle();
     const service = document.getElementById("serviceSelect")?.value || "listendeck";
     const isLight = Boolean(document.getElementById("themeToggleCheckbox")?.checked);
     const useScrobbles = Boolean(document.getElementById("useScrobblesCheckbox")?.checked);
 
     const reportEl = document.getElementById("storyReport");
     reportEl.className = isLight ? "theme-light" : "theme-dark";
-
-    const bgImg = document.getElementById("storyReportBackgroundImg");
-    if (bgImg) {
-      bgImg.src = `/assets/bg/${selectedBg}.webp`;
-    }
+    bgControls.applyCurrentBg(isLight);
 
     document.getElementById("storyReportTitle").textContent = "Recap";
     document.getElementById("storyServiceLogo").innerHTML = SERVICE_LOGOS[service] || "";

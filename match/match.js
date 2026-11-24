@@ -1,6 +1,7 @@
 import { EVENTS, trackEvent } from "../shared/analytics.js";
 import { deezer, listenbrainz } from "../shared/api.js";
 import { exportNodeAsPng } from "../shared/export.js";
+import { initExportBgControls } from "../shared/export-bg.js";
 import {
   addRecentUser,
   CACHE_TTL_CURRENT,
@@ -528,15 +529,15 @@ function initExportModal() {
   const closeBtn = document.getElementById("closeSettingsModal");
   const confirmBtn = document.getElementById("confirmSettingsBtn");
   const themeCheckbox = document.getElementById("themeToggleCheckbox");
-  const bgOptions = document.querySelectorAll(".bg-option");
+  const bgPicker = document.getElementById("bgStylePicker");
+  const meshBgEl = document.getElementById("storyReportBackground");
 
   if (!openBtn || !settingsModal) return;
 
+  const bgControls = initExportBgControls({ pickerEl: bgPicker, targetEl: meshBgEl });
+
   const openModal = () => {
     if (!currentMatchData) return;
-    if (themeCheckbox) {
-      themeCheckbox.checked = document.documentElement.getAttribute("data-theme") !== "dark";
-    }
     settingsModal.classList.add("show");
   };
 
@@ -551,27 +552,16 @@ function initExportModal() {
     if (e.target === settingsModal) closeModal();
   });
 
-  bgOptions.forEach((opt) => {
-    opt.addEventListener("click", () => {
-      bgOptions.forEach((item) => item.classList.remove("selected"));
-      opt.classList.add("selected");
-    });
-  });
-
   confirmBtn?.addEventListener("click", async () => {
     if (!currentMatchData) return;
     closeModal();
 
-    const selectedBg = document.querySelector(".bg-option.selected")?.dataset.bg || "candy";
+    const selectedBg = bgControls.getSelectedStyle();
     const isLight = Boolean(themeCheckbox?.checked);
 
     const reportEl = document.getElementById("storyReport");
     reportEl.className = isLight ? "theme-light" : "theme-dark";
-
-    const bgImg = document.getElementById("storyReportBackgroundImg");
-    if (bgImg) {
-      bgImg.src = `/assets/bg/${selectedBg}.webp`;
-    }
+    bgControls.applyCurrentBg(isLight);
 
     document.getElementById("storyReportTitle").textContent = "Match";
     document.getElementById("storyMatchScore").textContent = `${currentMatchData.matchPercentage}%`;

@@ -336,30 +336,35 @@
         </div>
 
         <div class="bg-palette" id="bgStylePicker">
-          <button type="button" class="bg-option" data-bg="red" style="background-color: #B90000;" aria-label="Red"
-            title="Red">
+          <button type="button" class="bg-option selected" data-bg="purple" style="background-color: #7c3aed;"
+            aria-label="Purple" aria-pressed="true" title="Purple">
             <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
           </button>
-          <button type="button" class="bg-option" data-bg="hot" style="background-color: #F37F3B;" aria-label="Hot"
-            title="Hot">
+          <button type="button" class="bg-option" data-bg="nature" style="background-color: #65c914;"
+            aria-label="Nature" aria-pressed="false" title="Nature">
             <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
           </button>
-          <button type="button" class="bg-option" data-bg="nature" style="background-color: #68CA2D;"
-            aria-label="Nature" title="Nature">
+          <button type="button" class="bg-option" data-bg="crimson" style="background-color: #ff2626;"
+            aria-label="Crimson" aria-pressed="false" title="Crimson">
             <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
           </button>
-          <button type="button" class="bg-option" data-bg="sea" style="background-color: #516AD9;" aria-label="Sea"
-            title="Sea">
+          <button type="button" class="bg-option" data-bg="sea" style="background-color: #3b82f6;"
+            aria-label="Sea" aria-pressed="false" title="Sea">
             <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
           </button>
-          <button type="button" class="bg-option selected" data-bg="candy" style="background-color: #A24CBC;"
-            aria-label="Candy" title="Candy">
+          <button type="button" class="bg-option" data-bg="sunset" style="background-color: #f97316;"
+            aria-label="Sunset" aria-pressed="false" title="Sunset">
             <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
           </button>
-          <button type="button" class="bg-option" data-bg="neutral" style="background-color: #6E6E73;"
-            aria-label="Neutral" title="Neutral">
-            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
-          </button>
+          <label class="bg-option bg-option-custom" title="Custom color">
+            <input type="color" class="bg-custom-color-input" value="#7c3aed" aria-label="Custom color" />
+            <svg class="bg-pick-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m2 22 1-1h3l9-9" />
+              <path d="M3 21v-3l9-9" />
+              <path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z" />
+            </svg>
+          </label>
         </div>
 
         <button type="button" id="nextStepBtn" class="ld-btn-primary">Continue</button>
@@ -425,7 +430,7 @@
 
   <div id="storyReportContainer" class="hidden-report-container">
     <div id="storyReport" class="theme-dark">
-      <img id="storyReportBackgroundImg" class="story-report-bg-img" crossorigin="anonymous" />
+      <div id="storyReportBackground" class="export-mesh-bg" aria-hidden="true"></div>
 
       <div class="story-header">
         <div id="storyReportTitle" class="story-title">Recap</div>
