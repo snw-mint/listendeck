@@ -448,6 +448,24 @@ button {
   text-decoration: underline;
 }
 
+.result-back-bar {
+  margin-bottom: 14px;
+}
+
+.result-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+}
+
+.result-back-link:hover {
+  color: var(--color-text);
+}
+
 .input-pill input {
   flex: 1;
   min-width: 0;

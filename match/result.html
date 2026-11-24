@@ -40,6 +40,231 @@
     </div>
   </header>
 
+  <main class="result-main">
+    <div class="result-back-bar">
+      <a href="/match/" class="result-back-link">
+        <animate-icons name="arrow-left" size="16"></animate-icons>
+        <span>Back</span>
+      </a>
+    </div>
+
+    <div id="match-report">
+      <section class="user-cover-section">
+        <div class="cover-image-container" id="coverContainer">
+          <img id="artistCover" alt="Shared Artist Cover" class="cover-image" />
+        </div>
+
+        <div class="match-hero-container">
+          <div class="match-user-side user1">
+            <h1 id="userDisplayName1" class="user-display-name">User 1</h1>
+            <div class="stats-cards-container">
+              <div class="stat-card">
+                <span class="stat-title">Listens</span>
+                <span id="userScrobbles1" class="stat-value skeleton skeleton-text"></span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-title">Artists</span>
+                <span id="userArtists1" class="stat-value skeleton skeleton-text"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="match-center-col">
+            <div class="tastometer-container" id="tastometerContainer">
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle class="bg" cx="50" cy="50" r="45" />
+                <circle class="progress" id="tastometerProgress" cx="50" cy="50" r="45" />
+              </svg>
+              <span class="percentage-text" id="tastometerText">0%</span>
+            </div>
+            <span id="tastometerTier" class="tastometer-tier skeleton skeleton-text"></span>
+            <button id="export-match-btn" type="button" class="export-btn">
+              <animate-icons name="download" size="18"></animate-icons>
+              <span>Export</span>
+            </button>
+          </div>
+
+          <div class="match-user-side user2">
+            <h1 id="userDisplayName2" class="user-display-name">User 2</h1>
+            <div class="stats-cards-container">
+              <div class="stat-card">
+                <span class="stat-title">Listens</span>
+                <span id="userScrobbles2" class="stat-value skeleton skeleton-text"></span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-title">Artists</span>
+                <span id="userArtists2" class="stat-value skeleton skeleton-text"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="charts-section">
+        <div class="charts-grid">
+          <section class="chart-card" id="cardUser1Vibe">
+            <h2 id="titleUser1Vibe">User 1<span class="logo-dot">.</span></h2>
+            <div class="lista-top" id="listUser1Vibe">
+              <div class="chart-item top-1 is-skeleton"><div class="top1-skeleton-bg skeleton"></div><div class="text-content"><span class="skeleton skeleton-text" style="width: 150px; height: 20px;"></span><span class="skeleton skeleton-text" style="width: 100px; height: 14px; margin-top: 8px;"></span></div></div>
+              <div class="chart-item"><span class="chart-rank">#2</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 145px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#3</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 165px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#4</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 130px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#5</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 155px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#6</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 140px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#7</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 170px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#8</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 125px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#9</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 150px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#10</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 135px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+            </div>
+          </section>
+
+          <section class="chart-card" id="cardCommonArtists">
+            <h2>Common Artists<span class="logo-dot">.</span></h2>
+            <div class="lista-top" id="listCommonArtists">
+              <div class="chart-item top-1 is-skeleton"><div class="top1-skeleton-bg skeleton"></div><div class="text-content"><span class="skeleton skeleton-text" style="width: 150px; height: 20px;"></span><span class="skeleton skeleton-text" style="width: 100px; height: 14px; margin-top: 8px;"></span></div></div>
+              <div class="chart-item"><span class="chart-rank">#2</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 145px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#3</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 165px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#4</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 130px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#5</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 155px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#6</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 140px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#7</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 170px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#8</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 125px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#9</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 150px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#10</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 135px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+            </div>
+          </section>
+
+          <section class="chart-card" id="cardUser2Vibe">
+            <h2 id="titleUser2Vibe">User 2<span class="logo-dot">.</span></h2>
+            <div class="lista-top" id="listUser2Vibe">
+              <div class="chart-item top-1 is-skeleton"><div class="top1-skeleton-bg skeleton"></div><div class="text-content"><span class="skeleton skeleton-text" style="width: 150px; height: 20px;"></span><span class="skeleton skeleton-text" style="width: 100px; height: 14px; margin-top: 8px;"></span></div></div>
+              <div class="chart-item"><span class="chart-rank">#2</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 145px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#3</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 165px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#4</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 130px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#5</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 155px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#6</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 140px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#7</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 170px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#8</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 125px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#9</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 150px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+              <div class="chart-item"><span class="chart-rank">#10</span><div class="chart-row-text"><span class="skeleton skeleton-text" style="width: 135px; height: 14px;"></span></div><span class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span></div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="generationSettingsModal" class="ld-modal" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="ld-modal-card">
+      <div class="ld-modal-header">
+        <div>
+          <h2 id="settingsModalTitle">Report Style</h2>
+          <p class="ld-modal-subtitle">Choose a theme for your match card</p>
+        </div>
+        <button type="button" class="ld-icon-btn" id="closeSettingsModal" aria-label="Close">
+          <animate-icons name="x" size="20"></animate-icons>
+        </button>
+      </div>
+
+      <div class="bg-palette" id="bgStylePicker">
+        <button type="button" class="bg-option" data-bg="red" style="background-color: #B90000;" aria-label="Red" title="Red">
+          <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+        </button>
+        <button type="button" class="bg-option" data-bg="hot" style="background-color: #F37F3B;" aria-label="Hot" title="Hot">
+          <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+        </button>
+        <button type="button" class="bg-option" data-bg="nature" style="background-color: #68CA2D;" aria-label="Nature" title="Nature">
+          <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+        </button>
+        <button type="button" class="bg-option" data-bg="sea" style="background-color: #516AD9;" aria-label="Sea" title="Sea">
+          <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+        </button>
+        <button type="button" class="bg-option selected" data-bg="candy" style="background-color: #A24CBC;" aria-label="Candy" title="Candy">
+          <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+        </button>
+        <button type="button" class="bg-option" data-bg="neutral" style="background-color: #6E6E73;" aria-label="Neutral" title="Neutral">
+          <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+        </button>
+      </div>
+
+      <label class="ld-switch-row">
+        <span>Light Theme</span>
+        <span class="ld-switch">
+          <input type="checkbox" id="themeToggleCheckbox" />
+          <span class="ld-slider"></span>
+        </span>
+      </label>
+
+      <button type="button" id="confirmSettingsBtn" class="ld-btn-primary">
+        <animate-icons name="download" size="18"></animate-icons>
+        <span>Generate Report</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="generationModal" class="ld-modal">
+    <div class="ld-status-pill">
+      <div id="generationStateLoading">
+        <span class="ld-loader"></span>
+      </div>
+      <div id="generationStateComplete" style="display: none;">
+        <animate-icons name="circle-check" size="64" color="#ffffff"></animate-icons>
+      </div>
+    </div>
+  </div>
+
+  <div id="storyReportContainer" class="hidden-report-container">
+    <div id="storyReport" class="theme-dark">
+      <img id="storyReportBackgroundImg" class="story-report-bg-img" crossorigin="anonymous" />
+
+      <div class="story-header">
+        <div id="storyReportTitle" class="story-title">Match</div>
+        <div id="storyMatchScore" class="story-match-score">0%</div>
+      </div>
+
+      <div class="story-period-header">
+        <div id="storyMonthYear" class="story-month-year">TOTAL STRANGERS</div>
+        <div id="storyTotalMinutes" class="story-total-minutes"></div>
+      </div>
+
+      <div class="story-body" id="storyBody">
+        <div class="story-lists-container">
+          <div class="story-list-block">
+            <h3>Top Artists</h3>
+            <div id="storyListArtists1" class="story-items-list"></div>
+          </div>
+          <div class="story-list-block">
+            <h3>Top Songs</h3>
+            <div id="storyListSongs1" class="story-items-list"></div>
+          </div>
+          <div class="story-list-block">
+            <h3>Top Albums</h3>
+            <div id="storyListAlbums1" class="story-items-list"></div>
+          </div>
+        </div>
+
+        <div class="story-lists-container user2">
+          <div class="story-list-block">
+            <h3>Top Artists</h3>
+            <div id="storyListArtists2" class="story-items-list"></div>
+          </div>
+          <div class="story-list-block">
+            <h3>Top Songs</h3>
+            <div id="storyListSongs2" class="story-items-list"></div>
+          </div>
+          <div class="story-list-block">
+            <h3>Top Albums</h3>
+            <div id="storyListAlbums2" class="story-items-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-footer">
+        <div class="story-brand">listendeck.vercel.app</div>
+      </div>
+    </div>
+  </div>
+
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
