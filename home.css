@@ -132,6 +132,36 @@
   color: var(--color-accent);
 }
 
+.directory-propose {
+  margin-top: 16px;
+  padding: 8px 12px;
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  transition: color 0.16s ease;
+}
+
+.directory-propose-arrow {
+  display: inline-block;
+  transition: transform 0.16s ease, color 0.16s ease;
+}
+
+.directory-propose:hover,
+.directory-propose:focus-visible {
+  color: var(--color-text);
+  outline: none;
+}
+
+.directory-propose:hover .directory-propose-arrow,
+.directory-propose:focus-visible .directory-propose-arrow {
+  transform: translateX(3px);
+  color: var(--color-accent);
+}
+
 @media (max-width: 640px) {
   .directory-main {
     padding: 16px;
