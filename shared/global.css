@@ -4,7 +4,7 @@
   --font-sans: 'Onest', sans-serif;
   --color-accent: #5B52B6;
   --color-bg: #FAFAFA;
-  --color-surface: #FFFFFF;
+  --color-surface: #F5F5F7;
   --color-text: #141416;
   --color-text-muted: #6E6E77;
   --color-border: rgba(20, 20, 22, 0.1);
@@ -408,7 +408,7 @@ button {
   align-items: center;
   gap: 8px;
   padding: 6px 6px 6px 18px;
-  background-color: #F5F5F7;
+  background-color: var(--color-surface);
   border-radius: var(--radius);
   transition: border-color 0.2s ease;
 }
