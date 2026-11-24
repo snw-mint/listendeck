@@ -1,0 +1,55 @@
+{
+  "id": "/",
+  "name": "listendeck.",
+  "short_name": "listendeck",
+  "description": "Open-source browser music utilities for ListenBrainz charts, taste match, LRCLIB lyric cards, and Deezer cover cards.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#5B52B6",
+  "background_color": "#FAFAFA",
+  "categories": ["music", "utilities"],
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Charts",
+      "short_name": "Charts",
+      "url": "/charts/"
+    },
+    {
+      "name": "Match",
+      "short_name": "Match",
+      "url": "/match/"
+    },
+    {
+      "name": "Lyrics",
+      "short_name": "Lyrics",
+      "url": "/lyrics/"
+    },
+    {
+      "name": "Cards",
+      "short_name": "Cards",
+      "url": "/cards/"
+    }
+  ]
+}
