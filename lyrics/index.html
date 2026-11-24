@@ -51,7 +51,7 @@
 
         <form id="lyrics-form" class="tool-form lyrics-search-form" autocomplete="off">
           <div class="search-dropdown-wrap" id="lyrics-search-wrap">
-            <div class="input-pill" id="lyrics-input-pill">
+            <div class="input-pill lyrics-input-pill" id="lyrics-input-pill">
               <span class="search-leading-icon" aria-hidden="true">
                 <animate-icons name="search" size="18"></animate-icons>
               </span>
@@ -65,7 +65,9 @@
                 aria-expanded="false"
                 required
               />
-              <button type="submit" id="lyrics-submit-btn" class="input-pill-btn">Search</button>
+              <button type="button" id="lyrics-clear-btn" class="search-clear-btn" aria-label="Clear search" hidden>
+                <animate-icons name="x" size="16"></animate-icons>
+              </button>
             </div>
 
             <div id="lyrics-dropdown" class="search-dropdown" role="listbox" hidden></div>

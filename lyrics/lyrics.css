@@ -7,12 +7,38 @@
   width: 100%;
 }
 
+.lyrics-input-pill {
+  padding: 6px 12px 6px 16px;
+  min-height: 52px;
+}
+
 .search-leading-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--color-text-muted);
   flex-shrink: 0;
+}
+
+.search-clear-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.search-clear-btn:hover {
+  color: var(--color-text);
+  background-color: var(--color-border);
+}
+
+.search-clear-btn[hidden] {
+  display: none;
 }
 
 .search-dropdown {

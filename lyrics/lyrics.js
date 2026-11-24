@@ -385,6 +385,7 @@ function loadSession() {
 function initLandingPage() {
   const form = document.getElementById("lyrics-form");
   const input = document.getElementById("lyrics-query");
+  const clearBtn = document.getElementById("lyrics-clear-btn");
   const dropdown = document.getElementById("lyrics-dropdown");
   const wrap = document.getElementById("lyrics-search-wrap");
   const errorEl = document.getElementById("lyrics-error");
@@ -476,6 +477,7 @@ function initLandingPage() {
   input.addEventListener("input", () => {
     errorEl.textContent = "";
     clearTimeout(debounceTimer);
+    if (clearBtn) clearBtn.hidden = input.value.length === 0;
     const val = input.value.trim();
     if (val.length < 2) {
       results = [];
@@ -484,6 +486,18 @@ function initLandingPage() {
     }
     debounceTimer = setTimeout(() => runSearch(val), 280);
   });
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      clearTimeout(debounceTimer);
+      input.value = "";
+      clearBtn.hidden = true;
+      results = [];
+      activeIndex = -1;
+      setOpen(false);
+      input.focus();
+    });
+  }
 
   input.addEventListener("focus", () => {
     if (results.length > 0) setOpen(true);
@@ -516,15 +530,12 @@ function initLandingPage() {
     const query = input.value.trim();
     if (!query) return;
 
-    if (results.length > 0) {
-      selectTrack(results[activeIndex >= 0 ? activeIndex : 0]);
+    if (!dropdown.hidden && results.length > 0 && activeIndex >= 0) {
+      selectTrack(results[activeIndex]);
       return;
     }
 
     await runSearch(query);
-    if (results.length === 1) {
-      selectTrack(results[0]);
-    }
   });
 
   document.addEventListener("click", (e) => {
