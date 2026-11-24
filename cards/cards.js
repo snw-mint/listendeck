@@ -1078,7 +1078,7 @@ function initResultPage() {
       const relH = coverRect.height;
       const borderRadius = parseFloat(window.getComputedStyle(coverContainer).borderRadius) || 8;
 
-      const scale = state.layout === "card" ? 3 : 2;
+      const scale = state.layout === "card" ? 4 : 3;
       const baseCanvas = await toCanvas(exportNode, {
         pixelRatio: scale,
         cacheBust: true,
@@ -1103,6 +1103,8 @@ function initResultPage() {
       const offsetX = Math.floor((canvas.width - baseCanvas.width) / 2);
       const offsetY = Math.floor((canvas.height - baseCanvas.height) / 2);
       const ctx = canvas.getContext("2d", { alpha: false });
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
 
       const coverW = Math.max(2, Math.round(relW * scale));
       const coverH = Math.max(2, Math.round(relH * scale));
@@ -1148,7 +1150,7 @@ function initResultPage() {
           "avc1.4d0028",
           "avc1.640028",
         ];
-        const accelCandidates = ["prefer-software", "no-preference"];
+        const accelCandidates = ["no-preference", "prefer-software"];
         let encoderConfig = null;
 
         outerLoop: for (const hardwareAcceleration of accelCandidates) {
@@ -1158,7 +1160,7 @@ function initResultPage() {
                 codec,
                 width: canvas.width,
                 height: canvas.height,
-                bitrate: 5000000,
+                bitrate: 10000000,
                 framerate: fps,
                 latencyMode: "realtime",
                 hardwareAcceleration,
@@ -1283,7 +1285,7 @@ function initResultPage() {
         const stream = canvas.captureStream(fps);
         const recorder = new MediaRecorder(
           stream,
-          mimeType ? { mimeType, videoBitsPerSecond: 8000000 } : { videoBitsPerSecond: 8000000 }
+          mimeType ? { mimeType, videoBitsPerSecond: 10000000 } : { videoBitsPerSecond: 10000000 }
         );
         const chunks = [];
         recorder.ondataavailable = (e) => {
