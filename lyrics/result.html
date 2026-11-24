@@ -48,16 +48,12 @@
         <span id="lyrics-back-label">Search</span>
       </button>
 
-      <nav class="lyrics-stepper" aria-label="Steps">
-        <button type="button" class="stepper-pill active" data-step="select" id="step-pill-select">
-          <span class="stepper-num">1</span>
-          <span>Lyrics</span>
-        </button>
-        <span class="stepper-sep" aria-hidden="true">/</span>
-        <button type="button" class="stepper-pill" data-step="style" id="step-pill-style" disabled>
-          <span class="stepper-num">2</span>
-          <span>Customize</span>
-        </button>
+      <nav class="lyrics-breadcrumb" aria-label="Breadcrumb">
+        <a href="/lyrics/" class="breadcrumb-link">Search</a>
+        <span class="breadcrumb-sep" aria-hidden="true">/</span>
+        <button type="button" class="breadcrumb-link active" data-step="select" id="step-pill-select">Lyrics</button>
+        <span class="breadcrumb-sep" aria-hidden="true">/</span>
+        <button type="button" class="breadcrumb-link" data-step="style" id="step-pill-style" disabled>Customize</button>
       </nav>
     </div>
 
@@ -66,10 +62,10 @@
         <div class="sheet-header">
           <div class="sheet-track">
             <div class="sheet-cover-wrap">
-              <img id="sheet-cover" alt="" class="sheet-cover" />
               <span class="sheet-cover-fallback" id="sheet-cover-fallback" aria-hidden="true">
                 <animate-icons name="music" size="20"></animate-icons>
               </span>
+              <img id="sheet-cover" alt="" class="sheet-cover" />
             </div>
             <div class="sheet-track-meta">
               <h1 id="sheet-title" class="sheet-title">Loading track...</h1>
@@ -78,17 +74,26 @@
           </div>
 
           <div class="sheet-translate-controls">
-            <select id="lyrics-lang-select" class="sheet-lang-select" aria-label="Translation language">
-              <option value="pt">PT</option>
-              <option value="en">EN</option>
-              <option value="es">ES</option>
-              <option value="fr">FR</option>
-              <option value="de">DE</option>
-              <option value="it">IT</option>
-              <option value="ja">JA</option>
-              <option value="ko">KO</option>
-            </select>
+            <div class="sheet-lang-wrap">
+              <span class="sheet-lang-icon" aria-hidden="true">
+                <animate-icons name="globe" size="15"></animate-icons>
+              </span>
+              <select id="lyrics-lang-select" class="sheet-lang-select" aria-label="Translation language">
+                <option value="pt">PT</option>
+                <option value="en">EN</option>
+                <option value="es">ES</option>
+                <option value="fr">FR</option>
+                <option value="de">DE</option>
+                <option value="it">IT</option>
+                <option value="ja">JA</option>
+                <option value="ko">KO</option>
+              </select>
+              <span class="sheet-lang-chevron" aria-hidden="true">
+                <animate-icons name="chevron-down" size="14"></animate-icons>
+              </span>
+            </div>
             <button type="button" id="btn-translate-toggle" class="sheet-translate-btn">
+              <animate-icons name="languages" size="16"></animate-icons>
               <span id="translate-btn-label">Translate</span>
             </button>
           </div>

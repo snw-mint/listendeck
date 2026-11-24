@@ -173,58 +173,37 @@
   margin-bottom: 18px;
 }
 
-.lyrics-stepper {
+.lyrics-breadcrumb {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 10px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
+  font-size: 0.86rem;
 }
 
-.stepper-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.84rem;
-  font-weight: 600;
+.breadcrumb-link {
   color: var(--color-text-muted);
-  padding: 4px 8px;
-  border-radius: 999px;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  font-weight: 500;
+  transition: color 0.15s ease;
 }
 
-.stepper-pill:disabled {
-  opacity: 0.45;
+.breadcrumb-link:hover:not(:disabled):not(.active) {
+  color: var(--color-text);
+}
+
+.breadcrumb-link.active {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.breadcrumb-link:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-.stepper-pill.active {
-  color: var(--color-text);
-  background-color: var(--color-border);
-}
-
-.stepper-num {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: var(--color-border);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.72rem;
-}
-
-.stepper-pill.active .stepper-num {
-  background-color: var(--color-accent);
-  color: #ffffff;
-}
-
-.stepper-sep {
-  font-size: 0.78rem;
+.breadcrumb-sep {
   color: var(--color-text-muted);
-  opacity: 0.5;
+  opacity: 0.45;
+  user-select: none;
 }
 
 .lyrics-step-panel[hidden] {
@@ -235,7 +214,8 @@
   width: 100%;
   max-width: 740px;
   margin: 0 auto;
-  height: clamp(460px, calc(100vh - 220px), 720px);
+  height: calc(100dvh - 210px);
+  min-height: 460px;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
@@ -281,11 +261,16 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
+  z-index: 1;
   transition: opacity 0.25s ease;
 }
 
 .sheet-cover.is-loaded {
   opacity: 1;
+}
+
+.sheet-cover-fallback[hidden] {
+  display: none;
 }
 
 .sheet-cover-fallback {
@@ -317,21 +302,55 @@
 .sheet-translate-controls {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
-.sheet-lang-select {
+.sheet-lang-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
   height: 34px;
-  padding: 0 8px;
   border-radius: 10px;
   border: 1px solid var(--color-border);
   background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: border-color 0.15s ease;
+}
+
+.sheet-lang-wrap:hover {
+  border-color: var(--color-accent);
+}
+
+.sheet-lang-icon {
+  position: absolute;
+  left: 9px;
+  display: inline-flex;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.sheet-lang-chevron {
+  position: absolute;
+  right: 8px;
+  display: inline-flex;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.sheet-lang-select {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 100%;
+  padding: 0 26px 0 28px;
+  border: none;
+  background: transparent;
   color: var(--color-text);
   font: inherit;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
+  outline: none;
 }
 
 .sheet-translate-btn {
@@ -343,6 +362,9 @@
   color: var(--color-text);
   font-size: 0.82rem;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
@@ -389,7 +411,6 @@
 
 .lyric-line.selected {
   background-color: rgba(91, 82, 182, 0.14);
-  border-color: var(--color-accent);
 }
 
 .lyric-line-orig {
@@ -437,6 +458,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -852,11 +874,11 @@
   transition: transform 0.2s ease;
 }
 
-.toggle-switch input:checked + .toggle-slider {
+.toggle-switch input:checked+.toggle-slider {
   background-color: var(--color-accent);
 }
 
-.toggle-switch input:checked + .toggle-slider::before {
+.toggle-switch input:checked+.toggle-slider::before {
   transform: translateX(18px);
 }
 

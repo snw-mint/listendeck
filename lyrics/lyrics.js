@@ -459,6 +459,7 @@ function initResultPage() {
   const pillStyle = document.getElementById("step-pill-style");
 
   const sheetCover = document.getElementById("sheet-cover");
+  const sheetCoverFallback = document.getElementById("sheet-cover-fallback");
   const sheetTitle = document.getElementById("sheet-title");
   const sheetArtist = document.getElementById("sheet-artist");
   const linesContainer = document.getElementById("lyrics-lines-container");
@@ -829,7 +830,10 @@ function initResultPage() {
 
     const coverUrl = track.coverHq || track.cover;
     if (coverUrl) {
-      sheetCover.onload = () => sheetCover.classList.add("is-loaded");
+      sheetCover.onload = () => {
+        sheetCover.classList.add("is-loaded");
+        if (sheetCoverFallback) sheetCoverFallback.hidden = true;
+      };
       sheetCover.src = track.cover || coverUrl;
       loadImageAsDataUrl(coverUrl).then((dataUrl) => {
         state.coverDataUrl = dataUrl;

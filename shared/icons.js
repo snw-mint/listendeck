@@ -17,6 +17,8 @@ import {
   Music,
   Paintbrush,
   Search,
+  Languages,
+  Globe,
 } from "@animateicons/vanilla/lucide";
 
 defineIcons({
@@ -37,6 +39,8 @@ defineIcons({
   Music,
   Paintbrush,
   Search,
+  Languages,
+  Globe,
 });
 
 if (typeof document !== "undefined") {
