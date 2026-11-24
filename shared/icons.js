@@ -16,6 +16,7 @@ import {
   ImagePlus,
   Music,
   Paintbrush,
+  Search,
 } from "@animateicons/vanilla/lucide";
 
 defineIcons({
@@ -35,6 +36,7 @@ defineIcons({
   ImagePlus,
   Music,
   Paintbrush,
+  Search,
 });
 
 if (typeof document !== "undefined") {

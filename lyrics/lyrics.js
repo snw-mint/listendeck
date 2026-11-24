@@ -348,17 +348,14 @@ function initLandingPage() {
 
     dropdown.innerHTML = results
       .map((item, idx) => {
-        const sub = item.album ? `${item.artist} · ${item.album}` : item.artist;
+        const label = item.artist ? `${item.title} - ${item.artist}` : item.title;
         const activeClass = idx === activeIndex ? " is-active" : "";
         return `
           <button type="button" class="dropdown-item${activeClass}" role="option" data-index="${idx}">
             <span class="dropdown-item-icon" aria-hidden="true">
               <animate-icons name="music" size="16"></animate-icons>
             </span>
-            <span class="dropdown-item-text">
-              <span class="dropdown-item-title">${escapeHtml(item.title)}</span>
-              <span class="dropdown-item-sub">${escapeHtml(sub)}</span>
-            </span>
+            <span class="dropdown-item-label">${escapeHtml(label)}</span>
           </button>
         `;
       })
