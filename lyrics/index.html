@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lyrics · listendeck.</title>
+  <title>Lyrics Card Generator · listendeck.</title>
+  <meta name="description" content="Search song lyrics via LRCLIB, pick your favorite lines, and export clean shareable cards and Stories." />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <link rel="stylesheet" href="/shared/global.css" />
   <link rel="stylesheet" href="/lyrics/lyrics.css" />
@@ -43,19 +44,56 @@
   <main class="tool-main">
     <div class="tool-split">
       <section class="tool-input-col">
-        <h1 class="tool-title">Lyrics</h1>
+        <h1 class="tool-title">Turn Your Favorite Lyrics Into Cards<span class="logo-dot">.</span></h1>
         <p class="tool-description">
-          Search track lyrics via LRCLIB and export clean cards inspired by your favorite streaming layouts.
+          Search any track, pick your favorite lines, and export minimal shareable cards or Stories powered by LRCLIB and Deezer.
         </p>
-        <form id="lyrics-form" class="tool-form">
-          <div class="input-pill">
-            <input type="text" id="lyrics-query" placeholder="Track or artist name" autocomplete="off" required />
-            <button type="submit" class="input-pill-btn">Search</button>
+
+        <form id="lyrics-form" class="tool-form lyrics-search-form" autocomplete="off">
+          <div class="search-dropdown-wrap" id="lyrics-search-wrap">
+            <div class="input-pill" id="lyrics-input-pill">
+              <span class="search-leading-icon" aria-hidden="true">
+                <animate-icons name="music" size="18"></animate-icons>
+              </span>
+              <input
+                type="text"
+                id="lyrics-query"
+                placeholder="Track, artist, or album..."
+                autocomplete="off"
+                aria-autocomplete="list"
+                aria-controls="lyrics-dropdown"
+                aria-expanded="false"
+                required
+              />
+              <button type="submit" id="lyrics-submit-btn" class="input-pill-btn">Search</button>
+            </div>
+
+            <div id="lyrics-dropdown" class="search-dropdown" role="listbox" hidden></div>
           </div>
+          <p id="lyrics-error" class="form-error" role="alert" aria-live="polite"></p>
         </form>
       </section>
 
-      <section class="tool-preview-col" aria-label="Example preview"></section>
+      <section class="tool-preview-col lyrics-preview-col" aria-label="Example preview">
+        <div class="preview-lyrics-card" aria-hidden="true">
+          <div class="preview-lyrics-head">
+            <img src="/assets/preview/charts-song.webp" alt="" class="preview-lyrics-cover" />
+            <div class="preview-lyrics-meta">
+              <strong>Pink + White</strong>
+              <span>Frank Ocean</span>
+            </div>
+          </div>
+          <div class="preview-lyrics-verses">
+            <p>That's the way everyday goes</p>
+            <p>Every time we've no control</p>
+            <p>If the sky is pink and white</p>
+            <p>If the ground is black and yellow</p>
+          </div>
+          <div class="preview-lyrics-foot">
+            <span>listendeck<span class="logo-dot">.</span></span>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 

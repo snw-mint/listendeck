@@ -6,6 +6,7 @@ import {
   Menu,
   X,
   ArrowLeft,
+  ArrowRight,
   Download,
   Check,
   ChevronLeft,
@@ -13,6 +14,8 @@ import {
   CircleCheck,
   Calendar,
   ImagePlus,
+  Music,
+  Paintbrush,
 } from "@animateicons/vanilla/lucide";
 
 defineIcons({
@@ -22,6 +25,7 @@ defineIcons({
   Menu,
   X,
   ArrowLeft,
+  ArrowRight,
   Download,
   Check,
   ChevronLeft,
@@ -29,6 +33,8 @@ defineIcons({
   CircleCheck,
   Calendar,
   ImagePlus,
+  Music,
+  Paintbrush,
 });
 
 if (typeof document !== "undefined") {

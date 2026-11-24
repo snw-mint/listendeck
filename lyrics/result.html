@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lyrics · listendeck.</title>
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <link rel="stylesheet" href="/shared/global.css" />
   <link rel="stylesheet" href="/lyrics/lyrics.css" />
@@ -39,6 +40,170 @@
       </div>
     </div>
   </header>
+
+  <main class="result-main lyrics-result-main">
+    <div class="lyrics-topbar">
+      <button type="button" id="lyrics-back-btn" class="result-back-link">
+        <animate-icons name="arrow-left" size="16"></animate-icons>
+        <span id="lyrics-back-label">Search</span>
+      </button>
+
+      <nav class="lyrics-stepper" aria-label="Steps">
+        <button type="button" class="stepper-pill active" data-step="select" id="step-pill-select">
+          <span class="stepper-num">1</span>
+          <span>Lyrics</span>
+        </button>
+        <span class="stepper-sep" aria-hidden="true">/</span>
+        <button type="button" class="stepper-pill" data-step="style" id="step-pill-style" disabled>
+          <span class="stepper-num">2</span>
+          <span>Customize</span>
+        </button>
+      </nav>
+    </div>
+
+    <section id="step-select" class="lyrics-step-panel">
+      <div class="lyrics-sheet">
+        <div class="sheet-header">
+          <div class="sheet-track">
+            <div class="sheet-cover-wrap">
+              <img id="sheet-cover" alt="" class="sheet-cover" />
+              <span class="sheet-cover-fallback" id="sheet-cover-fallback" aria-hidden="true">
+                <animate-icons name="music" size="20"></animate-icons>
+              </span>
+            </div>
+            <div class="sheet-track-meta">
+              <h1 id="sheet-title" class="sheet-title">Loading track...</h1>
+              <p id="sheet-artist" class="sheet-artist"></p>
+            </div>
+          </div>
+
+          <div class="sheet-translate-controls">
+            <select id="lyrics-lang-select" class="sheet-lang-select" aria-label="Translation language">
+              <option value="pt">PT</option>
+              <option value="en">EN</option>
+              <option value="es">ES</option>
+              <option value="fr">FR</option>
+              <option value="de">DE</option>
+              <option value="it">IT</option>
+              <option value="ja">JA</option>
+              <option value="ko">KO</option>
+            </select>
+            <button type="button" id="btn-translate-toggle" class="sheet-translate-btn">
+              <span id="translate-btn-label">Translate</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="sheet-body" id="lyrics-lines-container">
+          <div class="lyric-skeleton skeleton"></div>
+          <div class="lyric-skeleton skeleton" style="width: 78%;"></div>
+          <div class="lyric-skeleton skeleton" style="width: 92%;"></div>
+          <div class="lyric-skeleton skeleton" style="width: 68%;"></div>
+          <div class="lyric-skeleton skeleton" style="width: 84%;"></div>
+          <div class="lyric-skeleton skeleton" style="width: 72%;"></div>
+        </div>
+
+        <div class="sheet-footer">
+          <div class="sheet-footer-left">
+            <span id="selection-count-badge" class="selection-count">0 / 5</span>
+            <button type="button" id="btn-clear-selection" class="sheet-clear-btn" hidden>Clear</button>
+          </div>
+          <button type="button" id="btn-to-style" class="primary-action-btn" disabled>
+            <span>Continue</span>
+            <animate-icons name="arrow-right" size="16"></animate-icons>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="step-style" class="lyrics-step-panel" hidden>
+      <div class="style-workspace">
+        <div class="style-preview-stage">
+          <div id="lyrics-export-node" class="export-stage format-card layout-solid text-light">
+            <div class="export-stage-bg" id="export-stage-bg"></div>
+            <div class="export-card" id="export-card">
+              <div class="export-card-bg" id="export-card-bg"></div>
+              <div class="export-card-content">
+                <div class="export-card-header">
+                  <img id="export-cover" alt="" class="export-cover" />
+                  <div class="export-meta">
+                    <strong id="export-title"></strong>
+                    <span id="export-artist"></span>
+                  </div>
+                </div>
+                <div id="export-verses" class="export-verses"></div>
+                <div class="export-card-footer">
+                  <span class="export-brand">listendeck<span class="export-brand-dot">.</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="style-controls-panel">
+          <div class="control-group">
+            <span class="control-label">Format</span>
+            <div class="segmented-group" id="ctrl-format">
+              <button type="button" class="seg-btn active" data-format="card">Card</button>
+              <button type="button" class="seg-btn" data-format="story">Story</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <span class="control-label">Style</span>
+            <div class="segmented-group" id="ctrl-layout">
+              <button type="button" class="seg-btn active" data-layout="solid">Solid</button>
+              <button type="button" class="seg-btn" data-layout="modern">Modern</button>
+              <button type="button" class="seg-btn" data-layout="blurred">Blurred</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <span class="control-label">Text</span>
+            <div class="segmented-group" id="ctrl-text">
+              <button type="button" class="seg-btn active" data-text="light">White</button>
+              <button type="button" class="seg-btn" data-text="dark">Black</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-label-row">
+              <span class="control-label">Color</span>
+              <button type="button" id="btn-reset-color" class="control-reset-btn" hidden>Auto</button>
+            </div>
+            <div class="color-swatches" id="ctrl-colors">
+              <button type="button" class="swatch-btn active" data-color="auto" id="swatch-auto" title="Auto color"></button>
+              <button type="button" class="swatch-btn" data-color="#141416" style="--sw: #141416;" title="Charcoal"></button>
+              <button type="button" class="swatch-btn" data-color="#5B52B6" style="--sw: #5B52B6;" title="Indigo"></button>
+              <button type="button" class="swatch-btn" data-color="#1F4E5F" style="--sw: #1F4E5F;" title="Teal"></button>
+              <button type="button" class="swatch-btn" data-color="#7A2E3A" style="--sw: #7A2E3A;" title="Burgundy"></button>
+              <button type="button" class="swatch-btn" data-color="#F2F2F5" style="--sw: #F2F2F5;" title="Paper"></button>
+              <label class="swatch-picker-btn" title="Custom color">
+                <animate-icons name="paintbrush" size="15"></animate-icons>
+                <input type="color" id="ctrl-custom-color" value="#5B52B6" />
+              </label>
+            </div>
+          </div>
+
+          <div class="control-group control-toggle-row" id="ctrl-bilingual-row" hidden>
+            <div>
+              <span class="control-label">Show original</span>
+              <span class="control-hint">Original text above translation</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="ctrl-bilingual" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <button type="button" id="btn-download-lyrics" class="primary-action-btn download-full-btn">
+            <animate-icons name="download" size="18"></animate-icons>
+            <span id="download-btn-label">Download PNG</span>
+          </button>
+        </aside>
+      </div>
+    </section>
+  </main>
 
   <footer class="site-footer">
     <div class="footer-inner">
