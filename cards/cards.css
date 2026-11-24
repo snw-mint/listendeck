@@ -286,7 +286,7 @@
   gap: 0.55rem;
   box-sizing: border-box;
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 10px 20px #00000020;
 }
 
 .cards-layout-frame.format-card .music-card-target {
