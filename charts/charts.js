@@ -210,11 +210,17 @@ function aggregateListens(listens, elapsedDays) {
       const existing = trackMap.get(key);
       if (existing) {
         existing.plays += 1;
+        if (releaseName) {
+          existing.releases.set(releaseName, (existing.releases.get(releaseName) || 0) + 1);
+        }
       } else {
+        const releases = new Map();
+        if (releaseName) releases.set(releaseName, 1);
         trackMap.set(key, {
           title: trackName,
           subtitle: artistName,
           plays: 1,
+          releases,
           caaReleaseMbid: mapping.caa_release_mbid || "",
           caaId: mapping.caa_id || "",
           cover: "",
@@ -244,12 +250,32 @@ function aggregateListens(listens, elapsedDays) {
   const totalMinutes = Math.round(totalDurationMs / 60000);
   const dailyAvg = Math.round(totalListens / Math.max(1, elapsedDays));
 
+  const topTracks = sortAndSliceTop(trackMap, 10).map((item) => {
+    let preferredRelease = "";
+    let bestCount = 0;
+    for (const [rel, count] of item.releases.entries()) {
+      if (count > bestCount) {
+        bestCount = count;
+        preferredRelease = rel;
+      }
+    }
+    return {
+      title: item.title,
+      subtitle: item.subtitle,
+      plays: item.plays,
+      releaseName: preferredRelease,
+      caaReleaseMbid: item.caaReleaseMbid,
+      caaId: item.caaId,
+      cover: item.cover,
+    };
+  });
+
   return {
     totalListens,
     totalMinutes,
     dailyAvg,
     artists: sortAndSliceTop(artistMap, 10),
-    tracks: sortAndSliceTop(trackMap, 10),
+    tracks: topTracks,
     albums: sortAndSliceTop(albumMap, 10),
   };
 }
@@ -379,19 +405,32 @@ function renderChartList(container, items, { allowImageUpload = false } = {}) {
   }
 }
 
-async function resolveTopCover(type, query, caaReleaseMbid, caaId) {
+function normalizeMatch(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s*\([^)]*\)/g, "")
+    .replace(/[^\p{L}\p{N}\s]/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function pickBestAlbumMatch(items, targetTitle) {
+  if (!items.length) return null;
+  const target = normalizeMatch(targetTitle);
+  return (
+    items.find((al) => normalizeMatch(al.title) === target) ||
+    items.find((al) => normalizeMatch(al.title).includes(target) || target.includes(normalizeMatch(al.title))) ||
+    items[0]
+  );
+}
+
+async function resolveAlbumCover(albumTitle, artistName, caaReleaseMbid, caaId) {
   try {
-    const res = await deezer.search(type, query, 1);
-    const first = res?.data?.[0];
-    if (type === "artist") {
-      return first?.picture_xl || first?.picture_big || first?.picture_medium || "";
-    }
-    if (type === "track") {
-      return first?.album?.cover_xl || first?.album?.cover_big || first?.album?.cover_medium || "";
-    }
-    if (type === "album") {
-      return first?.cover_xl || first?.cover_big || first?.cover_medium || "";
-    }
+    const query = `${albumTitle} ${artistName}`.trim();
+    const res = await deezer.search("album", query, 8);
+    const chosen = pickBestAlbumMatch(res?.data || [], albumTitle);
+    const cover = chosen?.cover_xl || chosen?.cover_big || chosen?.cover_medium || "";
+    if (cover) return cover;
   } catch {
   }
 
@@ -399,6 +438,54 @@ async function resolveTopCover(type, query, caaReleaseMbid, caaId) {
     return `https://coverartarchive.org/release/${caaReleaseMbid}/${caaId}-500.jpg`;
   }
   return "";
+}
+
+async function resolveTrackCover(topTrack) {
+  const { title, subtitle, releaseName, caaReleaseMbid, caaId } = topTrack;
+
+  if (releaseName) {
+    try {
+      const trackRes = await deezer.search("track", `${title} ${subtitle}`, 10);
+      const trackItems = trackRes?.data || [];
+      const targetAlbum = normalizeMatch(releaseName);
+      const albumMatchedTrack = trackItems.find((t) => {
+        const alb = normalizeMatch(t.album?.title);
+        return alb && (alb === targetAlbum || alb.includes(targetAlbum) || targetAlbum.includes(alb));
+      });
+      if (albumMatchedTrack) {
+        const cover = albumMatchedTrack.album?.cover_xl || albumMatchedTrack.album?.cover_big || albumMatchedTrack.album?.cover_medium || "";
+        if (cover) return cover;
+      }
+
+      const albumCover = await resolveAlbumCover(releaseName, subtitle, "", "");
+      if (albumCover) return albumCover;
+    } catch {
+    }
+  }
+
+  if (caaReleaseMbid && caaId) {
+    return `https://coverartarchive.org/release/${caaReleaseMbid}/${caaId}-500.jpg`;
+  }
+
+  try {
+    const res = await deezer.search("track", `${title} ${subtitle}`, 5);
+    const first = res?.data?.[0];
+    return first?.album?.cover_xl || first?.album?.cover_big || first?.album?.cover_medium || "";
+  } catch {
+    return "";
+  }
+}
+
+async function resolveArtistCover(artistName) {
+  try {
+    const res = await deezer.search("artist", artistName, 5);
+    const items = res?.data || [];
+    const target = artistName.toLowerCase().trim();
+    const chosen = items.find((a) => a.name?.toLowerCase().trim() === target) || items[0];
+    return chosen?.picture_xl || chosen?.picture_big || chosen?.picture_medium || "";
+  } catch {
+    return "";
+  }
 }
 
 async function resolveVibe(topTrack, topAlbum) {
@@ -433,12 +520,10 @@ async function fetchChartsData(username, period) {
   const { artists, tracks, albums } = aggregated;
 
   const [artistCover, trackCover, albumCover, vibe] = await Promise.all([
-    artists[0] ? resolveTopCover("artist", artists[0].title) : Promise.resolve(""),
-    tracks[0]
-      ? resolveTopCover("track", `${tracks[0].title} ${tracks[0].subtitle}`, tracks[0].caaReleaseMbid, tracks[0].caaId)
-      : Promise.resolve(""),
+    artists[0] ? resolveArtistCover(artists[0].title) : Promise.resolve(""),
+    tracks[0] ? resolveTrackCover(tracks[0]) : Promise.resolve(""),
     albums[0]
-      ? resolveTopCover("album", `${albums[0].title} ${albums[0].subtitle}`, albums[0].caaReleaseMbid, albums[0].caaId)
+      ? resolveAlbumCover(albums[0].title, albums[0].subtitle, albums[0].caaReleaseMbid, albums[0].caaId)
       : Promise.resolve(""),
     resolveVibe(tracks[0], albums[0]),
   ]);
