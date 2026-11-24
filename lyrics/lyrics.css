@@ -541,186 +541,793 @@
   min-height: 460px;
 }
 
-.export-stage {
-  --card-color: #2b2f3a;
-  --card-color-dark: #161820;
-  --card-fg: #ffffff;
-  --card-fg-muted: rgba(255, 255, 255, 0.72);
+.lyrics-layout-frame {
   position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border-radius: 22px;
+  box-sizing: border-box;
 }
 
-.export-stage.text-dark {
-  --card-fg: #141416;
-  --card-fg-muted: rgba(20, 20, 22, 0.68);
+.lyrics-layout-frame.format-card {
+  max-width: 400px;
+  padding: 2.5rem 1.25rem;
+  min-height: 380px;
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
-.export-stage.format-card {
-  width: 100%;
-  max-width: 420px;
+[data-theme="dark"] .lyrics-layout-frame.format-card {
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
-.export-stage.format-story {
-  width: 100%;
+.lyrics-layout-frame.format-story {
   max-width: 340px;
   aspect-ratio: 9 / 16;
-  padding: 28px 22px;
-  background-color: var(--card-color-dark);
+  min-height: 520px;
+  padding: 2.5rem 1.25rem;
+  border-radius: 28px;
 }
 
-.export-stage-bg {
-  position: absolute;
-  inset: -24px;
-  background-size: cover;
-  background-position: center;
-  filter: blur(28px) brightness(0.65);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.export-stage.format-story .export-stage-bg {
-  opacity: 1;
-}
-
-.export-card {
-  position: relative;
-  width: 100%;
-  border-radius: 20px;
-  overflow: hidden;
-  background-color: var(--card-color);
-  color: var(--card-fg);
-  z-index: 1;
-}
-
-.export-stage.layout-modern .export-card {
-  background: linear-gradient(155deg, var(--card-color) 0%, var(--card-color-dark) 100%);
-}
-
-.export-stage.layout-blurred .export-card {
-  background-color: #141416;
-}
-
-.export-card-bg {
-  position: absolute;
-  inset: -20px;
-  background-size: cover;
-  background-position: center;
-  filter: blur(22px) saturate(1.15);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.export-stage.layout-blurred .export-card-bg {
-  opacity: 1;
-}
-
-.export-stage.layout-blurred .export-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.42);
-  pointer-events: none;
-}
-
-.export-stage.layout-blurred.text-dark .export-card::after {
-  background: rgba(255, 255, 255, 0.52);
-}
-
-.export-card-content {
+.lyrics-card-wrapper {
   position: relative;
   z-index: 2;
-  padding: 26px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: flex-start;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 320px;
 }
 
-.export-card-header {
+.lyrics-card-target {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 22px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.lyrics-card-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.85rem;
+  min-width: 0;
+  text-align: left;
 }
 
-.export-cover {
-  width: 48px;
-  height: 48px;
+.lyrics-card-thumb {
+  width: 44px;
+  height: 44px;
   border-radius: 10px;
   object-fit: cover;
   flex-shrink: 0;
-  background-color: rgba(128, 128, 128, 0.2);
 }
 
-.export-meta {
+.lyrics-card-meta {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
 }
 
-.export-meta strong {
-  font-size: 0.96rem;
+.lyrics-card-title {
+  font-size: 0.95rem;
   font-weight: 700;
-  line-height: 1.2;
-  color: var(--card-fg);
+  line-height: 1.25;
+  word-break: break-word;
 }
 
-.export-meta span {
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--card-fg-muted);
+.lyrics-card-blurred .lyrics-card-title {
+  font-size: 0.9rem;
 }
 
-.export-verses {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.export-verse-block {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.export-verse-orig {
+.lyrics-card-artist {
   font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--card-fg-muted);
-  line-height: 1.3;
+  opacity: 0.75;
 }
 
-.export-verse-main {
-  font-size: 1.32rem;
+.lyrics-card-blurred .lyrics-card-artist {
+  font-size: 0.76rem;
+}
+
+.lyrics-card-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.lyrics-card-line {
+  font-size: 1.15rem;
   font-weight: 700;
-  line-height: 1.28;
-  letter-spacing: -0.02em;
-  color: var(--card-fg);
+  line-height: 1.35;
 }
 
-.export-stage.format-story .export-verse-main {
+.lyrics-card-line-orig {
+  font-size: 0.75rem;
+  font-weight: 500;
+  opacity: 0.65;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.lyrics-card-line-trans {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+  display: block;
+}
+
+.lyrics-card-lines.lines-count-5 {
+  gap: 0.75rem;
+}
+
+.lyrics-card-lines.lines-count-5 .lyrics-card-line,
+.lyrics-card-lines.lines-count-5 .lyrics-card-line-trans {
+  font-size: 1.15rem;
+}
+
+.lyrics-card-lines.lines-count-5 .lyrics-card-line-orig {
+  font-size: 0.75rem;
+}
+
+.lyrics-card-lines.lines-count-4 {
+  gap: 0.82rem;
+}
+
+.lyrics-card-lines.lines-count-4 .lyrics-card-line,
+.lyrics-card-lines.lines-count-4 .lyrics-card-line-trans {
+  font-size: 1.22rem;
+}
+
+.lyrics-card-lines.lines-count-4 .lyrics-card-line-orig {
+  font-size: 0.78rem;
+}
+
+.lyrics-card-lines.lines-count-3 {
+  gap: 0.9rem;
+}
+
+.lyrics-card-lines.lines-count-3 .lyrics-card-line,
+.lyrics-card-lines.lines-count-3 .lyrics-card-line-trans {
+  font-size: 1.32rem;
+}
+
+.lyrics-card-lines.lines-count-3 .lyrics-card-line-orig {
+  font-size: 0.82rem;
+}
+
+.lyrics-card-lines.lines-count-2 {
+  gap: 1rem;
+}
+
+.lyrics-card-lines.lines-count-2 .lyrics-card-line,
+.lyrics-card-lines.lines-count-2 .lyrics-card-line-trans {
+  font-size: 1.44rem;
+}
+
+.lyrics-card-lines.lines-count-2 .lyrics-card-line-orig {
+  font-size: 0.86rem;
+}
+
+.lyrics-card-lines.lines-count-1 {
+  gap: 1.1rem;
+}
+
+.lyrics-card-lines.lines-count-1 .lyrics-card-line,
+.lyrics-card-lines.lines-count-1 .lyrics-card-line-trans {
+  font-size: 1.58rem;
+}
+
+.lyrics-card-lines.lines-count-1 .lyrics-card-line-orig {
+  font-size: 0.92rem;
+}
+
+.lyrics-card-divider {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.lyrics-card-blurred .lyrics-card-header {
+  align-items: flex-start;
+}
+
+.lyrics-card-blurred .lyrics-card-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+}
+
+.lyrics-card-service-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  line-height: 1;
+  padding: 0 0.5rem 0.25rem 0.5rem;
+  margin-left: 1rem;
+  opacity: 0.85;
+}
+
+.lyrics-card-service-logo svg {
+  display: block;
+  height: 14px;
+  width: auto;
+  max-width: 70px;
+  fill: currentColor;
+  overflow: visible !important;
+}
+
+.lyrics-layout-frame.format-card .lyrics-card-service-logo {
+  color: var(--color-text);
+}
+
+.lyrics-card-modern-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.85));
+  z-index: 1;
+}
+
+.story-blur-image {
+  position: absolute;
+  inset: -24px;
+  width: calc(100% + 48px);
+  height: calc(100% + 48px);
+  object-fit: cover;
+  filter: blur(34px) brightness(0.55);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.format-story .lyrics-card-wrapper {
+  max-width: 250px;
+  gap: 0.5rem;
+}
+
+.format-story .lyrics-card-target {
+  max-width: 250px;
+  padding: 0.9rem 1rem;
+  gap: 0.6rem;
+  border-radius: 15px;
+}
+
+.format-story .lyrics-card-header {
+  gap: 0.55rem;
+}
+
+.format-story .lyrics-card-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.format-story .lyrics-card-blurred .lyrics-card-thumb {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+}
+
+.format-story .lyrics-card-title {
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.format-story .lyrics-card-blurred .lyrics-card-title {
+  font-size: 0.7rem;
+}
+
+.format-story .lyrics-card-artist {
+  font-size: 0.62rem;
+}
+
+.format-story .lyrics-card-blurred .lyrics-card-artist {
+  font-size: 0.6rem;
+}
+
+.format-story .lyrics-card-lines {
+  gap: 0.38rem;
+}
+
+.format-story .lyrics-card-line {
+  font-size: 0.78rem;
+  line-height: 1.28;
+}
+
+.format-story .lyrics-card-line-orig {
+  font-size: 0.56rem;
+  margin-bottom: 1px;
+}
+
+.format-story .lyrics-card-line-trans {
+  font-size: 0.78rem;
+  line-height: 1.28;
+}
+
+.format-story .lyrics-card-lines.lines-count-5,
+.export-story .lyrics-card-lines.lines-count-5 {
+  gap: 0.38rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-5 .lyrics-card-line,
+.format-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-trans,
+.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line,
+.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-trans {
+  font-size: 0.78rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-orig,
+.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-orig {
+  font-size: 0.56rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-4,
+.export-story .lyrics-card-lines.lines-count-4 {
+  gap: 0.42rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-4 .lyrics-card-line,
+.format-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-trans,
+.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line,
+.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-trans {
+  font-size: 0.84rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-orig,
+.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-orig {
+  font-size: 0.59rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-3,
+.export-story .lyrics-card-lines.lines-count-3 {
+  gap: 0.48rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-3 .lyrics-card-line,
+.format-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-trans,
+.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line,
+.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-trans {
+  font-size: 0.92rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-orig,
+.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-orig {
+  font-size: 0.63rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-2,
+.export-story .lyrics-card-lines.lines-count-2 {
+  gap: 0.55rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-2 .lyrics-card-line,
+.format-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-trans,
+.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line,
+.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-trans {
+  font-size: 1.02rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-orig,
+.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-orig {
+  font-size: 0.68rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-1,
+.export-story .lyrics-card-lines.lines-count-1 {
+  gap: 0.64rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-1 .lyrics-card-line,
+.format-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-trans,
+.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line,
+.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-trans {
   font-size: 1.14rem;
 }
 
-.export-card-footer {
+.format-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-orig,
+.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-orig {
+  font-size: 0.74rem;
+}
+
+.format-story .lyrics-card-divider {
+  margin-top: 0.3rem;
+  padding-top: 0.5rem;
+}
+
+.format-story .lyrics-card-service-logo {
+  padding: 0 0.4rem 0.2rem 0.4rem;
+  margin-left: 0.85rem;
+}
+
+.format-story .lyrics-card-service-logo svg {
+  height: 11px;
+  max-width: 55px;
+}
+
+.format-story .lyrics-card-blurred,
+.export-story .lyrics-card-blurred {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.lyrics-export-wrapper,
+.lyrics-export-wrapper * {
+  box-sizing: border-box;
+}
+
+.lyrics-export-wrapper.export-card {
+  width: 320px !important;
+  min-width: 320px !important;
+  max-width: 320px !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-wrapper {
+  width: 320px !important;
+  min-width: 320px !important;
+  max-width: 320px !important;
+  gap: 0.75rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-target {
+  width: 320px !important;
+  min-width: 320px !important;
+  max-width: 320px !important;
+  border-radius: 22px !important;
+  padding: 1.5rem !important;
+  gap: 1.25rem !important;
+  box-shadow: none !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-thumb {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 10px !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-blurred .lyrics-card-thumb {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 10px !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-title {
+  font-size: 0.95rem !important;
+  line-height: 1.25 !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-blurred .lyrics-card-title {
+  font-size: 0.9rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-artist {
+  font-size: 0.78rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-blurred .lyrics-card-artist {
+  font-size: 0.76rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines {
+  gap: 0.75rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-line {
+  font-size: 1.15rem !important;
+  line-height: 1.35 !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-line-orig {
+  font-size: 0.75rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-line-trans {
+  font-size: 1.15rem !important;
+  line-height: 1.35 !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-5 {
+  gap: 0.75rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-5 .lyrics-card-line,
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-5 .lyrics-card-line-trans {
+  font-size: 1.15rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-5 .lyrics-card-line-orig {
+  font-size: 0.75rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-4 {
+  gap: 0.82rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-4 .lyrics-card-line,
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-4 .lyrics-card-line-trans {
+  font-size: 1.22rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-4 .lyrics-card-line-orig {
+  font-size: 0.78rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-3 {
+  gap: 0.9rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-3 .lyrics-card-line,
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-3 .lyrics-card-line-trans {
+  font-size: 1.32rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-3 .lyrics-card-line-orig {
+  font-size: 0.82rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-2 {
+  gap: 1rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-2 .lyrics-card-line,
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-2 .lyrics-card-line-trans {
+  font-size: 1.44rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-2 .lyrics-card-line-orig {
+  font-size: 0.86rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-1 {
+  gap: 1.1rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-1 .lyrics-card-line,
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-1 .lyrics-card-line-trans {
+  font-size: 1.58rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-lines.lines-count-1 .lyrics-card-line-orig {
+  font-size: 0.92rem !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-service-logo {
+  padding: 0 0.5rem 0.25rem 0.5rem !important;
+  margin-left: 1rem !important;
+  opacity: 0.85 !important;
+}
+
+.lyrics-export-wrapper.export-card .lyrics-card-service-logo svg {
+  height: 14px !important;
+  max-width: 70px !important;
+}
+
+.lyrics-export-wrapper.export-story {
+  width: 360px !important;
+  height: 640px !important;
+  min-width: 360px !important;
+  min-height: 640px !important;
+  max-width: 360px !important;
+  max-height: 640px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 2.5rem 1.25rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-wrapper {
+  width: 250px !important;
+  min-width: 250px !important;
+  max-width: 250px !important;
+  gap: 0.5rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-target {
+  width: 250px !important;
+  min-width: 250px !important;
+  max-width: 250px !important;
+  padding: 0.9rem 1rem !important;
+  gap: 0.6rem !important;
+  border-radius: 15px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35) !important;
+}
+
+.lyrics-export-wrapper.export-story.export-solid .lyrics-card-target,
+.lyrics-export-wrapper.export-card .lyrics-card-target,
+.lyrics-card-solid {
+  box-shadow: none !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-header {
+  gap: 0.55rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-thumb {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 6px !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-blurred .lyrics-card-thumb {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 7px !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-title {
+  font-size: 0.72rem !important;
+  line-height: 1.2 !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-blurred .lyrics-card-title {
+  font-size: 0.7rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-artist {
+  font-size: 0.62rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-blurred .lyrics-card-artist {
+  font-size: 0.6rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines {
+  gap: 0.38rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-line {
+  font-size: 0.78rem !important;
+  line-height: 1.28 !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-line-orig {
+  font-size: 0.56rem !important;
+  margin-bottom: 1px !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-line-trans {
+  font-size: 0.78rem !important;
+  line-height: 1.28 !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-5 {
+  gap: 0.38rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line,
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-trans {
+  font-size: 0.78rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-orig {
+  font-size: 0.56rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-4 {
+  gap: 0.42rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line,
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-trans {
+  font-size: 0.84rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-orig {
+  font-size: 0.59rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-3 {
+  gap: 0.48rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line,
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-trans {
+  font-size: 0.92rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-orig {
+  font-size: 0.63rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-2 {
+  gap: 0.55rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line,
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-trans {
+  font-size: 1.02rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-orig {
+  font-size: 0.68rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-1 {
+  gap: 0.64rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line,
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-trans {
+  font-size: 1.14rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-orig {
+  font-size: 0.74rem !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-service-logo {
+  padding: 0 0.4rem 0.2rem 0.4rem !important;
+  margin-left: 0.85rem !important;
+  opacity: 0.85 !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-service-logo svg {
+  height: 11px !important;
+  max-width: 55px !important;
+}
+
+.lyrics-export-wrapper.export-story .lyrics-card-divider {
+  margin-top: 0.3rem !important;
+  padding-top: 0.5rem !important;
+}
+
+.lyrics-export-wrapper .story-blur-image {
+  position: absolute;
+  inset: -40px;
+  width: calc(100% + 80px);
+  height: calc(100% + 80px);
+  object-fit: cover;
+  filter: blur(40px) brightness(0.55);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.control-select-wrap {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding-top: 4px;
+  height: 40px;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
 }
 
-.export-brand {
-  font-size: 0.84rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--card-fg-muted);
+.control-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 100%;
+  padding: 0 34px 0 14px;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
 }
 
-.export-brand-dot {
-  color: var(--card-fg);
+.control-select-chevron {
+  position: absolute;
+  right: 12px;
+  display: inline-flex;
+  color: var(--color-text-muted);
+  pointer-events: none;
 }
 
 .style-controls-panel {

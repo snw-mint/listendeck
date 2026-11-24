@@ -124,25 +124,7 @@
     <section id="step-style" class="lyrics-step-panel" hidden>
       <div class="style-workspace">
         <div class="style-preview-stage">
-          <div id="lyrics-export-node" class="export-stage format-card layout-solid text-light">
-            <div class="export-stage-bg" id="export-stage-bg"></div>
-            <div class="export-card" id="export-card">
-              <div class="export-card-bg" id="export-card-bg"></div>
-              <div class="export-card-content">
-                <div class="export-card-header">
-                  <img id="export-cover" alt="" class="export-cover" />
-                  <div class="export-meta">
-                    <strong id="export-title"></strong>
-                    <span id="export-artist"></span>
-                  </div>
-                </div>
-                <div id="export-verses" class="export-verses"></div>
-                <div class="export-card-footer">
-                  <span class="export-brand">listendeck<span class="export-brand-dot">.</span></span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div id="lyrics-preview-frame" class="lyrics-layout-frame format-card"></div>
         </div>
 
         <aside class="style-controls-panel">
@@ -168,6 +150,23 @@
             <div class="segmented-group" id="ctrl-text">
               <button type="button" class="seg-btn active" data-text="light">White</button>
               <button type="button" class="seg-btn" data-text="dark">Black</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <span class="control-label">Service Logo</span>
+            <div class="control-select-wrap">
+              <select id="ctrl-service" class="control-select" aria-label="Service logo">
+                <option value="none" selected>None</option>
+                <option value="spotify">Spotify</option>
+                <option value="applemusic">Apple Music</option>
+                <option value="youtubemusic">YouTube Music</option>
+                <option value="deezer">Deezer</option>
+                <option value="lastfm">Last.fm</option>
+              </select>
+              <span class="control-select-chevron" aria-hidden="true">
+                <animate-icons name="chevron-down" size="15"></animate-icons>
+              </span>
             </div>
           </div>
 
