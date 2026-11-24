@@ -1,0 +1,47 @@
+name: Feature Request
+description: Suggest an improvement, new card style, or customization option for an existing tool
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to improve an existing tool in **listendeck**? Share your suggestion below! (If you want to propose a brand-new standalone tool, please use the **New Tool Proposal** template instead.)
+
+  - type: dropdown
+    id: target-module
+    attributes:
+      label: Target Module
+      description: Which existing tool or area does this improvement apply to?
+      options:
+        - Charts
+        - Match
+        - Lyrics
+        - Cards
+        - Global UI / Theme / Accessibility
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Use Case
+      description: What limitation are you running into, or what workflow would this improve?
+      placeholder: When sharing a Lyrics card on Instagram Stories, it would be helpful to toggle the album release year next to the track title.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe how the feature should look or behave in the interface.
+      placeholder: Add a "Show release year" toggle inside the right-hand customization panel in the Lyrics studio.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or Visual References (Optional)
+      description: Share mockups, screenshots, or examples from similar tools if available.

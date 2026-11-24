@@ -1,0 +1,59 @@
+name: New Tool Proposal
+description: Propose a new minimalist utility module for the listendeck suite
+title: "[Tool]: "
+labels: ["enhancement", "new-tool"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping expand **listendeck**! Please keep in mind that all tools in this suite are designed to be **minimalist, 100% client-side (no backend or database), and powered by public APIs without requiring user login**.
+
+  - type: input
+    id: tool-name
+    attributes:
+      label: Tool Name
+      description: A short, single-word name that fits the suite (e.g., Grid, Timeline, Wrapped).
+      placeholder: e.g., Grid
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: What does this tool do?
+      description: Describe the core utility and the problem it solves in a few sentences.
+      placeholder: Generates a 3x3 or 5x5 album cover collage from a user's recent ListenBrainz plays.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data-source
+    attributes:
+      label: Primary Data Source / API
+      description: Which public, no-auth API would power this tool?
+      multiple: true
+      options:
+        - ListenBrainz (Raw Listens / Stats)
+        - Deezer Public API
+        - LRCLIB
+        - MusicBrainz / Cover Art Archive
+        - Other (specify below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: input-output
+    attributes:
+      label: Input & Output Flow
+      description: What does the user enter on the screen, and what is the final result or exportable image?
+      placeholder: |
+        - Input: ListenBrainz username + timeframe + grid size (3x3, 4x4)
+        - Output: Clean cover grid preview with optional album titles and PNG download
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Visual References or API Endpoints (Optional)
+      description: Share links to similar tools, mockups, or specific API endpoints if you have them.

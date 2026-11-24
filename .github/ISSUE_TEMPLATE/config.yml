@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Live App (listendeck)
+    url: https://listendeck.vercel.app
+    about: Open the live web application to verify if an issue still occurs in production

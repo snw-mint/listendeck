@@ -1,0 +1,66 @@
+name: Bug Report
+description: Report a visual glitch, broken layout, or API/caching issue in listendeck
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue in **listendeck**! Please provide as much detail as possible so we can reproduce and fix it quickly.
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Affected Module
+      description: Which part of listendeck is experiencing the issue?
+      options:
+        - Charts
+        - Match
+        - Lyrics
+        - Cards
+        - Home / Credits / Navigation
+        - Export / Image Rendering
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected to happen instead.
+      placeholder: When exporting a Story card in Lyrics with Blurred style enabled, the cover artwork fails to load.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: List the exact steps needed to trigger the issue.
+      placeholder: |
+        1. Go to Lyrics and search for a track
+        2. Select 4 lines and switch to Story format
+        3. Click "Download PNG"
+        4. Observe the blank background in the exported file
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Browser & Platform
+      multiple: true
+      options:
+        - Chrome / Edge / Brave (Desktop)
+        - Firefox (Desktop)
+        - Safari (macOS)
+        - Chrome / Samsung Internet (Android)
+        - Safari (iOS)
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context or Screenshots (Optional)
+      description: Paste any console errors, public ListenBrainz username used for testing, or drag and drop screenshots here.
