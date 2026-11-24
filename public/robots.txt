@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://listendeck.vercel.app/sitemap.xml
