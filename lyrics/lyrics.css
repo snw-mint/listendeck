@@ -1500,6 +1500,10 @@
     gap: 18px;
   }
 
+  .style-controls-panel {
+    order: -1;
+  }
+
   .style-preview-stage {
     min-height: auto;
     padding: 16px;
