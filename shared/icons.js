@@ -19,6 +19,7 @@ import {
   Search,
   Languages,
   Globe,
+  Disc3,
 } from "@animateicons/vanilla/lucide";
 
 defineIcons({
@@ -41,6 +42,7 @@ defineIcons({
   Search,
   Languages,
   Globe,
+  Disc3,
 });
 
 if (typeof document !== "undefined") {

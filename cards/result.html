@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cards · listendeck.</title>
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <link rel="stylesheet" href="/shared/global.css" />
   <link rel="stylesheet" href="/cards/cards.css" />
@@ -39,6 +40,90 @@
       </div>
     </div>
   </header>
+
+  <main class="result-main cards-result-main">
+    <div class="cards-topbar">
+      <a href="/cards/" class="result-back-link">
+        <animate-icons name="arrow-left" size="16"></animate-icons>
+        <span>Search</span>
+      </a>
+
+      <nav class="cards-breadcrumb" aria-label="Breadcrumb">
+        <a href="/cards/" class="breadcrumb-link">Search</a>
+        <span class="breadcrumb-sep" aria-hidden="true">/</span>
+        <span class="breadcrumb-link active" aria-current="page">Customize</span>
+      </nav>
+    </div>
+
+    <div class="style-workspace">
+      <div class="style-preview-stage">
+        <div id="cards-preview-frame" class="cards-layout-frame format-card"></div>
+      </div>
+
+      <aside class="style-controls-panel">
+        <div class="control-group">
+          <span class="control-label">Style</span>
+          <div class="segmented-group" id="ctrl-card-layout">
+            <button type="button" class="seg-btn active" data-layout="card">Card</button>
+            <button type="button" class="seg-btn" data-layout="solid">Flat</button>
+            <button type="button" class="seg-btn" data-layout="blurred">Blurred</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">Cover Mode</span>
+          <div class="segmented-group" id="ctrl-card-mode">
+            <button type="button" class="seg-btn active" data-mode="static">Static</button>
+            <div class="seg-btn-tooltip-wrap has-tooltip" id="animated-btn-wrap">
+              <button type="button" class="seg-btn is-disabled" id="btn-mode-animated" data-mode="animated" aria-disabled="true">Animated</button>
+              <div class="mode-tooltip" id="animated-tooltip">Checking animated cover...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">Service Logo</span>
+          <div class="control-select-wrap">
+            <select id="ctrl-card-service" class="control-select" aria-label="Service logo">
+              <option value="none" selected>None</option>
+              <option value="spotify">Spotify</option>
+              <option value="applemusic">Apple Music</option>
+              <option value="youtubemusic">YouTube Music</option>
+              <option value="deezer">Deezer</option>
+              <option value="lastfm">Last.fm</option>
+            </select>
+            <span class="control-select-chevron" aria-hidden="true">
+              <animate-icons name="chevron-down" size="15"></animate-icons>
+            </span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="control-label-row">
+            <span class="control-label">Card Color</span>
+            <button type="button" id="btn-reset-card-color" class="control-reset-btn" hidden>Auto</button>
+          </div>
+          <div class="color-swatches" id="ctrl-card-colors">
+            <button type="button" class="swatch-btn active" data-color="default" id="swatch-card-auto" style="--sw: #F4F4F6;" title="Auto tint"></button>
+            <button type="button" class="swatch-btn" data-color="#FFFFFF" style="--sw: #FFFFFF;" title="White"></button>
+            <button type="button" class="swatch-btn" data-color="#141416" style="--sw: #141416;" title="Charcoal"></button>
+            <button type="button" class="swatch-btn" data-color="#5B52B6" style="--sw: #5B52B6;" title="Indigo"></button>
+            <button type="button" class="swatch-btn" data-color="#1F4E5F" style="--sw: #1F4E5F;" title="Teal"></button>
+            <button type="button" class="swatch-btn" data-color="#7A2E3A" style="--sw: #7A2E3A;" title="Burgundy"></button>
+            <label class="swatch-picker-btn" title="Custom color">
+              <animate-icons name="paintbrush" size="15"></animate-icons>
+              <input type="color" id="ctrl-card-custom-color" value="#141416" />
+            </label>
+          </div>
+        </div>
+
+        <button type="button" id="btn-download-card" class="primary-action-btn download-full-btn">
+          <animate-icons name="download" size="18"></animate-icons>
+          <span id="download-card-label">Download PNG</span>
+        </button>
+      </aside>
+    </div>
+  </main>
 
   <footer class="site-footer">
     <div class="footer-inner">

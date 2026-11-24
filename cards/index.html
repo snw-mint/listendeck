@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cards · listendeck.</title>
+  <title>Music Card Generator · listendeck.</title>
+  <meta name="description" content="Search tracks and albums via Deezer to create clean, shareable static and animated music cards or Stories." />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <link rel="stylesheet" href="/shared/global.css" />
   <link rel="stylesheet" href="/cards/cards.css" />
@@ -43,19 +44,54 @@
   <main class="tool-main">
     <div class="tool-split">
       <section class="tool-input-col">
-        <h1 class="tool-title">Cards</h1>
+        <h1 class="tool-title">Turn Any Track Or Album Into Cards<span class="logo-dot">.</span></h1>
         <p class="tool-description">
-          Create minimal story cards with album artwork, track title, and artist powered by Deezer.
+          Search any track or album to generate minimal music cards and 9:16 Stories with static or animated artwork.
         </p>
-        <form id="cards-form" class="tool-form">
-          <div class="input-pill">
-            <input type="text" id="cards-query" placeholder="Track or artist name" autocomplete="off" required />
-            <button type="submit" class="input-pill-btn">Search</button>
+
+        <form id="cards-form" class="tool-form cards-search-form" autocomplete="off">
+          <div class="search-dropdown-wrap" id="cards-search-wrap">
+            <div class="input-pill cards-input-pill" id="cards-input-pill">
+              <span class="search-leading-icon" aria-hidden="true">
+                <animate-icons name="search" size="18"></animate-icons>
+              </span>
+              <input
+                type="text"
+                id="cards-query"
+                placeholder="Track, album, or artist..."
+                autocomplete="off"
+                aria-autocomplete="list"
+                aria-controls="cards-dropdown"
+                aria-expanded="false"
+                required
+              />
+              <button type="button" id="cards-clear-btn" class="search-clear-btn" aria-label="Clear search" hidden>
+                <animate-icons name="x" size="16"></animate-icons>
+              </button>
+            </div>
+
+            <div id="cards-dropdown" class="search-dropdown" role="listbox" hidden></div>
           </div>
+          <p id="cards-error" class="form-error" role="alert" aria-live="polite"></p>
         </form>
       </section>
 
-      <section class="tool-preview-col" aria-label="Example preview"></section>
+      <section class="tool-preview-col cards-preview-col" aria-label="Example preview">
+        <div class="preview-music-stage" aria-hidden="true">
+          <img src="/assets/preview/lyrics-danceteria.webp" alt="" class="preview-music-blur-bg" />
+          <div class="music-card-wrapper preview-music-card-wrap">
+            <div class="music-card-target preview-music-card-box">
+              <div class="music-card-cover-container">
+                <img src="/assets/preview/lyrics-danceteria.webp" alt="" class="music-card-cover-img" />
+              </div>
+              <div class="music-card-meta">
+                <span class="music-card-title">Danceteria</span>
+                <span class="music-card-artist">Madonna</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 
