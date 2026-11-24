@@ -93,13 +93,17 @@
           Enter two ListenBrainz usernames to calculate your compatibility score, uncover shared artists, and export a
           shareable Story match card.
         </p>
-        <form id="match-form" class="tool-form">
-          <div class="input-pill" id="match-input-pill">
-            <input type="text" id="match-user-1" placeholder="First user" autocomplete="off" required />
-            <span class="input-pill-divider">vs</span>
-            <input type="text" id="match-user-2" placeholder="Second user" autocomplete="off" required />
-            <button type="submit" id="match-submit-btn" class="input-pill-btn">Compare</button>
+        <form id="match-form" class="tool-form match-tool-form">
+          <div class="match-inputs-box" id="match-input-pill">
+            <label class="match-input-field">
+              <input type="text" id="match-user-1" placeholder="First username" autocomplete="off" required />
+            </label>
+            <span class="match-vs-badge" aria-hidden="true">vs</span>
+            <label class="match-input-field">
+              <input type="text" id="match-user-2" placeholder="Second username" autocomplete="off" required />
+            </label>
           </div>
+          <button type="submit" id="match-submit-btn" class="match-submit-btn">Compare</button>
           <p id="match-error" class="form-error" role="alert" aria-live="polite"></p>
         </form>
         <p class="signup-link">
