@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>listendeck.</title>
+  <meta name="description" content="Weekly and monthly ListenBrainz charts, taste match, LRCLIB lyric cards, and Deezer cover cards." />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <link rel="stylesheet" href="/shared/global.css" />
   <link rel="stylesheet" href="/home.css" />
@@ -40,24 +41,88 @@
     </div>
   </header>
 
+  <main class="directory-main">
+    <div class="directory-shell">
+      <section class="directory-intro">
+        <h1 class="directory-heading">Music utilities for your listening history<span class="logo-dot">.</span></h1>
+        <p class="directory-lead">Open-source tools to explore charts, compare taste, and design shareable cards in your browser.</p>
+      </section>
+
+      <nav class="directory-index" aria-label="Tools directory">
+      <a href="/charts/" class="directory-row" data-shortcut="1">
+        <div class="directory-row-left">
+          <span class="directory-num" aria-hidden="true">01</span>
+          <div class="directory-copy">
+            <h2 class="directory-title">Charts<span class="logo-dot">.</span></h2>
+            <p class="directory-desc">Weekly and monthly listening stats and Story recaps.</p>
+          </div>
+        </div>
+        <div class="directory-row-right">
+          <span class="directory-source">ListenBrainz</span>
+          <span class="directory-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+
+      <a href="/match/" class="directory-row" data-shortcut="2">
+        <div class="directory-row-left">
+          <span class="directory-num" aria-hidden="true">02</span>
+          <div class="directory-copy">
+            <h2 class="directory-title">Match<span class="logo-dot">.</span></h2>
+            <p class="directory-desc">Compare music taste and shared artists between two profiles.</p>
+          </div>
+        </div>
+        <div class="directory-row-right">
+          <span class="directory-source">ListenBrainz</span>
+          <span class="directory-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+
+      <a href="/lyrics/" class="directory-row" data-shortcut="3">
+        <div class="directory-row-left">
+          <span class="directory-num" aria-hidden="true">03</span>
+          <div class="directory-copy">
+            <h2 class="directory-title">Lyrics<span class="logo-dot">.</span></h2>
+            <p class="directory-desc">Search tracks, translate verses inline, and export lyric cards.</p>
+          </div>
+        </div>
+        <div class="directory-row-right">
+          <span class="directory-source">LRCLIB</span>
+          <span class="directory-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+
+      <a href="/cards/" class="directory-row" data-shortcut="4">
+        <div class="directory-row-left">
+          <span class="directory-num" aria-hidden="true">04</span>
+          <div class="directory-copy">
+            <h2 class="directory-title">Cards<span class="logo-dot">.</span></h2>
+            <p class="directory-desc">Generate minimal track and album cover cards for Stories.</p>
+          </div>
+        </div>
+        <div class="directory-row-right">
+          <span class="directory-source">Deezer</span>
+          <span class="directory-arrow" aria-hidden="true">→</span>
+        </div>
+      </a>
+      </nav>
+    </div>
+  </main>
+
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
         <strong>listendeck<span class="logo-dot">.</span></strong>
-        <span>·</span>
         <span>by <a href="https://github.com/snw-mint/" target="_blank" rel="noopener noreferrer">Snow Mint</a></span>
         <span>·</span>
         <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GPL-3.0</a>
       </div>
       <div class="footer-right">
-        <a href="/privacy.html">Privacy Policy</a>
-        <span>·</span>
-        <a href="/terms.html">Terms of Use</a>
-        <span>·</span>
         <div class="footer-powered">
           <span>Powered by</span>
-          <a href="https://listenbrainz.org" target="_blank" rel="noopener noreferrer">ListenBrainz</a><span>,</span>
-          <a href="https://lrclib.net" target="_blank" rel="noopener noreferrer">LRCLIB</a><span>&amp;</span>
+          <a href="https://listenbrainz.org" target="_blank" rel="noopener noreferrer">ListenBrainz</a>
+          <span>·</span>
+          <a href="https://lrclib.net" target="_blank" rel="noopener noreferrer">LRCLIB</a>
+          <span>·</span>
           <a href="https://developers.deezer.com" target="_blank" rel="noopener noreferrer">Deezer</a>
         </div>
       </div>
@@ -65,6 +130,7 @@
   </footer>
 
   <script type="module" src="/shared/header.js"></script>
+  <script type="module" src="/home.js"></script>
 </body>
 
 </html>

@@ -20,6 +20,10 @@ import {
   Languages,
   Globe,
   Disc3,
+  ChartColumnIncreasing,
+  Heart,
+  Quote,
+  ArrowUpRight,
 } from "@animateicons/vanilla/lucide";
 
 defineIcons({
@@ -30,6 +34,7 @@ defineIcons({
   X,
   ArrowLeft,
   ArrowRight,
+  ArrowUpRight,
   Download,
   Check,
   ChevronLeft,
@@ -43,6 +48,9 @@ defineIcons({
   Languages,
   Globe,
   Disc3,
+  ChartColumnIncreasing,
+  Heart,
+  Quote,
 });
 
 if (typeof document !== "undefined") {
