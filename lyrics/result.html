@@ -74,24 +74,16 @@
           </div>
 
           <div class="sheet-translate-controls">
-            <div class="sheet-lang-wrap">
-              <span class="sheet-lang-icon" aria-hidden="true">
-                <animate-icons name="globe" size="15"></animate-icons>
-              </span>
-              <select id="lyrics-lang-select" class="sheet-lang-select" aria-label="Translation language">
-                <option value="pt">PT</option>
-                <option value="en">EN</option>
-                <option value="es">ES</option>
-                <option value="fr">FR</option>
-                <option value="de">DE</option>
-                <option value="it">IT</option>
-                <option value="ja">JA</option>
-                <option value="ko">KO</option>
-              </select>
-              <span class="sheet-lang-chevron" aria-hidden="true">
-                <animate-icons name="chevron-down" size="14"></animate-icons>
-              </span>
-            </div>
+            <select id="lyrics-lang-select" data-icon="globe" data-compact="true" aria-label="Translation language">
+              <option value="pt">PT</option>
+              <option value="en">EN</option>
+              <option value="es">ES</option>
+              <option value="fr">FR</option>
+              <option value="de">DE</option>
+              <option value="it">IT</option>
+              <option value="ja">JA</option>
+              <option value="ko">KO</option>
+            </select>
             <button type="button" id="btn-translate-toggle" class="sheet-translate-btn">
               <animate-icons name="languages" size="16"></animate-icons>
               <span id="translate-btn-label">Translate</span>
@@ -155,19 +147,14 @@
 
           <div class="control-group">
             <span class="control-label">Service Logo</span>
-            <div class="control-select-wrap">
-              <select id="ctrl-service" class="control-select" aria-label="Service logo">
-                <option value="none" selected>None</option>
-                <option value="spotify">Spotify</option>
-                <option value="applemusic">Apple Music</option>
-                <option value="youtubemusic">YouTube Music</option>
-                <option value="deezer">Deezer</option>
-                <option value="lastfm">Last.fm</option>
-              </select>
-              <span class="control-select-chevron" aria-hidden="true">
-                <animate-icons name="chevron-down" size="15"></animate-icons>
-              </span>
-            </div>
+            <select id="ctrl-service" aria-label="Service logo">
+              <option value="none" selected>None</option>
+              <option value="spotify">Spotify</option>
+              <option value="applemusic">Apple Music</option>
+              <option value="youtubemusic">YouTube Music</option>
+              <option value="deezer">Deezer</option>
+              <option value="lastfm">Last.fm</option>
+            </select>
           </div>
 
           <div class="control-group">

@@ -1,4 +1,5 @@
 import "./icons.js";
+import { initCustomSelects } from "./select.js";
 
 const SUN_ICON = `<animate-icons name="sun" size="20"></animate-icons>`;
 const MOON_ICON = `<animate-icons name="moon" size="20"></animate-icons>`;
@@ -84,4 +85,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initActiveNav();
   initMobileMenu();
+  initCustomSelects();
 });
