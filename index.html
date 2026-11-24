@@ -5,14 +5,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>listendeck. — Music Utilities for Your Listening History</title>
-  <meta name="description" content="Open-source browser music utilities for ListenBrainz charts, taste compatibility match, LRCLIB lyric cards, and Deezer cover cards with zero sign-up." />
+  <meta name="description"
+    content="Open-source browser music utilities for ListenBrainz charts, taste compatibility match, LRCLIB lyric cards, and Deezer cover cards with zero sign-up." />
   <meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0B0B0E" media="(prefers-color-scheme: dark)" />
   <link rel="canonical" href="https://listendeck.vercel.app/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="listendeck." />
   <meta property="og:title" content="listendeck. — Music Utilities for Your Listening History" />
-  <meta property="og:description" content="Open-source browser music utilities for ListenBrainz charts, taste compatibility match, LRCLIB lyric cards, and Deezer cover cards with zero sign-up." />
+  <meta property="og:description"
+    content="Open-source browser music utilities for ListenBrainz charts, taste compatibility match, LRCLIB lyric cards, and Deezer cover cards with zero sign-up." />
   <meta property="og:url" content="https://listendeck.vercel.app/" />
   <meta property="og:image" content="https://listendeck.vercel.app/og-image.png" />
   <meta property="og:image:width" content="1200" />
@@ -20,8 +22,13 @@
   <meta property="og:image:alt" content="listendeck. — Music Utilities for Your Listening History" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="listendeck. — Music Utilities for Your Listening History" />
-  <meta name="twitter:description" content="Open-source browser music utilities for ListenBrainz charts, taste compatibility match, LRCLIB lyric cards, and Deezer cover cards with zero sign-up." />
+  <meta name="twitter:description"
+    content="Open-source browser music utilities for ListenBrainz charts, taste compatibility match, LRCLIB lyric cards, and Deezer cover cards with zero sign-up." />
   <meta name="twitter:image" content="https://listendeck.vercel.app/og-image.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -65,11 +72,13 @@
           <a href="/cards/" class="nav-link" data-route="/cards">Cards</a>
         </nav>
 
-        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="header-nav">
+        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Open menu" aria-expanded="false"
+          aria-controls="header-nav">
           <animate-icons name="menu" size="22"></animate-icons>
         </button>
 
-        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner" aria-label="GitHub Repository" title="GitHub">
+        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner"
+          aria-label="GitHub Repository" title="GitHub">
           <animate-icons name="github" size="20"></animate-icons>
         </a>
       </div>
@@ -80,65 +89,70 @@
     <div class="directory-shell">
       <section class="directory-intro">
         <h1 class="directory-heading">Music utilities for your listening history<span class="logo-dot">.</span></h1>
-        <p class="directory-lead">Open-source tools to explore charts, compare taste, and design shareable cards in your browser.</p>
+        <p class="directory-lead">Open-source tools to explore charts, compare taste, and design shareable cards in your
+          browser.</p>
       </section>
 
       <nav class="directory-index" aria-label="Tools directory">
-      <a href="/charts/" class="directory-row" data-shortcut="1" data-track="nav_click" data-track-props='{"location":"home_directory","tool":"charts"}'>
-        <div class="directory-row-left">
-          <span class="directory-num" aria-hidden="true">01</span>
-          <div class="directory-copy">
-            <h2 class="directory-title">Charts<span class="logo-dot">.</span></h2>
-            <p class="directory-desc">Weekly and monthly listening stats and Story recaps.</p>
+        <a href="/charts/" class="directory-row" data-shortcut="1" data-track="nav_click"
+          data-track-props='{"location":"home_directory","tool":"charts"}'>
+          <div class="directory-row-left">
+            <span class="directory-num" aria-hidden="true">01</span>
+            <div class="directory-copy">
+              <h2 class="directory-title">Charts<span class="logo-dot">.</span></h2>
+              <p class="directory-desc">Weekly and monthly listening stats and Story recaps.</p>
+            </div>
           </div>
-        </div>
-        <div class="directory-row-right">
-          <span class="directory-source">ListenBrainz</span>
-          <span class="directory-arrow" aria-hidden="true">→</span>
-        </div>
-      </a>
+          <div class="directory-row-right">
+            <span class="directory-source">ListenBrainz</span>
+            <span class="directory-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
 
-      <a href="/match/" class="directory-row" data-shortcut="2" data-track="nav_click" data-track-props='{"location":"home_directory","tool":"match"}'>
-        <div class="directory-row-left">
-          <span class="directory-num" aria-hidden="true">02</span>
-          <div class="directory-copy">
-            <h2 class="directory-title">Match<span class="logo-dot">.</span></h2>
-            <p class="directory-desc">Compare music taste and shared artists between two profiles.</p>
+        <a href="/match/" class="directory-row" data-shortcut="2" data-track="nav_click"
+          data-track-props='{"location":"home_directory","tool":"match"}'>
+          <div class="directory-row-left">
+            <span class="directory-num" aria-hidden="true">02</span>
+            <div class="directory-copy">
+              <h2 class="directory-title">Match<span class="logo-dot">.</span></h2>
+              <p class="directory-desc">Compare music taste and shared artists between two profiles.</p>
+            </div>
           </div>
-        </div>
-        <div class="directory-row-right">
-          <span class="directory-source">ListenBrainz</span>
-          <span class="directory-arrow" aria-hidden="true">→</span>
-        </div>
-      </a>
+          <div class="directory-row-right">
+            <span class="directory-source">ListenBrainz</span>
+            <span class="directory-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
 
-      <a href="/lyrics/" class="directory-row" data-shortcut="3" data-track="nav_click" data-track-props='{"location":"home_directory","tool":"lyrics"}'>
-        <div class="directory-row-left">
-          <span class="directory-num" aria-hidden="true">03</span>
-          <div class="directory-copy">
-            <h2 class="directory-title">Lyrics<span class="logo-dot">.</span></h2>
-            <p class="directory-desc">Search tracks, translate verses inline, and export lyric cards.</p>
+        <a href="/lyrics/" class="directory-row" data-shortcut="3" data-track="nav_click"
+          data-track-props='{"location":"home_directory","tool":"lyrics"}'>
+          <div class="directory-row-left">
+            <span class="directory-num" aria-hidden="true">03</span>
+            <div class="directory-copy">
+              <h2 class="directory-title">Lyrics<span class="logo-dot">.</span></h2>
+              <p class="directory-desc">Search tracks, translate verses inline, and export lyric cards.</p>
+            </div>
           </div>
-        </div>
-        <div class="directory-row-right">
-          <span class="directory-source">LRCLIB</span>
-          <span class="directory-arrow" aria-hidden="true">→</span>
-        </div>
-      </a>
+          <div class="directory-row-right">
+            <span class="directory-source">LRCLIB</span>
+            <span class="directory-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
 
-      <a href="/cards/" class="directory-row" data-shortcut="4" data-track="nav_click" data-track-props='{"location":"home_directory","tool":"cards"}'>
-        <div class="directory-row-left">
-          <span class="directory-num" aria-hidden="true">04</span>
-          <div class="directory-copy">
-            <h2 class="directory-title">Cards<span class="logo-dot">.</span></h2>
-            <p class="directory-desc">Generate minimal track and album cover cards for Stories.</p>
+        <a href="/cards/" class="directory-row" data-shortcut="4" data-track="nav_click"
+          data-track-props='{"location":"home_directory","tool":"cards"}'>
+          <div class="directory-row-left">
+            <span class="directory-num" aria-hidden="true">04</span>
+            <div class="directory-copy">
+              <h2 class="directory-title">Cards<span class="logo-dot">.</span></h2>
+              <p class="directory-desc">Generate minimal track and album cover cards for Stories.</p>
+            </div>
           </div>
-        </div>
-        <div class="directory-row-right">
-          <span class="directory-source">Deezer</span>
-          <span class="directory-arrow" aria-hidden="true">→</span>
-        </div>
-      </a>
+          <div class="directory-row-right">
+            <span class="directory-source">Deezer</span>
+            <span class="directory-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
       </nav>
     </div>
   </main>
@@ -149,7 +163,8 @@
         <strong>listendeck<span class="logo-dot">.</span></strong>
         <span>by <a href="https://github.com/snw-mint" target="_blank" rel="noopener noreferrer">Snow Mint</a></span>
         <span>·</span>
-        <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GPL-3.0</a>
+        <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank"
+          rel="noopener noreferrer">GPL-3.0</a>
       </div>
       <div class="footer-right">
         <a href="/credits/">Credits</a>

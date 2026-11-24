@@ -5,7 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lyrics — listendeck.</title>
-  <meta name="description" content="Search song lyrics via LRCLIB, translate verses inline, select your favorite lines, and export clean shareable lyric cards or 9:16 Stories in seconds." />
+  <meta name="description"
+    content="Search song lyrics via LRCLIB, translate verses inline, select your favorite lines, and export clean shareable lyric cards or 9:16 Stories in seconds." />
   <meta name="robots" content="noindex, follow" />
   <meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0B0B0E" media="(prefers-color-scheme: dark)" />
@@ -13,14 +14,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="listendeck." />
   <meta property="og:title" content="Lyrics Card Generator — listendeck." />
-  <meta property="og:description" content="Search song lyrics via LRCLIB, translate verses inline, select your favorite lines, and export clean shareable lyric cards or 9:16 Stories in seconds." />
+  <meta property="og:description"
+    content="Search song lyrics via LRCLIB, translate verses inline, select your favorite lines, and export clean shareable lyric cards or 9:16 Stories in seconds." />
   <meta property="og:url" content="https://listendeck.vercel.app/lyrics/" />
   <meta property="og:image" content="https://listendeck.vercel.app/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Lyrics Card Generator — listendeck." />
-  <meta name="twitter:description" content="Search song lyrics via LRCLIB, translate verses inline, select your favorite lines, and export clean shareable lyric cards or 9:16 Stories in seconds." />
+  <meta name="twitter:description"
+    content="Search song lyrics via LRCLIB, translate verses inline, select your favorite lines, and export clean shareable lyric cards or 9:16 Stories in seconds." />
   <meta name="twitter:image" content="https://listendeck.vercel.app/og-image.png" />
-  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
   <link rel="stylesheet" href="/shared/global.css" />
   <link rel="stylesheet" href="/lyrics/lyrics.css" />
 </head>
@@ -44,11 +50,13 @@
           <a href="/cards/" class="nav-link" data-route="/cards">Cards</a>
         </nav>
 
-        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="header-nav">
+        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Open menu" aria-expanded="false"
+          aria-controls="header-nav">
           <animate-icons name="menu" size="22"></animate-icons>
         </button>
 
-        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner" aria-label="GitHub Repository" title="GitHub">
+        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner"
+          aria-label="GitHub Repository" title="GitHub">
           <animate-icons name="github" size="20"></animate-icons>
         </a>
       </div>
@@ -177,12 +185,18 @@
               <button type="button" id="btn-reset-color" class="control-reset-btn" hidden>Auto</button>
             </div>
             <div class="color-swatches" id="ctrl-colors">
-              <button type="button" class="swatch-btn active" data-color="auto" id="swatch-auto" title="Auto color"></button>
-              <button type="button" class="swatch-btn" data-color="#141416" style="--sw: #141416;" title="Charcoal"></button>
-              <button type="button" class="swatch-btn" data-color="#5B52B6" style="--sw: #5B52B6;" title="Indigo"></button>
-              <button type="button" class="swatch-btn" data-color="#1F4E5F" style="--sw: #1F4E5F;" title="Teal"></button>
-              <button type="button" class="swatch-btn" data-color="#7A2E3A" style="--sw: #7A2E3A;" title="Burgundy"></button>
-              <button type="button" class="swatch-btn" data-color="#F2F2F5" style="--sw: #F2F2F5;" title="Paper"></button>
+              <button type="button" class="swatch-btn active" data-color="auto" id="swatch-auto"
+                title="Auto color"></button>
+              <button type="button" class="swatch-btn" data-color="#141416" style="--sw: #141416;"
+                title="Charcoal"></button>
+              <button type="button" class="swatch-btn" data-color="#5B52B6" style="--sw: #5B52B6;"
+                title="Indigo"></button>
+              <button type="button" class="swatch-btn" data-color="#1F4E5F" style="--sw: #1F4E5F;"
+                title="Teal"></button>
+              <button type="button" class="swatch-btn" data-color="#7A2E3A" style="--sw: #7A2E3A;"
+                title="Burgundy"></button>
+              <button type="button" class="swatch-btn" data-color="#F2F2F5" style="--sw: #F2F2F5;"
+                title="Paper"></button>
               <label class="swatch-picker-btn" title="Custom color">
                 <animate-icons name="paintbrush" size="15"></animate-icons>
                 <input type="color" id="ctrl-custom-color" value="#5B52B6" />
@@ -216,7 +230,8 @@
         <strong>listendeck<span class="logo-dot">.</span></strong>
         <span>by <a href="https://github.com/snw-mint" target="_blank" rel="noopener noreferrer">Snow Mint</a></span>
         <span>·</span>
-        <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">GPL-3.0</a>
+        <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank"
+          rel="noopener noreferrer">GPL-3.0</a>
       </div>
       <div class="footer-right">
         <a href="/credits/">Credits</a>
