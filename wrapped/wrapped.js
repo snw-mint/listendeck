@@ -158,6 +158,27 @@ function sortAndSliceTop(map, limit = 10) {
     .slice(0, limit);
 }
 
+function getLocalDayIndex(timestampSec) {
+  const d = new Date(timestampSec * 1000);
+  return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+}
+
+function getLongestConsecutiveDays(daySet) {
+  if (!daySet || !daySet.size) return 0;
+  const sorted = Array.from(daySet).sort((a, b) => a - b);
+  let longest = 1;
+  let current = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === sorted[i - 1] + 1) {
+      current += 1;
+      if (current > longest) longest = current;
+    } else {
+      current = 1;
+    }
+  }
+  return longest;
+}
+
 function aggregateListens(listens, elapsedDays) {
   const artistMap = new Map();
   const trackMap = new Map();
@@ -167,6 +188,8 @@ function aggregateListens(listens, elapsedDays) {
   for (const listen of listens) {
     totalDurationMs += getListenDurationMs(listen);
 
+    const ts = Number(listen?.listened_at);
+    const dayIndex = Number.isFinite(ts) ? getLocalDayIndex(ts) : null;
     const meta = listen?.track_metadata || {};
     const artistName = (meta.artist_name || "Unknown Artist").trim();
     const trackName = (meta.track_name || "").trim();
@@ -188,16 +211,20 @@ function aggregateListens(listens, elapsedDays) {
       const existing = trackMap.get(key);
       if (existing) {
         existing.plays += 1;
+        if (dayIndex !== null) existing.days.add(dayIndex);
         if (releaseName) {
           existing.releases.set(releaseName, (existing.releases.get(releaseName) || 0) + 1);
         }
       } else {
         const releases = new Map();
+        const days = new Set();
+        if (dayIndex !== null) days.add(dayIndex);
         if (releaseName) releases.set(releaseName, 1);
         trackMap.set(key, {
           title: trackName,
           subtitle: artistName,
           plays: 1,
+          days,
           releases,
           caaReleaseMbid: mapping.caa_release_mbid || "",
           caaId: mapping.caa_id || "",
@@ -221,6 +248,24 @@ function aggregateListens(listens, elapsedDays) {
           cover: "",
         });
       }
+    }
+  }
+
+  let obsession = null;
+  for (const track of trackMap.values()) {
+    const streak = getLongestConsecutiveDays(track.days);
+    if (
+      streak > 0 &&
+      (!obsession ||
+        streak > obsession.days ||
+        (streak === obsession.days && track.plays > obsession.plays))
+    ) {
+      obsession = {
+        days: streak,
+        plays: track.plays,
+        title: track.title,
+        artist: track.subtitle,
+      };
     }
   }
 
@@ -252,6 +297,7 @@ function aggregateListens(listens, elapsedDays) {
     totalListens,
     totalMinutes,
     dailyAvg,
+    obsession,
     artists: sortAndSliceTop(artistMap, 10),
     tracks: topTracks,
     albums: sortAndSliceTop(albumMap, 10),
@@ -486,7 +532,7 @@ async function resolveVibe(topTrack, topAlbum) {
 
 async function fetchWrappedData(username) {
   const windowInfo = getYearWindow();
-  const cacheKey = `wrapped:${username.toLowerCase()}:${WRAPPED_RANGE}:${windowInfo.year}`;
+  const cacheKey = `wrapped:v2:${username.toLowerCase()}:${WRAPPED_RANGE}:${windowInfo.year}`;
   const cached = getCache(cacheKey);
   if (cached) return cached;
 
@@ -516,6 +562,8 @@ async function fetchWrappedData(username) {
   if (tracks[0]) tracks[0].cover = trackCover;
   if (albums[0]) albums[0].cover = albumCover;
 
+  const obsession = aggregated.obsession;
+
   const data = {
     storyHeading: windowInfo.storyHeading,
     stats: {
@@ -523,6 +571,10 @@ async function fetchWrappedData(username) {
       totalMinutes: aggregated.totalMinutes,
       listens: formatNumber(aggregated.totalListens),
       minutes: formatNumber(aggregated.totalMinutes),
+      obsession: obsession ? obsession.title : "—",
+      obsessionTrack: obsession ? obsession.title : "",
+      obsessionArtist: obsession ? obsession.artist : "",
+      obsessionDays: obsession ? obsession.days : 0,
       dailyAvg: formatNumber(aggregated.dailyAvg),
       vibe,
     },
@@ -537,13 +589,16 @@ async function fetchWrappedData(username) {
 }
 
 function setStatsSkeleton(active) {
-  const ids = ["userScrobbles", "userMinutes", "userDailyAvg", "userVibe"];
+  const ids = ["userScrobbles", "userMinutes", "userObsession", "userDailyAvg", "userVibe"];
   ids.forEach((id) => {
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.toggle("skeleton", active);
     el.classList.toggle("skeleton-text", active);
-    if (active) el.textContent = "";
+    if (active) {
+      el.textContent = "";
+      el.removeAttribute("title");
+    }
   });
 }
 
@@ -553,6 +608,15 @@ function applyWrappedToDom(data) {
 
   document.getElementById("userScrobbles").textContent = data.stats.listens;
   document.getElementById("userMinutes").textContent = data.stats.minutes;
+  const obsessionEl = document.getElementById("userObsession");
+  const obsessionName = data.stats.obsessionTrack || data.stats.obsession || "—";
+  obsessionEl.textContent = obsessionName;
+  if (data.stats.obsessionTrack) {
+    const fullTitle = data.stats.obsessionArtist
+      ? `${data.stats.obsessionTrack} · ${data.stats.obsessionArtist}`
+      : data.stats.obsessionTrack;
+    obsessionEl.setAttribute("title", fullTitle);
+  }
   document.getElementById("userDailyAvg").textContent = data.stats.dailyAvg;
   document.getElementById("userVibe").textContent = data.stats.vibe;
 
@@ -679,6 +743,7 @@ async function loadWrapped(username) {
     setStatsSkeleton(false);
     document.getElementById("userScrobbles").textContent = "—";
     document.getElementById("userMinutes").textContent = "—";
+    document.getElementById("userObsession").textContent = "—";
     document.getElementById("userDailyAvg").textContent = "—";
     document.getElementById("userVibe").textContent = "—";
     const msg = "Unable to load ListenBrainz data.";

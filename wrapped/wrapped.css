@@ -120,6 +120,13 @@
   line-height: 1;
 }
 
+#userObsession {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .charts-actions {
   display: flex;
   align-items: center;
