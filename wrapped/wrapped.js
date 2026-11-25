@@ -4,14 +4,15 @@ import { exportNodeAsPng } from "../shared/export.js";
 import { initExportBgControls } from "../shared/export-bg.js";
 import {
   addRecentUser,
-  CACHE_TTL_CURRENT,
+  CACHE_TTL_WRAPPED,
   getCache,
   setCache,
 } from "../shared/storage.js";
 
 const WRAPPED_RANGE = "this_year";
 const FALLBACK_DURATION_MS = 3.5 * 60 * 1000;
-const MOCK_TOTAL_PAGES = 15;
+const LISTENS_PAGE_SIZE = 1000;
+const MAX_WRAPPED_PAGES = 50;
 
 const SERVICE_LOGOS = {
   listendeck: `<span class="story-service-wordmark">listendeck<span class="logo-dot">.</span></span>`,
@@ -25,9 +26,8 @@ const SERVICE_LOGOS = {
 const lastValidResults = new Map();
 let currentWrappedData = null;
 let customArtistImage = null;
-let toastPreviewTimer = null;
 
-function updateLoadingProgress({ visible, current = 1, total = MOCK_TOTAL_PAGES, label = "Fetching listens" }) {
+function updateLoadingProgress({ visible, current = 1, total = MAX_WRAPPED_PAGES, label = "Fetching listens" }) {
   const statusEl = document.getElementById("wrappedFetchStatus");
   const progressEl = document.getElementById("wrappedBannerProgress");
   const barEl = document.getElementById("wrappedBannerBar");
@@ -44,19 +44,6 @@ function updateLoadingProgress({ visible, current = 1, total = MOCK_TOTAL_PAGES,
     const pct = visible ? Math.max(0, Math.min(100, (current / Math.max(1, total)) * 100)) : 0;
     barEl.style.width = `${pct}%`;
   }
-}
-
-function startLoadingProgressPreview() {
-  if (toastPreviewTimer) {
-    clearInterval(toastPreviewTimer);
-    toastPreviewTimer = null;
-  }
-  let page = 1;
-  updateLoadingProgress({ visible: true, current: page, total: MOCK_TOTAL_PAGES });
-  toastPreviewTimer = setInterval(() => {
-    page = page >= MOCK_TOTAL_PAGES ? 1 : page + 1;
-    updateLoadingProgress({ visible: true, current: page, total: MOCK_TOTAL_PAGES });
-  }, 600);
 }
 
 function escapeHtml(value) {
@@ -84,10 +71,191 @@ function cleanReportTitle(str) {
   return cleaned || String(str).trim();
 }
 
-function getElapsedDaysThisYear() {
+function getYearWindow() {
   const now = new Date();
-  const startOfYear = new Date(now.getFullYear(), 0, 1);
-  return Math.max(1, Math.ceil((now.getTime() - startOfYear.getTime()) / 86400000));
+  const year = now.getFullYear();
+  const startDate = new Date(year, 0, 1);
+  const startTs = Math.floor(startDate.getTime() / 1000);
+  const endTs = Math.floor(now.getTime() / 1000);
+  const elapsedDays = Math.max(1, Math.ceil((endTs - startTs) / 86400));
+  return {
+    year,
+    startTs,
+    endTs,
+    elapsedDays,
+    storyHeading: `${year} WRAPPED`,
+  };
+}
+
+async function estimateYearPages(username) {
+  try {
+    const activityRes = await listenbrainz.getUserListeningActivity(username, { range: WRAPPED_RANGE });
+    const buckets = activityRes?.payload?.listening_activity || [];
+    const total = buckets.reduce((sum, bucket) => sum + Number(bucket?.listen_count || 0), 0);
+    if (total > 0) {
+      return Math.max(1, Math.min(MAX_WRAPPED_PAGES, Math.ceil(total / LISTENS_PAGE_SIZE)));
+    }
+  } catch {
+  }
+  return MAX_WRAPPED_PAGES;
+}
+
+async function fetchYearListens(username, startTs, endTs, onProgress) {
+  const collected = [];
+  const seen = new Set();
+  let cursorMaxTs = endTs;
+  let totalPages = await estimateYearPages(username);
+
+  for (let page = 1; page <= MAX_WRAPPED_PAGES; page++) {
+    if (page > totalPages) totalPages = page;
+    onProgress?.(page, totalPages);
+
+    const response = await listenbrainz.getUserListens(username, {
+      maxTs: cursorMaxTs,
+      count: LISTENS_PAGE_SIZE,
+    });
+    const batch = response?.payload?.listens || [];
+    if (!batch.length) break;
+
+    for (const listen of batch) {
+      const ts = Number(listen?.listened_at);
+      if (!Number.isFinite(ts) || ts >= endTs || ts < startTs) continue;
+      const trackName = listen?.track_metadata?.track_name || "";
+      const artistName = listen?.track_metadata?.artist_name || "";
+      const dedupeKey = `${ts}:${trackName}:${artistName}`;
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+      collected.push(listen);
+    }
+
+    const oldestTs = Number(batch[batch.length - 1]?.listened_at);
+    if (!Number.isFinite(oldestTs) || oldestTs <= startTs || batch.length < LISTENS_PAGE_SIZE || oldestTs >= cursorMaxTs) {
+      onProgress?.(page, page);
+      break;
+    }
+    cursorMaxTs = oldestTs;
+  }
+
+  return collected;
+}
+
+function getListenDurationMs(listen) {
+  const info = listen?.track_metadata?.additional_info;
+  const durationMs = Number(info?.duration_ms);
+  if (Number.isFinite(durationMs) && durationMs > 0) {
+    return durationMs;
+  }
+  const durationSec = Number(info?.duration);
+  if (Number.isFinite(durationSec) && durationSec > 0) {
+    return durationSec * 1000;
+  }
+  return FALLBACK_DURATION_MS;
+}
+
+function sortAndSliceTop(map, limit = 10) {
+  return Array.from(map.values())
+    .sort((a, b) => b.plays - a.plays || a.title.localeCompare(b.title))
+    .slice(0, limit);
+}
+
+function aggregateListens(listens, elapsedDays) {
+  const artistMap = new Map();
+  const trackMap = new Map();
+  const albumMap = new Map();
+  let totalDurationMs = 0;
+
+  for (const listen of listens) {
+    totalDurationMs += getListenDurationMs(listen);
+
+    const meta = listen?.track_metadata || {};
+    const artistName = (meta.artist_name || "Unknown Artist").trim();
+    const trackName = (meta.track_name || "").trim();
+    const releaseName = (meta.release_name || "").trim();
+    const mapping = meta.mbid_mapping || {};
+
+    if (artistName) {
+      const key = artistName.toLowerCase();
+      const existing = artistMap.get(key);
+      if (existing) {
+        existing.plays += 1;
+      } else {
+        artistMap.set(key, { title: artistName, subtitle: "", plays: 1, cover: "" });
+      }
+    }
+
+    if (trackName) {
+      const key = `${trackName.toLowerCase()}::${artistName.toLowerCase()}`;
+      const existing = trackMap.get(key);
+      if (existing) {
+        existing.plays += 1;
+        if (releaseName) {
+          existing.releases.set(releaseName, (existing.releases.get(releaseName) || 0) + 1);
+        }
+      } else {
+        const releases = new Map();
+        if (releaseName) releases.set(releaseName, 1);
+        trackMap.set(key, {
+          title: trackName,
+          subtitle: artistName,
+          plays: 1,
+          releases,
+          caaReleaseMbid: mapping.caa_release_mbid || "",
+          caaId: mapping.caa_id || "",
+          cover: "",
+        });
+      }
+    }
+
+    if (releaseName) {
+      const key = `${releaseName.toLowerCase()}::${artistName.toLowerCase()}`;
+      const existing = albumMap.get(key);
+      if (existing) {
+        existing.plays += 1;
+      } else {
+        albumMap.set(key, {
+          title: releaseName,
+          subtitle: artistName,
+          plays: 1,
+          caaReleaseMbid: mapping.caa_release_mbid || "",
+          caaId: mapping.caa_id || "",
+          cover: "",
+        });
+      }
+    }
+  }
+
+  const totalListens = listens.length;
+  const totalMinutes = Math.round(totalDurationMs / 60000);
+  const dailyAvg = Math.round(totalListens / Math.max(1, elapsedDays));
+
+  const topTracks = sortAndSliceTop(trackMap, 10).map((item) => {
+    let preferredRelease = "";
+    let bestCount = 0;
+    for (const [rel, count] of item.releases.entries()) {
+      if (count > bestCount) {
+        bestCount = count;
+        preferredRelease = rel;
+      }
+    }
+    return {
+      title: item.title,
+      subtitle: item.subtitle,
+      plays: item.plays,
+      releaseName: preferredRelease,
+      caaReleaseMbid: item.caaReleaseMbid,
+      caaId: item.caaId,
+      cover: item.cover,
+    };
+  });
+
+  return {
+    totalListens,
+    totalMinutes,
+    dailyAvg,
+    artists: sortAndSliceTop(artistMap, 10),
+    tracks: topTracks,
+    albums: sortAndSliceTop(albumMap, 10),
+  };
 }
 
 function renderSkeleton(container, withSub = true) {
@@ -317,48 +485,23 @@ async function resolveVibe(topTrack, topAlbum) {
 }
 
 async function fetchWrappedData(username) {
-  const year = new Date().getFullYear();
-  const cacheKey = `wrapped:${username.toLowerCase()}:${WRAPPED_RANGE}:${year}`;
+  const windowInfo = getYearWindow();
+  const cacheKey = `wrapped:${username.toLowerCase()}:${WRAPPED_RANGE}:${windowInfo.year}`;
   const cached = getCache(cacheKey);
   if (cached) return cached;
 
-  const [artistsRes, recordingsRes, releasesRes, activityRes] = await Promise.all([
-    listenbrainz.getUserStatsArtists(username, { range: WRAPPED_RANGE, count: 10 }),
-    listenbrainz.getUserStatsRecordings(username, { range: WRAPPED_RANGE, count: 10 }),
-    listenbrainz.getUserStatsReleases(username, { range: WRAPPED_RANGE, count: 10 }),
-    listenbrainz.getUserListeningActivity(username, { range: WRAPPED_RANGE }),
-  ]);
+  updateLoadingProgress({ visible: true, current: 1, total: MAX_WRAPPED_PAGES });
+  const listens = await fetchYearListens(
+    username,
+    windowInfo.startTs,
+    windowInfo.endTs,
+    (current, total) => {
+      updateLoadingProgress({ visible: true, current, total });
+    }
+  );
 
-  const artists = (artistsRes?.payload?.artists || []).slice(0, 10).map((artist) => ({
-    title: artist.artist_name || "Unknown Artist",
-    subtitle: "",
-    plays: Number(artist.listen_count || 0),
-    cover: "",
-  }));
-
-  const tracks = (recordingsRes?.payload?.recordings || []).slice(0, 10).map((recording) => ({
-    title: recording.track_name || "Unknown Track",
-    subtitle: recording.artist_name || "Unknown Artist",
-    plays: Number(recording.listen_count || 0),
-    releaseName: recording.release_name || "",
-    caaReleaseMbid: recording.caa_release_mbid || recording.release_mbid || "",
-    caaId: recording.caa_id || "",
-    cover: "",
-  }));
-
-  const albums = (releasesRes?.payload?.releases || []).slice(0, 10).map((release) => ({
-    title: release.release_name || "Unknown Album",
-    subtitle: release.artist_name || "Unknown Artist",
-    plays: Number(release.listen_count || 0),
-    caaReleaseMbid: release.caa_release_mbid || release.release_mbid || "",
-    caaId: release.caa_id || "",
-    cover: "",
-  }));
-
-  const activityBuckets = activityRes?.payload?.listening_activity || [];
-  const totalListens = activityBuckets.reduce((sum, bucket) => sum + Number(bucket?.listen_count || 0), 0);
-  const totalMinutes = Math.round((totalListens * FALLBACK_DURATION_MS) / 60000);
-  const dailyAvg = Math.round(totalListens / getElapsedDaysThisYear());
+  const aggregated = aggregateListens(listens, windowInfo.elapsedDays);
+  const { artists, tracks, albums } = aggregated;
 
   const [artistCover, trackCover, albumCover, vibe] = await Promise.all([
     artists[0] ? resolveArtistCover(artists[0].title) : Promise.resolve(""),
@@ -374,13 +517,13 @@ async function fetchWrappedData(username) {
   if (albums[0]) albums[0].cover = albumCover;
 
   const data = {
-    storyHeading: `${year} WRAPPED`,
+    storyHeading: windowInfo.storyHeading,
     stats: {
-      totalListens,
-      totalMinutes,
-      listens: formatNumber(totalListens),
-      minutes: formatNumber(totalMinutes),
-      dailyAvg: formatNumber(dailyAvg),
+      totalListens: aggregated.totalListens,
+      totalMinutes: aggregated.totalMinutes,
+      listens: formatNumber(aggregated.totalListens),
+      minutes: formatNumber(aggregated.totalMinutes),
+      dailyAvg: formatNumber(aggregated.dailyAvg),
       vibe,
     },
     heroCover: artistCover || albumCover || trackCover || "",
@@ -389,7 +532,7 @@ async function fetchWrappedData(username) {
     albums,
   };
 
-  setCache(cacheKey, data, CACHE_TTL_CURRENT);
+  setCache(cacheKey, data, CACHE_TTL_WRAPPED);
   return data;
 }
 
@@ -472,22 +615,45 @@ function initLandingForm() {
 
   input.addEventListener("input", () => setError(""));
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const user = input.value.trim();
     if (!user) return;
 
     setError("");
-    addRecentUser("wrapped", user);
-    trackEvent(EVENTS.SEARCH_SUBMIT, { tool: "wrapped" });
-    window.location.href = `/wrapped/result.html?user=${encodeURIComponent(user)}`;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Checking...";
+    }
+
+    try {
+      const userCacheKey = `user_ok:${user.toLowerCase()}`;
+      if (!getCache(userCacheKey)) {
+        await listenbrainz.getUserCount(user);
+        setCache(userCacheKey, true, CACHE_TTL_WRAPPED);
+      }
+      addRecentUser("wrapped", user);
+      trackEvent(EVENTS.SEARCH_SUBMIT, { tool: "wrapped" });
+      window.location.href = `/wrapped/result.html?user=${encodeURIComponent(user)}`;
+    } catch (err) {
+      if (err?.status === 404) {
+        setError(`User "${user}" not found on ListenBrainz.`);
+      } else {
+        setError("Unable to reach ListenBrainz. Please try again.");
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Generate";
+      }
+    }
   });
 }
 
-function loadWrapped() {
+async function loadWrapped(username) {
   const listArtists = document.getElementById("listTopArtists");
   const listTracks = document.getElementById("listTopTracks");
   const listAlbums = document.getElementById("listTopAlbums");
+  const memoryKey = `${username.toLowerCase()}:${WRAPPED_RANGE}`;
 
   currentWrappedData = null;
   setStatsSkeleton(true);
@@ -496,7 +662,32 @@ function loadWrapped() {
   renderSkeleton(listTracks, true);
   renderSkeleton(listAlbums, true);
 
-  startLoadingProgressPreview();
+  try {
+    const data = await fetchWrappedData(username);
+    lastValidResults.set(memoryKey, data);
+    applyWrappedToDom(data);
+  } catch (err) {
+    if (err?.status === 404) {
+      window.location.replace(`/wrapped/?not_found=${encodeURIComponent(username)}`);
+      return;
+    }
+    const fallback = lastValidResults.get(memoryKey);
+    if (fallback) {
+      applyWrappedToDom(fallback);
+      return;
+    }
+    setStatsSkeleton(false);
+    document.getElementById("userScrobbles").textContent = "—";
+    document.getElementById("userMinutes").textContent = "—";
+    document.getElementById("userDailyAvg").textContent = "—";
+    document.getElementById("userVibe").textContent = "—";
+    const msg = "Unable to load ListenBrainz data.";
+    renderEmpty(listArtists, msg);
+    renderEmpty(listTracks, msg);
+    renderEmpty(listAlbums, msg);
+  } finally {
+    updateLoadingProgress({ visible: false });
+  }
 }
 
 function populateStoryList(containerId, items, isTrackOrAlbum) {
