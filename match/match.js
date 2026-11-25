@@ -561,7 +561,7 @@ function initExportModal() {
 
     const reportEl = document.getElementById("storyReport");
     reportEl.className = isLight ? "theme-light" : "theme-dark";
-    bgControls.applyCurrentBg(isLight);
+    bgControls.applyCurrentBg();
 
     document.getElementById("storyReportTitle").textContent = "Match";
     document.getElementById("storyMatchScore").textContent = `${currentMatchData.matchPercentage}%`;

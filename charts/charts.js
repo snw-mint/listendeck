@@ -786,7 +786,7 @@ function initExportModal(username) {
 
     const reportEl = document.getElementById("storyReport");
     reportEl.className = isLight ? "theme-light" : "theme-dark";
-    bgControls.applyCurrentBg(isLight);
+    bgControls.applyCurrentBg();
 
     document.getElementById("storyReportTitle").textContent = "Recap";
     document.getElementById("storyServiceLogo").innerHTML = SERVICE_LOGOS[service] || "";

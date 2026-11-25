@@ -131,14 +131,6 @@ export function renderBlurredNoiseLayer(width, height, config) {
   return canvas;
 }
 
-function blendRgb(fgRgb, bgRgb, alpha) {
-  return [
-    Math.round(fgRgb[0] * alpha + bgRgb[0] * (1 - alpha)),
-    Math.round(fgRgb[1] * alpha + bgRgb[1] * (1 - alpha)),
-    Math.round(fgRgb[2] * alpha + bgRgb[2] * (1 - alpha)),
-  ];
-}
-
 function getRelativeLuminance([r, g, b]) {
   const [rs, gs, bs] = [r, g, b].map((channel) => {
     const normalized = channel / 255;
@@ -163,25 +155,6 @@ export function getContrastingInk(rgb) {
     primary: useDark ? "#141416" : "#ffffff",
     muted: useDark ? "rgba(20, 20, 22, 0.72)" : "rgba(255, 255, 255, 0.78)",
   };
-}
-
-export function applyExportCardContrast(reportEl, blob1Rgb, blob2Rgb, isLightTheme) {
-  if (!reportEl) return;
-  const baseRgb = isLightTheme ? [255, 255, 255] : [0, 0, 0];
-  const avgBlobRgb = [
-    Math.round((blob1Rgb[0] + blob2Rgb[0]) / 2),
-    Math.round((blob1Rgb[1] + blob2Rgb[1]) / 2),
-    Math.round((blob1Rgb[2] + blob2Rgb[2]) / 2),
-  ];
-
-  const bottomZoneRgb = blendRgb(avgBlobRgb, baseRgb, 0.58);
-  const footerZoneRgb = blendRgb(avgBlobRgb, baseRgb, 0.85);
-  const bottomInk = getContrastingInk(bottomZoneRgb);
-  const footerInk = getContrastingInk(footerZoneRgb);
-
-  reportEl.style.setProperty("--sc-bottom-text", bottomInk.primary);
-  reportEl.style.setProperty("--sc-bottom-text-dim", bottomInk.muted);
-  reportEl.style.setProperty("--sc-footer-text", footerInk.primary);
 }
 
 export function applyExportMeshPalette(container, paletteId = DEFAULT_EXPORT_BG) {
@@ -215,13 +188,12 @@ export function initExportBgControls({ pickerEl, targetEl }) {
   if (!pickerEl || !targetEl) {
     return {
       getSelectedStyle: () => activeStyle,
-      applyCurrentBg: (isLightTheme = true) => {
+      applyCurrentBg: () => {
         const palette = PALETTE_MAP.get(activeStyle) || PALETTE_MAP.get(DEFAULT_EXPORT_BG);
         const rgb1 = parseHexToRgb(palette.blob1);
         const rgb2 = parseHexToRgb(palette.blob2);
         applyExportMeshPalette(targetEl, activeStyle);
         applyCompositeLayer(targetEl, rgb1, rgb2);
-        applyExportCardContrast(targetEl?.parentElement, rgb1, rgb2, isLightTheme);
       },
     };
   }
@@ -283,22 +255,19 @@ export function initExportBgControls({ pickerEl, targetEl }) {
 
   return {
     getSelectedStyle: () => activeStyle,
-    applyCurrentBg: (isLightTheme = true) => {
-      const reportEl = targetEl.parentElement;
+    applyCurrentBg: () => {
       if (activeStyle === "custom") {
         applyExportMeshCustomColor(targetEl, customColor);
         const computedBlob2 = getComputedStyle(targetEl).getPropertyValue("--blob-2-color").trim();
         const rgb1 = parseHexToRgb(customColor);
         const rgb2 = resolveCssColorToRgb(computedBlob2, customColor);
         applyCompositeLayer(targetEl, rgb1, rgb2);
-        applyExportCardContrast(reportEl, rgb1, rgb2, isLightTheme);
       } else {
         const palette = PALETTE_MAP.get(activeStyle) || PALETTE_MAP.get(DEFAULT_EXPORT_BG);
         const rgb1 = parseHexToRgb(palette.blob1);
         const rgb2 = parseHexToRgb(palette.blob2);
         applyExportMeshPalette(targetEl, activeStyle);
         applyCompositeLayer(targetEl, rgb1, rgb2);
-        applyExportCardContrast(reportEl, rgb1, rgb2, isLightTheme);
       }
     },
   };
