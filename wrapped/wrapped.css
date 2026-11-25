@@ -12,6 +12,7 @@
   border-radius: var(--radius);
   background-color: var(--color-surface);
   margin-bottom: 2rem;
+  overflow: hidden;
 }
 
 .cover-image-container {
@@ -1257,4 +1258,50 @@
   .preview-story-square:nth-child(2) {
     margin-top: -32px;
   }
+}
+
+.wrapped-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wrapped-fetch-status {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.wrapped-fetch-status.is-visible {
+  opacity: 1;
+}
+
+.wrapped-banner-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 3;
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+  background-color: var(--color-border);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.wrapped-banner-progress.is-visible {
+  opacity: 1;
+}
+
+.wrapped-banner-bar {
+  width: 0%;
+  height: 100%;
+  background-color: var(--color-accent);
+  transition: width 0.25s ease;
 }

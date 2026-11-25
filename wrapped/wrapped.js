@@ -11,6 +11,7 @@ import {
 
 const WRAPPED_RANGE = "this_year";
 const FALLBACK_DURATION_MS = 3.5 * 60 * 1000;
+const MOCK_TOTAL_PAGES = 15;
 
 const SERVICE_LOGOS = {
   listendeck: `<span class="story-service-wordmark">listendeck<span class="logo-dot">.</span></span>`,
@@ -24,6 +25,39 @@ const SERVICE_LOGOS = {
 const lastValidResults = new Map();
 let currentWrappedData = null;
 let customArtistImage = null;
+let toastPreviewTimer = null;
+
+function updateLoadingProgress({ visible, current = 1, total = MOCK_TOTAL_PAGES, label = "Fetching listens" }) {
+  const statusEl = document.getElementById("wrappedFetchStatus");
+  const progressEl = document.getElementById("wrappedBannerProgress");
+  const barEl = document.getElementById("wrappedBannerBar");
+
+  if (statusEl) {
+    statusEl.classList.toggle("is-visible", Boolean(visible));
+    statusEl.setAttribute("aria-hidden", String(!visible));
+    statusEl.textContent = visible ? `${label} ${current}/${total}` : "";
+  }
+  if (progressEl) {
+    progressEl.classList.toggle("is-visible", Boolean(visible));
+  }
+  if (barEl) {
+    const pct = visible ? Math.max(0, Math.min(100, (current / Math.max(1, total)) * 100)) : 0;
+    barEl.style.width = `${pct}%`;
+  }
+}
+
+function startLoadingProgressPreview() {
+  if (toastPreviewTimer) {
+    clearInterval(toastPreviewTimer);
+    toastPreviewTimer = null;
+  }
+  let page = 1;
+  updateLoadingProgress({ visible: true, current: page, total: MOCK_TOTAL_PAGES });
+  toastPreviewTimer = setInterval(() => {
+    page = page >= MOCK_TOTAL_PAGES ? 1 : page + 1;
+    updateLoadingProgress({ visible: true, current: page, total: MOCK_TOTAL_PAGES });
+  }, 600);
+}
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -438,45 +472,22 @@ function initLandingForm() {
 
   input.addEventListener("input", () => setError(""));
 
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", (e) => {
     e.preventDefault();
     const user = input.value.trim();
     if (!user) return;
 
     setError("");
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Checking...";
-    }
-
-    try {
-      const userCacheKey = `user_ok:${user.toLowerCase()}`;
-      if (!getCache(userCacheKey)) {
-        await listenbrainz.getUserCount(user);
-        setCache(userCacheKey, true, CACHE_TTL_CURRENT);
-      }
-      addRecentUser("wrapped", user);
-      trackEvent(EVENTS.SEARCH_SUBMIT, { tool: "wrapped" });
-      window.location.href = `/wrapped/result.html?user=${encodeURIComponent(user)}`;
-    } catch (err) {
-      if (err?.status === 404) {
-        setError(`User "${user}" not found on ListenBrainz.`);
-      } else {
-        setError("Unable to reach ListenBrainz. Please try again.");
-      }
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Generate";
-      }
-    }
+    addRecentUser("wrapped", user);
+    trackEvent(EVENTS.SEARCH_SUBMIT, { tool: "wrapped" });
+    window.location.href = `/wrapped/result.html?user=${encodeURIComponent(user)}`;
   });
 }
 
-async function loadWrapped(username) {
+function loadWrapped() {
   const listArtists = document.getElementById("listTopArtists");
   const listTracks = document.getElementById("listTopTracks");
   const listAlbums = document.getElementById("listTopAlbums");
-  const memoryKey = `${username.toLowerCase()}:${WRAPPED_RANGE}`;
 
   currentWrappedData = null;
   setStatsSkeleton(true);
@@ -485,30 +496,7 @@ async function loadWrapped(username) {
   renderSkeleton(listTracks, true);
   renderSkeleton(listAlbums, true);
 
-  try {
-    const data = await fetchWrappedData(username);
-    lastValidResults.set(memoryKey, data);
-    applyWrappedToDom(data);
-  } catch (err) {
-    if (err?.status === 404) {
-      window.location.replace(`/wrapped/?not_found=${encodeURIComponent(username)}`);
-      return;
-    }
-    const fallback = lastValidResults.get(memoryKey);
-    if (fallback) {
-      applyWrappedToDom(fallback);
-      return;
-    }
-    setStatsSkeleton(false);
-    document.getElementById("userScrobbles").textContent = "—";
-    document.getElementById("userMinutes").textContent = "—";
-    document.getElementById("userDailyAvg").textContent = "—";
-    document.getElementById("userVibe").textContent = "—";
-    const msg = "Unable to load ListenBrainz data.";
-    renderEmpty(listArtists, msg);
-    renderEmpty(listTracks, msg);
-    renderEmpty(listAlbums, msg);
-  }
+  startLoadingProgressPreview();
 }
 
 function populateStoryList(containerId, items, isTrackOrAlbum) {
