@@ -795,18 +795,15 @@ function initResultPage() {
   const createExportElement = (layoutId, format) => {
     const { innerCardHtml, storyBgStyle, bgImgHtml } = buildCardSpec(layoutId, format);
     const wrapper = document.createElement("div");
-    wrapper.className = `lyrics-export-wrapper export-${format} export-${layoutId}`;
+    wrapper.className = `lyrics-export-wrapper format-${format} export-${format} export-${layoutId}`;
 
     if (format === "story") {
       wrapper.style.cssText = `
-        width: 360px;
-        height: 640px;
         position: relative;
         overflow: hidden;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 2.5rem 1.25rem;
         margin: 0;
         border: none;
         border-radius: 0;

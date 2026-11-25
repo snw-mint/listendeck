@@ -591,11 +591,11 @@
 }
 
 .lyrics-layout-frame.format-story {
-  max-width: 340px;
+  max-width: 290px;
   aspect-ratio: 9 / 16;
-  min-height: 520px;
-  padding: 2.5rem 1.25rem;
-  border-radius: 28px;
+  min-height: 440px;
+  padding: 2.1rem 1.05rem;
+  border-radius: 24px;
 }
 
 .lyrics-card-wrapper {
@@ -817,167 +817,149 @@
 }
 
 .format-story .lyrics-card-wrapper {
-  max-width: 250px;
-  gap: 0.5rem;
+  max-width: 180px;
+  gap: 0.42rem;
 }
 
 .format-story .lyrics-card-target {
-  max-width: 250px;
-  padding: 0.9rem 1rem;
-  gap: 0.6rem;
-  border-radius: 15px;
+  max-width: 180px;
+  min-height: 155px;
+  padding: 0.95rem 0.82rem;
+  gap: 0.5rem;
+  justify-content: center;
+  border-radius: 13px;
 }
 
 .format-story .lyrics-card-header {
-  gap: 0.55rem;
+  gap: 0.38rem;
 }
 
 .format-story .lyrics-card-thumb {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
 }
 
 .format-story .lyrics-card-blurred .lyrics-card-thumb {
-  width: 32px;
-  height: 32px;
-  border-radius: 7px;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
 }
 
 .format-story .lyrics-card-title {
-  font-size: 0.72rem;
+  font-size: 0.54rem;
   line-height: 1.2;
 }
 
 .format-story .lyrics-card-blurred .lyrics-card-title {
-  font-size: 0.7rem;
+  font-size: 0.52rem;
 }
 
 .format-story .lyrics-card-artist {
-  font-size: 0.62rem;
+  font-size: 0.46rem;
 }
 
 .format-story .lyrics-card-blurred .lyrics-card-artist {
-  font-size: 0.6rem;
+  font-size: 0.45rem;
 }
 
 .format-story .lyrics-card-lines {
-  gap: 0.38rem;
+  gap: 0.26rem;
 }
 
 .format-story .lyrics-card-line {
-  font-size: 1rem;
-  line-height: 1.28;
+  font-size: 0.72rem;
+  line-height: 1.26;
 }
 
 .format-story .lyrics-card-line-orig {
-  font-size: 0.66rem;
+  font-size: 0.48rem;
   margin-bottom: 1px;
 }
 
 .format-story .lyrics-card-line-trans {
-  font-size: 1rem;
-  line-height: 1.28;
+  font-size: 0.72rem;
+  line-height: 1.26;
 }
 
-.format-story .lyrics-card-lines.lines-count-5,
-.export-story .lyrics-card-lines.lines-count-5 {
-  gap: 0.38rem;
+.format-story .lyrics-card-lines.lines-count-5 {
+  gap: 0.26rem;
 }
 
 .format-story .lyrics-card-lines.lines-count-5 .lyrics-card-line,
-.format-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-trans,
-.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line,
-.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-trans {
-  font-size: 1rem;
+.format-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-trans {
+  font-size: 0.72rem;
 }
 
-.format-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-orig,
-.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-orig {
-  font-size: 0.66rem;
+.format-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-orig {
+  font-size: 0.48rem;
 }
 
-.format-story .lyrics-card-lines.lines-count-4,
-.export-story .lyrics-card-lines.lines-count-4 {
-  gap: 0.42rem;
+.format-story .lyrics-card-lines.lines-count-4 {
+  gap: 0.28rem;
 }
 
 .format-story .lyrics-card-lines.lines-count-4 .lyrics-card-line,
-.format-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-trans,
-.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line,
-.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-trans {
-  font-size: 1.08rem;
-}
-
-.format-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-orig,
-.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-orig {
-  font-size: 0.7rem;
-}
-
-.format-story .lyrics-card-lines.lines-count-3,
-.export-story .lyrics-card-lines.lines-count-3 {
-  gap: 0.48rem;
-}
-
-.format-story .lyrics-card-lines.lines-count-3 .lyrics-card-line,
-.format-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-trans,
-.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line,
-.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-trans {
-  font-size: 1.18rem;
-}
-
-.format-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-orig,
-.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-orig {
-  font-size: 0.74rem;
-}
-
-.format-story .lyrics-card-lines.lines-count-2,
-.export-story .lyrics-card-lines.lines-count-2 {
-  gap: 0.55rem;
-}
-
-.format-story .lyrics-card-lines.lines-count-2 .lyrics-card-line,
-.format-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-trans,
-.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line,
-.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-trans {
-  font-size: 1.28rem;
-}
-
-.format-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-orig,
-.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-orig {
+.format-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-trans {
   font-size: 0.78rem;
 }
 
-.format-story .lyrics-card-lines.lines-count-1,
-.export-story .lyrics-card-lines.lines-count-1 {
-  gap: 0.64rem;
+.format-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-orig {
+  font-size: 0.5rem;
 }
 
-.format-story .lyrics-card-lines.lines-count-1 .lyrics-card-line,
-.format-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-trans,
-.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line,
-.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-trans {
-  font-size: 1.4rem;
+.format-story .lyrics-card-lines.lines-count-3 {
+  gap: 0.32rem;
 }
 
-.format-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-orig,
-.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-orig {
+.format-story .lyrics-card-lines.lines-count-3 .lyrics-card-line,
+.format-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-trans {
   font-size: 0.84rem;
 }
 
+.format-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-orig {
+  font-size: 0.53rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-2 {
+  gap: 0.36rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-2 .lyrics-card-line,
+.format-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-trans {
+  font-size: 0.9rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-orig {
+  font-size: 0.56rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-1 {
+  gap: 0.42rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-1 .lyrics-card-line,
+.format-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-trans {
+  font-size: 0.98rem;
+}
+
+.format-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-orig {
+  font-size: 0.6rem;
+}
+
 .format-story .lyrics-card-divider {
-  margin-top: 0.3rem;
-  padding-top: 0.5rem;
+  margin-top: 0.25rem;
+  padding-top: 0.42rem;
 }
 
 .format-story .lyrics-card-service-logo {
-  padding: 0 0.4rem 0.2rem 0.4rem;
-  margin-left: 0.85rem;
+  padding: 0 0.34rem 0.17rem 0.34rem;
+  margin-left: 0.72rem;
 }
 
 .format-story .lyrics-card-service-logo svg {
-  height: 11px;
-  max-width: 55px;
+  height: 9.5px;
+  max-width: 47px;
 }
 
 .format-story .lyrics-card-blurred,
@@ -1138,16 +1120,16 @@
 }
 
 .lyrics-export-wrapper.export-story {
-  width: 360px !important;
-  height: 640px !important;
-  min-width: 360px !important;
-  min-height: 640px !important;
-  max-width: 360px !important;
-  max-height: 640px !important;
+  width: 290px !important;
+  height: calc(290px * 16 / 9) !important;
+  min-width: 290px !important;
+  min-height: calc(290px * 16 / 9) !important;
+  max-width: 290px !important;
+  max-height: calc(290px * 16 / 9) !important;
   border-radius: 0 !important;
   border: none !important;
   box-shadow: none !important;
-  padding: 2.5rem 1.25rem !important;
+  padding: 2.1rem 1.05rem !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -1155,20 +1137,7 @@
   overflow: hidden !important;
 }
 
-.lyrics-export-wrapper.export-story .lyrics-card-wrapper {
-  width: 250px !important;
-  min-width: 250px !important;
-  max-width: 250px !important;
-  gap: 0.5rem !important;
-}
-
 .lyrics-export-wrapper.export-story .lyrics-card-target {
-  width: 250px !important;
-  min-width: 250px !important;
-  max-width: 250px !important;
-  padding: 0.9rem 1rem !important;
-  gap: 0.6rem !important;
-  border-radius: 15px !important;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35) !important;
 }
 
@@ -1176,139 +1145,6 @@
 .lyrics-export-wrapper.export-card .lyrics-card-target,
 .lyrics-card-solid {
   box-shadow: none !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-header {
-  gap: 0.55rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-thumb {
-  width: 28px !important;
-  height: 28px !important;
-  border-radius: 6px !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-blurred .lyrics-card-thumb {
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 7px !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-title {
-  font-size: 0.72rem !important;
-  line-height: 1.2 !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-blurred .lyrics-card-title {
-  font-size: 0.7rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-artist {
-  font-size: 0.62rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-blurred .lyrics-card-artist {
-  font-size: 0.6rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines {
-  gap: 0.38rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-line {
-  font-size: 1rem !important;
-  line-height: 1.28 !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-line-orig {
-  font-size: 0.66rem !important;
-  margin-bottom: 1px !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-line-trans {
-  font-size: 1rem !important;
-  line-height: 1.28 !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-5 {
-  gap: 0.38rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line,
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-trans {
-  font-size: 1rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-5 .lyrics-card-line-orig {
-  font-size: 0.66rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-4 {
-  gap: 0.42rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line,
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-trans {
-  font-size: 1.08rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-4 .lyrics-card-line-orig {
-  font-size: 0.7rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-3 {
-  gap: 0.48rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line,
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-trans {
-  font-size: 1.18rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-3 .lyrics-card-line-orig {
-  font-size: 0.74rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-2 {
-  gap: 0.55rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line,
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-trans {
-  font-size: 1.28rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-2 .lyrics-card-line-orig {
-  font-size: 0.78rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-1 {
-  gap: 0.64rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line,
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-trans {
-  font-size: 1.4rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-lines.lines-count-1 .lyrics-card-line-orig {
-  font-size: 0.84rem !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-service-logo {
-  padding: 0 0.4rem 0.2rem 0.4rem !important;
-  margin-left: 0.85rem !important;
-  opacity: 0.85 !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-service-logo svg {
-  height: 11px !important;
-  max-width: 55px !important;
-}
-
-.lyrics-export-wrapper.export-story .lyrics-card-divider {
-  margin-top: 0.3rem !important;
-  padding-top: 0.5rem !important;
 }
 
 .lyrics-export-wrapper .story-blur-image {
