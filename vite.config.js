@@ -10,6 +10,8 @@ export default defineConfig({
         main: resolve(__dirname, "index.html"),
         charts: resolve(__dirname, "charts/index.html"),
         chartsResult: resolve(__dirname, "charts/result.html"),
+        wrapped: resolve(__dirname, "wrapped/index.html"),
+        wrappedResult: resolve(__dirname, "wrapped/result.html"),
         match: resolve(__dirname, "match/index.html"),
         matchResult: resolve(__dirname, "match/result.html"),
         lyrics: resolve(__dirname, "lyrics/index.html"),

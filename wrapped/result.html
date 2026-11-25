@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wrapped — listendeck.</title>
+  <meta name="description"
+    content="Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0B0B0E" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" href="https://listendeck.vercel.app/wrapped/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="listendeck." />
+  <meta property="og:title" content="ListenBrainz Wrapped &amp; Year in Music — listendeck." />
+  <meta property="og:description"
+    content="Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps." />
+  <meta property="og:url" content="https://listendeck.vercel.app/wrapped/" />
+  <meta property="og:image" content="https://listendeck.vercel.app/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ListenBrainz Wrapped &amp; Year in Music — listendeck." />
+  <meta name="twitter:description"
+    content="Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps." />
+  <meta name="twitter:image" content="https://listendeck.vercel.app/og-image.jpg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="stylesheet" href="/shared/global.css" />
+  <link rel="stylesheet" href="/wrapped/wrapped.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="header-logo">
+        <img src="/logo.svg" alt="" class="header-logo-icon" />
+        <span>listendeck<span class="logo-dot">.</span></span>
+      </a>
+
+      <div class="header-right">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme"></button>
+
+        <nav id="header-nav" class="header-nav" aria-label="Tools">
+          <a href="/" class="nav-link" data-route="/">Home</a>
+          <a href="/charts/" class="nav-link" data-route="/charts">Charts</a>
+          <a href="/wrapped/" class="nav-link" data-route="/wrapped">Wrapped</a>
+          <a href="/match/" class="nav-link" data-route="/match">Match</a>
+          <a href="/lyrics/" class="nav-link" data-route="/lyrics">Lyrics</a>
+          <a href="/cards/" class="nav-link" data-route="/cards">Cards</a>
+        </nav>
+
+        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Open menu" aria-expanded="false"
+          aria-controls="header-nav">
+          <animate-icons name="menu" size="22"></animate-icons>
+        </button>
+
+        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner"
+          aria-label="GitHub Repository" title="GitHub">
+          <animate-icons name="github" size="20"></animate-icons>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="result-main">
+    <div class="result-back-bar">
+      <a href="/wrapped/" class="result-back-link">
+        <animate-icons name="arrow-left" size="16"></animate-icons>
+        <span>Back</span>
+      </a>
+    </div>
+
+    <div id="wrapped-report">
+      <section class="user-cover-section">
+        <div class="cover-image-container" id="coverContainer">
+          <img id="artistCover" alt="Top Artist Cover" class="cover-image" />
+        </div>
+
+        <div class="user-profile-container">
+          <div class="user-info-wrapper">
+            <div class="user-info-details">
+              <h1 id="userDisplayName" class="user-display-name">User</h1>
+
+              <div class="stats-cards-container">
+                <div class="stat-card">
+                  <span class="stat-title">Listens</span>
+                  <span id="userScrobbles" class="stat-value skeleton skeleton-text"></span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-title">Minutes</span>
+                  <span id="userMinutes" class="stat-value skeleton skeleton-text"></span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-title">Daily Avg</span>
+                  <span id="userDailyAvg" class="stat-value skeleton skeleton-text"></span>
+                </div>
+                <div class="stat-card">
+                  <span class="stat-title">Vibe</span>
+                  <span id="userVibe" class="stat-value skeleton skeleton-text"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="charts-actions">
+              <button id="export-wrapped-btn" type="button" class="export-btn">
+                <animate-icons name="download" size="18"></animate-icons>
+                <span>Export</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="charts-section">
+        <div class="charts-grid">
+          <section class="chart-card" id="cardArtists">
+            <h2>Top Artists<span class="logo-dot">.</span></h2>
+            <input type="file" id="artistImageUploadInput"
+              accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" hidden />
+            <div class="lista-top" id="listTopArtists">
+              <div class="chart-item top-1 is-skeleton">
+                <div class="top1-skeleton-bg skeleton"></div>
+                <div class="text-content"><span class="skeleton skeleton-text"
+                    style="width: 150px; height: 20px;"></span><span class="skeleton skeleton-text"
+                    style="width: 100px; height: 14px; margin-top: 8px;"></span></div>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#2</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 145px; height: 14px;"></span></div><span class="skeleton skeleton-text"
+                  style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#3</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 165px; height: 14px;"></span></div><span class="skeleton skeleton-text"
+                  style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#4</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 130px; height: 14px;"></span></div><span class="skeleton skeleton-text"
+                  style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#5</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 155px; height: 14px;"></span></div><span class="skeleton skeleton-text"
+                  style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#6</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 140px; height: 14px;"></span></div><span class="skeleton skeleton-text"
+                  style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#7</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 170px; height: 14px;"></span></div><span class="skeleton skeleton-text"
+                  style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#8</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 125px; height: 14px;"></span></div><span class="skeleton skeleton-text"
+                  style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#9</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 150px; height: 14px;"></span></div><span class="skeleton skeleton-text"
+                  style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#10</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 135px; height: 14px;"></span></div><span class="skeleton skeleton-text"
+                  style="width: 30px; height: 12px;"></span>
+              </div>
+            </div>
+          </section>
+
+          <section class="chart-card" id="cardTracks">
+            <h2>Top Songs<span class="logo-dot">.</span></h2>
+            <div class="lista-top" id="listTopTracks">
+              <div class="chart-item top-1 is-skeleton">
+                <div class="top1-skeleton-bg skeleton"></div>
+                <div class="text-content"><span class="skeleton skeleton-text"
+                    style="width: 150px; height: 20px;"></span><span class="skeleton skeleton-text"
+                    style="width: 100px; height: 14px; margin-top: 8px;"></span></div>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#2</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 145px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 94px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#3</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 165px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 107px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#4</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 130px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 85px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#5</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 155px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 101px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#6</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 140px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 91px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#7</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 170px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 111px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#8</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 125px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 81px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#9</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 150px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 98px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#10</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 135px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 88px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+            </div>
+          </section>
+
+          <section class="chart-card" id="cardAlbums">
+            <h2>Top Albums<span class="logo-dot">.</span></h2>
+            <div class="lista-top" id="listTopAlbums">
+              <div class="chart-item top-1 is-skeleton">
+                <div class="top1-skeleton-bg skeleton"></div>
+                <div class="text-content"><span class="skeleton skeleton-text"
+                    style="width: 150px; height: 20px;"></span><span class="skeleton skeleton-text"
+                    style="width: 100px; height: 14px; margin-top: 8px;"></span></div>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#2</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 145px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 94px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#3</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 165px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 107px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#4</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 130px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 85px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#5</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 155px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 101px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#6</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 140px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 91px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#7</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 170px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 111px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#8</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 125px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 81px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#9</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 150px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 98px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+              <div class="chart-item"><span class="chart-rank">#10</span>
+                <div class="chart-row-text"><span class="skeleton skeleton-text"
+                    style="width: 135px; height: 14px;"></span><span class="skeleton skeleton-text"
+                    style="width: 88px; height: 11px; margin-top: 4px;"></span></div><span
+                  class="skeleton skeleton-text" style="width: 30px; height: 12px;"></span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="generationSettingsModal" class="ld-modal" role="dialog" aria-modal="true"
+    aria-labelledby="settingsModalTitle">
+    <div class="ld-modal-card">
+      <div id="step1">
+        <div class="ld-modal-header">
+          <div>
+            <h2 id="settingsModalTitle">Background</h2>
+            <p class="ld-modal-subtitle">Choose a theme for your report</p>
+          </div>
+          <button type="button" class="ld-icon-btn" id="closeSettingsModal" aria-label="Close">
+            <animate-icons name="x" size="20"></animate-icons>
+          </button>
+        </div>
+
+        <div class="bg-palette" id="bgStylePicker">
+          <button type="button" class="bg-option selected" data-bg="purple" style="background-color: #7c3aed;"
+            aria-label="Purple" aria-pressed="true" title="Purple">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <button type="button" class="bg-option" data-bg="nature" style="background-color: #65c914;"
+            aria-label="Nature" aria-pressed="false" title="Nature">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <button type="button" class="bg-option" data-bg="crimson" style="background-color: #ff2626;"
+            aria-label="Crimson" aria-pressed="false" title="Crimson">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <button type="button" class="bg-option" data-bg="sea" style="background-color: #3b82f6;"
+            aria-label="Sea" aria-pressed="false" title="Sea">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <button type="button" class="bg-option" data-bg="sunset" style="background-color: #f97316;"
+            aria-label="Sunset" aria-pressed="false" title="Sunset">
+            <animate-icons name="check" size="18" color="#ffffff" class="bg-check-icon"></animate-icons>
+          </button>
+          <label class="bg-option bg-option-custom" title="Custom color">
+            <input type="color" class="bg-custom-color-input" value="#7c3aed" aria-label="Custom color" />
+            <svg class="bg-pick-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m2 22 1-1h3l9-9" />
+              <path d="M3 21v-3l9-9" />
+              <path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z" />
+            </svg>
+          </label>
+        </div>
+
+        <button type="button" id="nextStepBtn" class="ld-btn-primary">Continue</button>
+      </div>
+
+      <div id="step2" style="display: none;">
+        <div class="ld-modal-header">
+          <div>
+            <h2>Preferences</h2>
+            <p class="ld-modal-subtitle">Customize your story card</p>
+          </div>
+          <button type="button" class="ld-icon-btn" id="backStepBtn" aria-label="Back">
+            <animate-icons name="chevron-left" size="20"></animate-icons>
+          </button>
+        </div>
+
+        <label class="ld-field-label" for="serviceSelect">Service Logo</label>
+        <div class="ld-select-wrap">
+          <select id="serviceSelect" class="ld-select" aria-label="Service logo">
+            <option value="listendeck" selected>listendeck.</option>
+            <option value="youtubemusic">YouTube Music</option>
+            <option value="deezer">Deezer</option>
+            <option value="spotify">Spotify</option>
+            <option value="applemusic">Apple Music</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+
+        <label class="ld-switch-row">
+          <span>Light Theme</span>
+          <span class="ld-switch">
+            <input type="checkbox" id="themeToggleCheckbox" />
+            <span class="ld-slider"></span>
+          </span>
+        </label>
+
+        <label class="ld-switch-row">
+          <span>Use Listens</span>
+          <span class="ld-switch">
+            <input type="checkbox" id="useScrobblesCheckbox" />
+            <span class="ld-slider"></span>
+          </span>
+        </label>
+
+        <button type="button" id="confirmSettingsBtn" class="ld-btn-primary">
+          <animate-icons name="download" size="18"></animate-icons>
+          <span>Generate Report</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="generationModal" class="ld-modal">
+    <div class="ld-status-pill">
+      <div id="generationStateLoading">
+        <span class="ld-loader"></span>
+      </div>
+      <div id="generationStateComplete" style="display: none;">
+        <animate-icons name="circle-check" size="64" color="#ffffff"></animate-icons>
+      </div>
+    </div>
+  </div>
+
+  <div id="storyReportContainer" class="hidden-report-container">
+    <div id="storyReport" class="theme-dark">
+      <div id="storyReportBackground" class="export-mesh-bg" aria-hidden="true"></div>
+
+      <div class="story-header">
+        <div id="storyReportTitle" class="story-title">Wrapped</div>
+        <div id="storyServiceLogo" class="story-service-logo"></div>
+      </div>
+
+      <div class="story-period-header">
+        <div id="storyMonthYear" class="story-month-year"></div>
+        <div id="storyTotalMinutes" class="story-total-minutes"></div>
+      </div>
+
+      <div class="story-body" id="storyBody">
+        <div class="story-lists-container">
+          <div class="story-list-block">
+            <h3>Top Artists</h3>
+            <div id="storyListArtists" class="story-items-list"></div>
+          </div>
+          <div class="story-list-block">
+            <h3>Top Songs</h3>
+            <div id="storyListSongs" class="story-items-list"></div>
+          </div>
+          <div class="story-list-block">
+            <h3>Top Albums</h3>
+            <div id="storyListAlbums" class="story-items-list"></div>
+          </div>
+        </div>
+
+        <div class="story-images-container">
+          <div class="story-square-image">
+            <img id="storyImageArtist" src="" alt="Top Artist" crossorigin="anonymous" />
+          </div>
+          <div class="story-square-image">
+            <img id="storyImageSong" src="" alt="Top Song" crossorigin="anonymous" />
+          </div>
+          <div class="story-square-image">
+            <img id="storyImageAlbum" src="" alt="Top Album" crossorigin="anonymous" />
+          </div>
+        </div>
+      </div>
+
+      <div class="story-footer">
+        <div class="story-brand">listendeck.vercel.app</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>listendeck<span class="logo-dot">.</span></strong>
+        <span>by <a href="https://github.com/snw-mint" target="_blank" rel="noopener noreferrer">Snow Mint</a></span>
+        <span>·</span>
+        <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank"
+          rel="noopener noreferrer">GPL-3.0</a>
+      </div>
+      <div class="footer-right">
+        <a href="/credits/">Credits</a>
+        <span>·</span>
+        <a href="https://github.com/snw-mint/listendeck/issues/new/choose" target="_blank" rel="noopener noreferrer"
+          data-track="feedback_click">Feedback</a>
+        <span>·</span>
+        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/shared/header.js"></script>
+  <script type="module" src="/wrapped/wrapped.js"></script>
+</body>
+
+</html>

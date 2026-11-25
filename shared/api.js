@@ -119,6 +119,38 @@ export const listenbrainz = {
       retries: 2,
     });
   },
+  getUserStatsArtists(username, { range = "this_year", count = 10, offset = 0 } = {}) {
+    const user = encodeURIComponent(username.trim());
+    const query = new URLSearchParams({ range, count: String(count), offset: String(offset) });
+    return requestJson(`${LB_BASE}/stats/user/${user}/artists?${query.toString()}`, {
+      timeout: 12000,
+      retries: 2,
+    });
+  },
+  getUserStatsRecordings(username, { range = "this_year", count = 10, offset = 0 } = {}) {
+    const user = encodeURIComponent(username.trim());
+    const query = new URLSearchParams({ range, count: String(count), offset: String(offset) });
+    return requestJson(`${LB_BASE}/stats/user/${user}/recordings?${query.toString()}`, {
+      timeout: 12000,
+      retries: 2,
+    });
+  },
+  getUserStatsReleases(username, { range = "this_year", count = 10, offset = 0 } = {}) {
+    const user = encodeURIComponent(username.trim());
+    const query = new URLSearchParams({ range, count: String(count), offset: String(offset) });
+    return requestJson(`${LB_BASE}/stats/user/${user}/releases?${query.toString()}`, {
+      timeout: 12000,
+      retries: 2,
+    });
+  },
+  getUserListeningActivity(username, { range = "this_year" } = {}) {
+    const user = encodeURIComponent(username.trim());
+    const query = new URLSearchParams({ range });
+    return requestJson(`${LB_BASE}/stats/user/${user}/listening-activity?${query.toString()}`, {
+      timeout: 12000,
+      retries: 2,
+    });
+  },
 };
 
 export const lrclib = {

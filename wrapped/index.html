@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ListenBrainz Wrapped &amp; Year in Music — listendeck.</title>
+  <meta name="description"
+    content="Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps." />
+  <meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0B0B0E" media="(prefers-color-scheme: dark)" />
+  <link rel="canonical" href="https://listendeck.vercel.app/wrapped/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="listendeck." />
+  <meta property="og:title" content="ListenBrainz Wrapped &amp; Year in Music — listendeck." />
+  <meta property="og:description"
+    content="Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps." />
+  <meta property="og:url" content="https://listendeck.vercel.app/wrapped/" />
+  <meta property="og:image" content="https://listendeck.vercel.app/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="ListenBrainz Wrapped &amp; Year in Music — listendeck." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ListenBrainz Wrapped &amp; Year in Music — listendeck." />
+  <meta name="twitter:description"
+    content="Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps." />
+  <meta name="twitter:image" content="https://listendeck.vercel.app/og-image.jpg" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "ListenBrainz Wrapped & Year in Music — listendeck.",
+      "url": "https://listendeck.vercel.app/wrapped/",
+      "description": "Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web",
+      "isAccessibleForFree": true,
+      "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+      "image": "https://listendeck.vercel.app/og-image.jpg",
+      "author": {
+        "@type": "Organization",
+        "name": "Snow Mint",
+        "url": "https://github.com/snw-mint"
+      }
+    }
+  </script>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <link rel="stylesheet" href="/shared/global.css" />
+  <link rel="stylesheet" href="/wrapped/wrapped.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="header-logo">
+        <img src="/logo.svg" alt="" class="header-logo-icon" />
+        <span>listendeck<span class="logo-dot">.</span></span>
+      </a>
+
+      <div class="header-right">
+        <button id="theme-toggle" class="theme-toggle-btn" type="button" aria-label="Toggle theme"></button>
+
+        <nav id="header-nav" class="header-nav" aria-label="Tools">
+          <a href="/" class="nav-link" data-route="/">Home</a>
+          <a href="/charts/" class="nav-link" data-route="/charts">Charts</a>
+          <a href="/wrapped/" class="nav-link" data-route="/wrapped">Wrapped</a>
+          <a href="/match/" class="nav-link" data-route="/match">Match</a>
+          <a href="/lyrics/" class="nav-link" data-route="/lyrics">Lyrics</a>
+          <a href="/cards/" class="nav-link" data-route="/cards">Cards</a>
+        </nav>
+
+        <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Open menu" aria-expanded="false"
+          aria-controls="header-nav">
+          <animate-icons name="menu" size="22"></animate-icons>
+        </button>
+
+        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer" class="github-corner"
+          aria-label="GitHub Repository" title="GitHub">
+          <animate-icons name="github" size="20"></animate-icons>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="tool-main">
+    <div class="tool-split">
+      <section class="tool-input-col">
+        <h1 class="tool-title">Turn Your ListenBrainz Year Into Wrapped<span class="logo-dot">.</span></h1>
+        <p class="tool-description">
+          Enter your ListenBrainz username to explore your top artists, tracks, and albums of the year with listening
+          stats and exportable Story recaps.
+        </p>
+        <form id="wrapped-form" class="tool-form">
+          <div class="input-pill" id="wrapped-input-pill">
+            <input type="text" id="wrapped-user" placeholder="ListenBrainz username" autocomplete="off" required />
+            <button type="submit" id="wrapped-submit-btn" class="input-pill-btn">Generate</button>
+          </div>
+          <p id="wrapped-error" class="form-error" role="alert" aria-live="polite"></p>
+        </form>
+        <p class="signup-link">
+          Don't have a ListenBrainz account?
+          <a href="https://metabrainz.org/signup" target="_blank" rel="noopener noreferrer">Create one!</a>
+        </p>
+      </section>
+
+      <section class="tool-preview-col charts-preview-col" aria-label="Example preview">
+        <div class="preview-story-card" aria-hidden="true">
+          <div class="preview-story-top">
+            <span class="preview-story-title">Wrapped</span>
+            <span class="preview-story-brand">listendeck<span class="logo-dot">.</span></span>
+          </div>
+
+          <div class="preview-story-period">
+            <div class="preview-story-month">2026 WRAPPED</div>
+            <div class="preview-story-minutes">42,810 minutes</div>
+          </div>
+
+          <div class="preview-story-body">
+            <div class="preview-story-lists">
+              <div class="preview-story-block">
+                <h3>Top Artists</h3>
+                <div class="preview-story-items">
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">1</span>
+                    <div class="preview-story-meta">
+                      <strong>The Weeknd</strong>
+                      <span>312 streams</span>
+                    </div>
+                  </div>
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">2</span>
+                    <div class="preview-story-meta">
+                      <strong>Sabrina Carpenter</strong>
+                      <span>248 streams</span>
+                    </div>
+                  </div>
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">3</span>
+                    <div class="preview-story-meta">
+                      <strong>Billie Eilish</strong>
+                      <span>195 streams</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="preview-story-block">
+                <h3>Top Songs</h3>
+                <div class="preview-story-items">
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">1</span>
+                    <div class="preview-story-meta">
+                      <strong>Espresso</strong>
+                      <span>Sabrina Carpenter</span>
+                    </div>
+                  </div>
+                  <div class="preview-story-row">
+                    <span class="preview-story-rank">2</span>
+                    <div class="preview-story-meta">
+                      <strong>Blinding Lights</strong>
+                      <span>The Weeknd</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-story-images">
+              <div class="preview-story-square">
+                <img src="/assets/preview/charts-artist.webp" alt="" />
+              </div>
+              <div class="preview-story-square">
+                <img src="/assets/preview/charts-song.webp" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>listendeck<span class="logo-dot">.</span></strong>
+        <span>by <a href="https://github.com/snw-mint" target="_blank" rel="noopener noreferrer">Snow Mint</a></span>
+        <span>·</span>
+        <a href="https://github.com/snw-mint/listendeck/blob/main/LICENSE" target="_blank"
+          rel="noopener noreferrer">GPL-3.0</a>
+      </div>
+      <div class="footer-right">
+        <a href="/credits/">Credits</a>
+        <span>·</span>
+        <a href="https://github.com/snw-mint/listendeck/issues/new/choose" target="_blank" rel="noopener noreferrer"
+          data-track="feedback_click">Feedback</a>
+        <span>·</span>
+        <a href="https://github.com/snw-mint/listendeck" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/shared/header.js"></script>
+  <script type="module" src="/wrapped/wrapped.js"></script>
+</body>
+
+</html>
