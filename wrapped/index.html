@@ -4,26 +4,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ListenBrainz Wrapped &amp; Year in Music — listendeck.</title>
+  <title>ListenBrainz Wrapped 2026 — Year in Music &amp; Top Charts | listendeck.</title>
   <meta name="description"
-    content="Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps." />
+    content="Generate your free ListenBrainz Wrapped 2026 recap in your browser. Explore your top artists, songs, albums, top genres, listening club, obsession track, and export 9:16 Story cards." />
+  <meta name="keywords"
+    content="ListenBrainz Wrapped, ListenBrainz Wrapped 2026, ListenBrainz Year in Music, ListenBrainz recap, music wrapped generator, top artists, top songs, top genres, listening stats, listendeck" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <meta name="author" content="Snow Mint" />
   <meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0B0B0E" media="(prefers-color-scheme: dark)" />
   <link rel="canonical" href="https://listendeck.vercel.app/wrapped/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="listendeck." />
-  <meta property="og:title" content="ListenBrainz Wrapped &amp; Year in Music — listendeck." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="ListenBrainz Wrapped 2026 — Year in Music &amp; Top Charts | listendeck." />
   <meta property="og:description"
-    content="Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps." />
+    content="Generate your free ListenBrainz Wrapped 2026 recap in your browser. Explore your top artists, songs, albums, top genres, obsession track, and export 9:16 Story cards." />
   <meta property="og:url" content="https://listendeck.vercel.app/wrapped/" />
   <meta property="og:image" content="https://listendeck.vercel.app/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="ListenBrainz Wrapped &amp; Year in Music — listendeck." />
+  <meta property="og:image:alt" content="ListenBrainz Wrapped 2026 — Year in Music &amp; Top Charts | listendeck." />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="ListenBrainz Wrapped &amp; Year in Music — listendeck." />
+  <meta name="twitter:title" content="ListenBrainz Wrapped 2026 — Year in Music &amp; Top Charts | listendeck." />
   <meta name="twitter:description"
-    content="Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps." />
+    content="Generate your free ListenBrainz Wrapped 2026 recap in your browser. Explore your top artists, songs, albums, top genres, obsession track, and export 9:16 Story cards." />
   <meta name="twitter:image" content="https://listendeck.vercel.app/og-image.jpg" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -32,20 +37,83 @@
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "ListenBrainz Wrapped & Year in Music — listendeck.",
-      "url": "https://listendeck.vercel.app/wrapped/",
-      "description": "Turn your ListenBrainz listening history into your yearly Wrapped recap. Explore your top artists, songs, albums of the year, and export shareable Story recaps.",
-      "applicationCategory": "MultimediaApplication",
-      "operatingSystem": "Web",
-      "isAccessibleForFree": true,
-      "license": "https://www.gnu.org/licenses/gpl-3.0.html",
-      "image": "https://listendeck.vercel.app/og-image.jpg",
-      "author": {
-        "@type": "Organization",
-        "name": "Snow Mint",
-        "url": "https://github.com/snw-mint"
-      }
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "name": "ListenBrainz Wrapped 2026 — listendeck.",
+          "url": "https://listendeck.vercel.app/wrapped/",
+          "description": "Generate your free ListenBrainz Wrapped 2026 recap in your browser. Explore top artists, songs, albums, top genres, listening club, obsession track, and exportable 9:16 Story cards.",
+          "applicationCategory": "MultimediaApplication",
+          "operatingSystem": "Web",
+          "browserRequirements": "Requires JavaScript",
+          "isAccessibleForFree": true,
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": [
+            "Full Year-in-Music Recap",
+            "Top 5 Artists, Songs & Albums Story Cards",
+            "Minutes Listened & Listening Club",
+            "Obsession Track Streak",
+            "Top 5 Genres Breakdown"
+          ],
+          "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+          "image": "https://listendeck.vercel.app/og-image.jpg",
+          "author": {
+            "@type": "Organization",
+            "name": "Snow Mint",
+            "url": "https://github.com/snw-mint"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://listendeck.vercel.app/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Wrapped",
+              "item": "https://listendeck.vercel.app/wrapped/"
+            }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How does ListenBrainz Wrapped on listendeck work?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Enter any public ListenBrainz username to analyze your listening history for the current year directly in your browser and generate your top artists, songs, albums, genres, obsession track, and listening club."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do I need to log in or connect an account?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No sign-up or login is required. Everything runs client-side in your browser using public ListenBrainz data."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What cards can I export?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You can export 9:16 PNG Story cards for Full Recap, Minutes & Club, Top Artists, Top Songs, Top Albums, Top Genres, and Obsession in dark or light themes."
+              }
+            }
+          ]
+        }
+      ]
     }
   </script>
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
@@ -66,8 +134,8 @@
 
         <nav id="header-nav" class="header-nav" aria-label="Tools">
           <a href="/" class="nav-link" data-route="/">Home</a>
-          <a href="/charts/" class="nav-link" data-route="/charts">Charts</a>
           <a href="/wrapped/" class="nav-link" data-route="/wrapped">Wrapped</a>
+          <a href="/charts/" class="nav-link" data-route="/charts">Charts</a>
           <a href="/match/" class="nav-link" data-route="/match">Match</a>
           <a href="/lyrics/" class="nav-link" data-route="/lyrics">Lyrics</a>
           <a href="/cards/" class="nav-link" data-route="/cards">Cards</a>

@@ -59,6 +59,40 @@
   outline: none;
 }
 
+.directory-row--featured {
+  background-color: rgba(91, 82, 182, 0.06);
+  box-shadow: inset 3px 0 0 var(--color-accent);
+}
+
+.directory-row--featured:hover,
+.directory-row--featured:focus-visible {
+  background-color: rgba(91, 82, 182, 0.11);
+}
+
+[data-theme="dark"] .directory-row--featured {
+  background-color: rgba(91, 82, 182, 0.12);
+}
+
+[data-theme="dark"] .directory-row--featured:hover,
+[data-theme="dark"] .directory-row--featured:focus-visible {
+  background-color: rgba(91, 82, 182, 0.18);
+}
+
+.directory-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: var(--color-accent);
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  margin-left: 8px;
+}
+
 [data-theme="dark"] .directory-row:hover,
 [data-theme="dark"] .directory-row:focus-visible {
   background-color: rgba(255, 255, 255, 0.035);

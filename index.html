@@ -66,6 +66,7 @@
 
         <nav id="header-nav" class="header-nav" aria-label="Tools">
           <a href="/" class="nav-link" data-route="/">Home</a>
+          <a href="/wrapped/" class="nav-link" data-route="/wrapped">Wrapped</a>
           <a href="/charts/" class="nav-link" data-route="/charts">Charts</a>
           <a href="/match/" class="nav-link" data-route="/match">Match</a>
           <a href="/lyrics/" class="nav-link" data-route="/lyrics">Lyrics</a>
@@ -94,10 +95,25 @@
       </section>
 
       <nav class="directory-index" aria-label="Tools directory">
-        <a href="/charts/" class="directory-row" data-shortcut="1" data-track="nav_click"
-          data-track-props='{"location":"home_directory","tool":"charts"}'>
+        <a href="/wrapped/" class="directory-row directory-row--featured" data-shortcut="1" data-track="nav_click"
+          data-track-props='{"location":"home_directory","tool":"wrapped"}'>
           <div class="directory-row-left">
             <span class="directory-num" aria-hidden="true">01</span>
+            <div class="directory-copy">
+              <h2 class="directory-title">Wrapped<span class="logo-dot">.</span><span class="directory-badge">2026</span></h2>
+              <p class="directory-desc">Year-in-music recap, top genres, listening club, and Story cards.</p>
+            </div>
+          </div>
+          <div class="directory-row-right">
+            <span class="directory-source">ListenBrainz</span>
+            <span class="directory-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <a href="/charts/" class="directory-row" data-shortcut="2" data-track="nav_click"
+          data-track-props='{"location":"home_directory","tool":"charts"}'>
+          <div class="directory-row-left">
+            <span class="directory-num" aria-hidden="true">02</span>
             <div class="directory-copy">
               <h2 class="directory-title">Charts<span class="logo-dot">.</span></h2>
               <p class="directory-desc">Weekly and monthly listening stats and Story recaps.</p>
@@ -109,10 +125,10 @@
           </div>
         </a>
 
-        <a href="/match/" class="directory-row" data-shortcut="2" data-track="nav_click"
+        <a href="/match/" class="directory-row" data-shortcut="3" data-track="nav_click"
           data-track-props='{"location":"home_directory","tool":"match"}'>
           <div class="directory-row-left">
-            <span class="directory-num" aria-hidden="true">02</span>
+            <span class="directory-num" aria-hidden="true">03</span>
             <div class="directory-copy">
               <h2 class="directory-title">Match<span class="logo-dot">.</span></h2>
               <p class="directory-desc">Compare music taste and shared artists between two profiles.</p>
@@ -124,10 +140,10 @@
           </div>
         </a>
 
-        <a href="/lyrics/" class="directory-row" data-shortcut="3" data-track="nav_click"
+        <a href="/lyrics/" class="directory-row" data-shortcut="4" data-track="nav_click"
           data-track-props='{"location":"home_directory","tool":"lyrics"}'>
           <div class="directory-row-left">
-            <span class="directory-num" aria-hidden="true">03</span>
+            <span class="directory-num" aria-hidden="true">04</span>
             <div class="directory-copy">
               <h2 class="directory-title">Lyrics<span class="logo-dot">.</span></h2>
               <p class="directory-desc">Search tracks, translate verses inline, and export lyric cards.</p>
@@ -139,10 +155,10 @@
           </div>
         </a>
 
-        <a href="/cards/" class="directory-row" data-shortcut="4" data-track="nav_click"
+        <a href="/cards/" class="directory-row" data-shortcut="5" data-track="nav_click"
           data-track-props='{"location":"home_directory","tool":"cards"}'>
           <div class="directory-row-left">
-            <span class="directory-num" aria-hidden="true">04</span>
+            <span class="directory-num" aria-hidden="true">05</span>
             <div class="directory-copy">
               <h2 class="directory-title">Cards<span class="logo-dot">.</span></h2>
               <p class="directory-desc">Generate minimal track and album cover cards for Stories.</p>

@@ -1,10 +1,11 @@
 import { EVENTS, trackEvent } from "./shared/analytics.js";
 
 const ROUTE_SHORTCUTS = {
-  1: "/charts/",
-  2: "/match/",
-  3: "/lyrics/",
-  4: "/cards/",
+  1: "/wrapped/",
+  2: "/charts/",
+  3: "/match/",
+  4: "/lyrics/",
+  5: "/cards/",
 };
 
 document.addEventListener("keydown", (e) => {
