@@ -1,0 +1,1259 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wrapped Cards Preview — listendeck.</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="/shared/global.css" />
+  <link rel="stylesheet" href="/wrapped/wrapped.css" />
+  <style>
+    .preview-page {
+      flex: 1;
+      width: 100%;
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 28px 24px 64px;
+    }
+
+    .preview-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .preview-toolbar-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .preview-controls {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .preview-swatches {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 999px;
+    }
+
+    .preview-swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .preview-swatch.is-active {
+      transform: scale(1.12);
+      border-color: var(--color-text);
+    }
+
+    .preview-theme-btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      align-items: start;
+    }
+
+    .preview-slot {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .preview-slot-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+    }
+
+    .preview-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      background-color: #000000;
+    }
+
+    .story-card-base * {
+      box-sizing: border-box;
+    }
+
+    .story-card-base {
+      --font-num: 'Inter', var(--font-sans);
+      --sc-bg: #000000;
+      --sc-text: #ffffff;
+      --sc-text-dim: #a1a1a6;
+      --sc-surface: rgba(255, 255, 255, 0.08);
+      --sc-border: rgba(255, 255, 255, 0.14);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1080px;
+      height: 1920px;
+      transform-origin: top left;
+      background-color: var(--sc-bg);
+      color: var(--sc-text);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: var(--font-sans);
+    }
+
+    .story-card-base.theme-light {
+      --sc-bg: #ffffff;
+      --sc-text: #000000;
+      --sc-text-dim: #000000;
+      --sc-surface: rgba(0, 0, 0, 0.05);
+      --sc-border: rgba(0, 0, 0, 0.1);
+    }
+
+    .story-card-base.theme-light .export-mesh-bg {
+      --bg-base: #ffffff;
+    }
+
+    .story-card-base.theme-dark .export-mesh-bg {
+      --bg-base: #000000;
+    }
+
+    .story-card-base>.export-mesh-bg {
+      position: absolute;
+      z-index: 0;
+    }
+
+    .story-card-base>* {
+      z-index: 10;
+      position: relative;
+    }
+
+    .story-card-base .story-footer {
+      margin-top: auto;
+      padding: 0 40px 48px;
+      text-align: center;
+    }
+
+    .story-card-base .story-brand {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--sc-text);
+      letter-spacing: 1px;
+      opacity: 0.4;
+      text-align: center;
+    }
+
+    .story-full-collage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 780px;
+      overflow: hidden;
+      z-index: 1 !important;
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(to bottom,
+          rgba(0, 0, 0, 0.85) 0%,
+          rgba(0, 0, 0, 0.7) 36%,
+          rgba(0, 0, 0, 0.25) 70%,
+          transparent 98%);
+      mask-image: linear-gradient(to bottom,
+          rgba(0, 0, 0, 0.85) 0%,
+          rgba(0, 0, 0, 0.7) 36%,
+          rgba(0, 0, 0, 0.25) 70%,
+          transparent 98%);
+    }
+
+    .story-full-collage-grid {
+      position: absolute;
+      top: -120px;
+      left: -140px;
+      right: -140px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 26px;
+      transform: rotate(-14deg);
+      transform-origin: center;
+    }
+
+    .story-full-tile {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 38px;
+      overflow: hidden;
+      background-color: var(--sc-surface);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .story-full-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .story-full-collage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+          rgba(0, 0, 0, 0.42) 0%,
+          rgba(0, 0, 0, 0.16) 45%,
+          transparent 100%);
+    }
+
+    .story-card-base.theme-light .story-full-collage::after {
+      background: linear-gradient(to bottom,
+          rgba(255, 255, 255, 0.48) 0%,
+          rgba(255, 255, 255, 0.2) 45%,
+          transparent 100%);
+    }
+
+    .story-full-period {
+      margin-top: 330px;
+      margin-bottom: 56px;
+    }
+
+    .story-full-user {
+      color: var(--blob-1-color, #a78bfa);
+      font-weight: 700;
+    }
+
+    .story-full-grid {
+      flex: 1;
+      padding: 60px 80px 40px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 64px 72px;
+      align-content: start;
+    }
+
+    .story-full-block {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      min-width: 0;
+    }
+
+    .story-full-block h3 {
+      font-size: 2.35rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--sc-text);
+      margin: 0;
+    }
+
+    .story-full-list {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+    }
+
+    .story-full-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 22px;
+      min-width: 0;
+    }
+
+    .story-full-rank {
+      width: 30px;
+      font-family: var(--font-num);
+      font-size: 2.15rem;
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--sc-text-dim);
+      flex-shrink: 0;
+    }
+
+    .story-full-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .story-full-name {
+      font-size: 2.35rem;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--sc-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .story-full-sub {
+      font-size: 1.7rem;
+      font-weight: 500;
+      line-height: 1.2;
+      color: var(--sc-text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .story-topchart-body {
+      padding: 28px 80px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .story-topchart-list {
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+    }
+
+    .story-topchart-row {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .story-topchart-rank {
+      width: 60px;
+      font-family: var(--font-num);
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--sc-text-dim);
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .story-topchart-avatar {
+      width: 184px;
+      height: 184px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      background-color: var(--sc-bg);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .story-topchart-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .story-topchart-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .story-topchart-row-title {
+      font-size: 3.1rem;
+      font-weight: 700;
+      line-height: 1.08;
+      color: var(--sc-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .story-topchart-row-plays {
+      font-size: 2.1rem;
+      font-weight: 500;
+      color: var(--sc-text-dim);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .story-topchart-row:first-child .story-topchart-rank {
+      font-size: 3.4rem;
+      color: var(--sc-text);
+    }
+
+    .story-topchart-row:first-child .story-topchart-avatar {
+      width: 224px;
+      height: 224px;
+    }
+
+    .story-topchart-row:first-child .story-topchart-row-title {
+      font-size: 3.6rem;
+      font-weight: 800;
+    }
+
+    .story-topchart-row:first-child .story-topchart-row-plays {
+      font-size: 2.3rem;
+    }
+
+    .story-topchart-list--squircle .story-topchart-avatar {
+      border-radius: 36px;
+    }
+
+    .story-topchart-list--squircle .story-topchart-row:first-child .story-topchart-avatar {
+      border-radius: 44px;
+    }
+
+    .story-spotlight-body {
+      flex: 1;
+      padding: 72px 80px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 40px;
+    }
+
+    .story-minutes-ring-outer {
+      width: 620px;
+      height: 620px;
+      padding: 44px;
+      border-radius: 140px;
+      background-color: var(--blob-1-color, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    .story-minutes-ring-mid {
+      width: 100%;
+      height: 100%;
+      padding: 42px;
+      border-radius: 98px;
+      background-color: var(--blob-2-color, #4f46e5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+    }
+
+    .story-minutes-ring-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 72px;
+      background-color: #18181f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 28px;
+      gap: 10px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .story-card-base.theme-light .story-minutes-ring-inner {
+      background-color: #ffffff;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
+    }
+
+    .story-big-number {
+      font-family: var(--font-num);
+      font-size: 6.6rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      color: var(--sc-text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .story-big-unit {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--sc-text-dim);
+      line-height: 1;
+    }
+
+    .story-minutes-extra {
+      width: 100%;
+      margin: auto 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 44px;
+    }
+
+    .story-club-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      max-width: 100%;
+    }
+
+    .story-club-kicker {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--sc-text-dim);
+    }
+
+    .story-club-title {
+      font-size: 4.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--sc-text);
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .story-minutes-metrics {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      padding-top: 40px;
+      border-top: 1px solid var(--sc-border);
+    }
+
+    .story-metric-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .story-metric-value {
+      font-family: var(--font-num);
+      font-size: 3.4rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--sc-text);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .story-metric-label {
+      font-size: 1.55rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sc-text-dim);
+    }
+
+    .story-obsession-ring-inner {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .story-obsession-ring-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .story-obsession-artist {
+      font-size: 2.3rem;
+      font-weight: 500;
+      color: var(--sc-text-dim);
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .story-obsession-metrics {
+      grid-template-columns: 1fr;
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .story-genres-body {
+      flex: 1;
+      padding: 20px 80px 56px;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .story-genres-chart {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 24px;
+      align-items: end;
+    }
+
+    .story-genre-col {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 18px;
+    }
+
+    .story-genre-pct {
+      font-family: var(--font-num);
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: var(--sc-text);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .story-genre-bar {
+      width: 100%;
+      border-radius: 36px;
+      padding: 30px 16px 34px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #18181f;
+      border: 1px solid #2a2a35;
+      color: var(--sc-text);
+      min-height: 280px;
+    }
+
+    .story-card-base.theme-light .story-genre-bar {
+      background-color: #f0f0f5;
+      border-color: #dcdce4;
+    }
+
+    .story-card-base .story-genre-col--first .story-genre-bar {
+      background-color: var(--blob-1-color, #7c3aed);
+      border-color: transparent;
+      color: #ffffff;
+    }
+
+    .story-card-base .story-genre-col--second .story-genre-bar {
+      background-color: var(--blob-2-color, #4f46e5);
+      border-color: transparent;
+      color: #ffffff;
+    }
+
+    .story-genre-rank {
+      font-family: var(--font-num);
+      font-size: 1.75rem;
+      font-weight: 900;
+      opacity: 0.78;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .story-genre-name {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 2.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 520px;
+    }
+
+    @media (max-width: 960px) {
+      .preview-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="preview-page">
+    <div class="preview-toolbar">
+      <h1 class="preview-toolbar-title">Wrapped Cards Preview<span class="logo-dot">.</span></h1>
+      <div class="preview-controls">
+        <div class="preview-swatches" id="previewSwatches">
+          <button type="button" class="preview-swatch is-active" data-palette="purple"
+            style="background-color: #7c3aed;" aria-label="Purple"></button>
+          <button type="button" class="preview-swatch" data-palette="nature" style="background-color: #65c914;"
+            aria-label="Nature"></button>
+          <button type="button" class="preview-swatch" data-palette="crimson" style="background-color: #ff2626;"
+            aria-label="Crimson"></button>
+          <button type="button" class="preview-swatch" data-palette="sea" style="background-color: #3b82f6;"
+            aria-label="Sea"></button>
+          <button type="button" class="preview-swatch" data-palette="sunset" style="background-color: #f97316;"
+            aria-label="Sunset"></button>
+        </div>
+        <button type="button" id="previewCardThemeBtn" class="preview-theme-btn">Card: Dark</button>
+      </div>
+    </div>
+
+    <div class="preview-grid">
+      <section class="preview-slot">
+        <span class="preview-slot-label">1. Full Recap (Default)</span>
+        <div class="preview-stage">
+          <div class="story-card-base theme-dark" data-story-card>
+            <div class="export-mesh-bg" data-story-mesh aria-hidden="true"></div>
+
+            <div class="story-full-collage" aria-hidden="true">
+              <div class="story-full-collage-grid">
+                <div class="story-full-tile"><img src="/assets/preview/cards-mayhem.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/wrapped-song-1.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/wrapped-song-2.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/wrapped-song-3.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/charts-song.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/lyrics-danceteria.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/wrapped-artist-1.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/wrapped-artist-2.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/wrapped-artist-3.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/charts-artist.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/cards-mayhem.webp" alt="" /></div>
+                <div class="story-full-tile"><img src="/assets/preview/wrapped-song-2.webp" alt="" /></div>
+              </div>
+            </div>
+
+            <div class="story-header">
+              <div class="story-title">Wrapped</div>
+              <div class="story-service-logo">
+                <span class="story-service-wordmark">listendeck<span class="logo-dot">.</span></span>
+              </div>
+            </div>
+
+            <div class="story-period-header story-full-period">
+              <div class="story-month-year">2026 WRAPPED</div>
+              <div class="story-total-minutes">60,609 minutes · <span class="story-full-user">@me.drey</span></div>
+            </div>
+
+            <div class="story-full-grid">
+              <div class="story-full-block">
+                <h3>Top Artists</h3>
+                <div class="story-full-list">
+                  <div class="story-full-row">
+                    <span class="story-full-rank">1</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">Lady Gaga</span>
+                      <span class="story-full-sub">2,083 streams</span>
+                    </div>
+                  </div>
+                  <div class="story-full-row">
+                    <span class="story-full-rank">2</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">Ariana Grande</span>
+                      <span class="story-full-sub">1,502 streams</span>
+                    </div>
+                  </div>
+                  <div class="story-full-row">
+                    <span class="story-full-rank">3</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">ABBA</span>
+                      <span class="story-full-sub">1,203 streams</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="story-full-block">
+                <h3>Top Songs</h3>
+                <div class="story-full-list">
+                  <div class="story-full-row">
+                    <span class="story-full-rank">1</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">Love Sensation</span>
+                      <span class="story-full-sub">Madonna</span>
+                    </div>
+                  </div>
+                  <div class="story-full-row">
+                    <span class="story-full-rank">2</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">Heavy Metal Lover</span>
+                      <span class="story-full-sub">Lady Gaga</span>
+                    </div>
+                  </div>
+                  <div class="story-full-row">
+                    <span class="story-full-rank">3</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">Girl Like Me</span>
+                      <span class="story-full-sub">PinkPantheress</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="story-full-block">
+                <h3>Top Albums</h3>
+                <div class="story-full-list">
+                  <div class="story-full-row">
+                    <span class="story-full-rank">1</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">CONFESSIONS II</span>
+                      <span class="story-full-sub">Madonna</span>
+                    </div>
+                  </div>
+                  <div class="story-full-row">
+                    <span class="story-full-rank">2</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">HADES</span>
+                      <span class="story-full-sub">Melanie Martinez</span>
+                    </div>
+                  </div>
+                  <div class="story-full-row">
+                    <span class="story-full-rank">3</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">It's Not That Deep</span>
+                      <span class="story-full-sub">Demi Lovato</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="story-full-block">
+                <h3>Top Genres</h3>
+                <div class="story-full-list">
+                  <div class="story-full-row">
+                    <span class="story-full-rank">1</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">Dance Pop</span>
+                      <span class="story-full-sub">42% of year</span>
+                    </div>
+                  </div>
+                  <div class="story-full-row">
+                    <span class="story-full-rank">2</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">Electropop</span>
+                      <span class="story-full-sub">24% of year</span>
+                    </div>
+                  </div>
+                  <div class="story-full-row">
+                    <span class="story-full-rank">3</span>
+                    <div class="story-full-meta">
+                      <span class="story-full-name">Synth-pop</span>
+                      <span class="story-full-sub">15% of year</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="story-footer">
+              <div class="story-brand">listendeck.vercel.app</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="preview-slot">
+        <span class="preview-slot-label">2. Top Charts Style</span>
+        <div class="preview-stage">
+          <div class="story-card-base theme-dark" data-story-card>
+            <div class="export-mesh-bg" data-story-mesh aria-hidden="true"></div>
+
+            <div class="story-header">
+              <div class="story-title">Wrapped 2026</div>
+              <div class="story-service-logo">
+                <span class="story-service-wordmark">listendeck<span class="logo-dot">.</span></span>
+              </div>
+            </div>
+
+            <div class="story-period-header">
+              <div class="story-month-year">TOP ARTISTS</div>
+            </div>
+
+            <div class="story-topchart-body">
+              <div class="story-topchart-list">
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">1</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/charts-artist.webp" alt="The Weeknd" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">The Weeknd</span>
+                    <span class="story-topchart-row-plays">1,240 plays</span>
+                  </div>
+                </div>
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">2</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/charts-song.webp" alt="Sabrina Carpenter" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">Sabrina Carpenter</span>
+                    <span class="story-topchart-row-plays">980 plays</span>
+                  </div>
+                </div>
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">3</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/cards-mayhem.webp" alt="Lady Gaga" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">Lady Gaga</span>
+                    <span class="story-topchart-row-plays">845 plays</span>
+                  </div>
+                </div>
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">4</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/lyrics-danceteria.webp" alt="Billie Eilish" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">Billie Eilish</span>
+                    <span class="story-topchart-row-plays">612 plays</span>
+                  </div>
+                </div>
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">5</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/charts-artist.webp" alt="Charli XCX" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">Charli XCX</span>
+                    <span class="story-topchart-row-plays">540 plays</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="story-footer">
+              <div class="story-brand">listendeck.vercel.app</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="preview-slot">
+        <span class="preview-slot-label">3. Top Songs / Albums</span>
+        <div class="preview-stage">
+          <div class="story-card-base theme-dark" data-story-card>
+            <div class="export-mesh-bg" data-story-mesh aria-hidden="true"></div>
+
+            <div class="story-header">
+              <div class="story-title">Wrapped 2026</div>
+              <div class="story-service-logo">
+                <span class="story-service-wordmark">listendeck<span class="logo-dot">.</span></span>
+              </div>
+            </div>
+
+            <div class="story-period-header">
+              <div class="story-month-year">TOP SONGS</div>
+            </div>
+
+            <div class="story-topchart-body">
+              <div class="story-topchart-list story-topchart-list--squircle">
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">1</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/charts-song.webp" alt="Espresso" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">Espresso</span>
+                    <span class="story-topchart-row-plays">Sabrina Carpenter · 412 plays</span>
+                  </div>
+                </div>
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">2</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/charts-artist.webp" alt="Blinding Lights" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">Blinding Lights</span>
+                    <span class="story-topchart-row-plays">The Weeknd · 350 plays</span>
+                  </div>
+                </div>
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">3</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/cards-mayhem.webp" alt="Abracadabra" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">Abracadabra</span>
+                    <span class="story-topchart-row-plays">Lady Gaga · 298 plays</span>
+                  </div>
+                </div>
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">4</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/lyrics-danceteria.webp" alt="Birds of a Feather" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">Birds of a Feather</span>
+                    <span class="story-topchart-row-plays">Billie Eilish · 245 plays</span>
+                  </div>
+                </div>
+                <div class="story-topchart-row">
+                  <span class="story-topchart-rank">5</span>
+                  <div class="story-topchart-avatar">
+                    <img src="/assets/preview/charts-song.webp" alt="360" />
+                  </div>
+                  <div class="story-topchart-meta">
+                    <span class="story-topchart-row-title">360</span>
+                    <span class="story-topchart-row-plays">Charli XCX · 210 plays</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="story-footer">
+              <div class="story-brand">listendeck.vercel.app</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="preview-slot">
+        <span class="preview-slot-label">4. Minutes &amp; Club</span>
+        <div class="preview-stage">
+          <div class="story-card-base theme-dark" data-story-card>
+            <div class="export-mesh-bg" data-story-mesh aria-hidden="true"></div>
+
+            <div class="story-header">
+              <div class="story-title">Wrapped 2026</div>
+              <div class="story-service-logo">
+                <span class="story-service-wordmark">listendeck<span class="logo-dot">.</span></span>
+              </div>
+            </div>
+
+            <div class="story-period-header">
+              <div class="story-month-year">TIME LISTENED</div>
+            </div>
+
+            <div class="story-spotlight-body">
+              <div class="story-minutes-ring-outer">
+                <div class="story-minutes-ring-mid">
+                  <div class="story-minutes-ring-inner">
+                    <div class="story-big-number">42,810</div>
+                    <div class="story-big-unit">minutes</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="story-minutes-extra">
+                <div class="story-club-block">
+                  <span class="story-club-kicker">Your Listening Club</span>
+                  <div class="story-club-title">Night Owl Club</div>
+                </div>
+                <div class="story-minutes-metrics">
+                  <div class="story-metric-item">
+                    <span class="story-metric-value">713</span>
+                    <span class="story-metric-label">Hours</span>
+                  </div>
+                  <div class="story-metric-item">
+                    <span class="story-metric-value">12,480</span>
+                    <span class="story-metric-label">Listens</span>
+                  </div>
+                  <div class="story-metric-item">
+                    <span class="story-metric-value">39</span>
+                    <span class="story-metric-label">Daily Avg</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="story-footer">
+              <div class="story-brand">listendeck.vercel.app</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="preview-slot">
+        <span class="preview-slot-label">5. Obsession</span>
+        <div class="preview-stage">
+          <div class="story-card-base theme-dark" data-story-card>
+            <div class="export-mesh-bg" data-story-mesh aria-hidden="true"></div>
+
+            <div class="story-header">
+              <div class="story-title">Wrapped 2026</div>
+              <div class="story-service-logo">
+                <span class="story-service-wordmark">listendeck<span class="logo-dot">.</span></span>
+              </div>
+            </div>
+
+            <div class="story-period-header">
+              <div class="story-month-year">OBSESSION</div>
+            </div>
+
+            <div class="story-spotlight-body">
+              <div class="story-minutes-ring-outer">
+                <div class="story-minutes-ring-mid">
+                  <div class="story-minutes-ring-inner story-obsession-ring-inner">
+                    <img src="/assets/preview/charts-song.webp" alt="Espresso" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="story-minutes-extra">
+                <div class="story-club-block">
+                  <span class="story-club-kicker">Most Consecutive Days</span>
+                  <div class="story-club-title">Espresso</div>
+                  <div class="story-obsession-artist">Sabrina Carpenter</div>
+                </div>
+                <div class="story-minutes-metrics story-obsession-metrics">
+                  <div class="story-metric-item">
+                    <span class="story-metric-value">412</span>
+                    <span class="story-metric-label">Plays</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="story-footer">
+              <div class="story-brand">listendeck.vercel.app</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="preview-slot">
+        <span class="preview-slot-label">6. Top Genres</span>
+        <div class="preview-stage">
+          <div class="story-card-base theme-dark" data-story-card>
+            <div class="export-mesh-bg" data-story-mesh aria-hidden="true"></div>
+
+            <div class="story-header">
+              <div class="story-title">Wrapped 2026</div>
+              <div class="story-service-logo">
+                <span class="story-service-wordmark">listendeck<span class="logo-dot">.</span></span>
+              </div>
+            </div>
+
+            <div class="story-period-header">
+              <div class="story-month-year">TOP GENRES</div>
+              <div class="story-total-minutes">Dance Pop led your year at 42%</div>
+            </div>
+
+            <div class="story-genres-body">
+              <div class="story-genres-chart">
+                <div class="story-genre-col story-genre-col--first">
+                  <span class="story-genre-pct">42%</span>
+                  <div class="story-genre-bar" style="height: 88%;">
+                    <span class="story-genre-rank">#1</span>
+                    <span class="story-genre-name">Dance Pop</span>
+                  </div>
+                </div>
+                <div class="story-genre-col story-genre-col--second">
+                  <span class="story-genre-pct">24%</span>
+                  <div class="story-genre-bar" style="height: 68%;">
+                    <span class="story-genre-rank">#2</span>
+                    <span class="story-genre-name">Electropop</span>
+                  </div>
+                </div>
+                <div class="story-genre-col">
+                  <span class="story-genre-pct">16%</span>
+                  <div class="story-genre-bar" style="height: 52%;">
+                    <span class="story-genre-rank">#3</span>
+                    <span class="story-genre-name">Synth-pop</span>
+                  </div>
+                </div>
+                <div class="story-genre-col">
+                  <span class="story-genre-pct">11%</span>
+                  <div class="story-genre-bar" style="height: 41%;">
+                    <span class="story-genre-rank">#4</span>
+                    <span class="story-genre-name">Alt Pop</span>
+                  </div>
+                </div>
+                <div class="story-genre-col">
+                  <span class="story-genre-pct">7%</span>
+                  <div class="story-genre-bar" style="height: 31%;">
+                    <span class="story-genre-rank">#5</span>
+                    <span class="story-genre-name">Disco</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="story-footer">
+              <div class="story-brand">listendeck.vercel.app</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module">
+    import { EXPORT_BG_PALETTES, renderBlurredNoiseLayer } from "/shared/export-bg.js";
+
+    const paletteMap = new Map(EXPORT_BG_PALETTES.map((p) => [p.id, p]));
+    const cards = Array.from(document.querySelectorAll("[data-story-card]"));
+    const meshes = Array.from(document.querySelectorAll("[data-story-mesh]"));
+    const stages = Array.from(document.querySelectorAll(".preview-stage"));
+    const swatchBtns = Array.from(document.querySelectorAll(".preview-swatch"));
+    const themeBtn = document.getElementById("previewCardThemeBtn");
+
+    let activePalette = "purple";
+    let isLight = false;
+
+    function applyMesh(paletteId) {
+      const palette = paletteMap.get(paletteId) || EXPORT_BG_PALETTES[0];
+      const canvas = renderBlurredNoiseLayer(1080, 1920, {
+        blob1: { color: palette.blob1 },
+        blob2: { color: palette.blob2 },
+      });
+      const dataUrl = `url("${canvas.toDataURL("image/png")}")`;
+      cards.forEach((card) => {
+        card.style.setProperty("--blob-1-color", palette.blob1);
+        card.style.setProperty("--blob-2-color", palette.blob2);
+      });
+      meshes.forEach((mesh) => {
+        mesh.style.backgroundImage = dataUrl;
+      });
+    }
+
+    function syncCardScale() {
+      stages.forEach((stage) => {
+        const card = stage.querySelector("[data-story-card]");
+        if (!card) return;
+        const scale = stage.clientWidth / 1080;
+        card.style.transform = `scale(${scale})`;
+      });
+    }
+
+    swatchBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        activePalette = btn.dataset.palette;
+        swatchBtns.forEach((b) => b.classList.toggle("is-active", b === btn));
+        applyMesh(activePalette);
+      });
+    });
+
+    themeBtn.addEventListener("click", () => {
+      isLight = !isLight;
+      themeBtn.textContent = isLight ? "Card: Light" : "Card: Dark";
+      cards.forEach((card) => {
+        card.classList.toggle("theme-light", isLight);
+        card.classList.toggle("theme-dark", !isLight);
+      });
+    });
+
+    const resizeObserver = new ResizeObserver(syncCardScale);
+    stages.forEach((stage) => resizeObserver.observe(stage));
+
+    applyMesh(activePalette);
+    syncCardScale();
+  </script>
+</body>
+
+</html>

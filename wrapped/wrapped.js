@@ -586,18 +586,23 @@ async function fetchWrappedData(username) {
   const aggregated = aggregateListens(listens, windowInfo.elapsedDays);
   const { artists, tracks, albums } = aggregated;
 
-  const [artistCover, trackCover, albumCover, vibe] = await Promise.all([
+  const [artistCover, trackCover, albumCovers, vibe] = await Promise.all([
     artists[0] ? resolveArtistCover(artists[0].title) : Promise.resolve(""),
     tracks[0] ? resolveTrackCover(tracks[0]) : Promise.resolve(""),
-    albums[0]
-      ? resolveAlbumCover(albums[0].title, albums[0].subtitle, albums[0].caaReleaseMbid, albums[0].caaId)
-      : Promise.resolve(""),
+    Promise.all(
+      albums.slice(0, 10).map((album) =>
+        resolveAlbumCover(album.title, album.subtitle, album.caaReleaseMbid, album.caaId)
+      )
+    ),
     resolveVibe(tracks[0], albums[0]),
   ]);
 
   if (artists[0]) artists[0].cover = artistCover;
   if (tracks[0]) tracks[0].cover = trackCover;
-  if (albums[0]) albums[0].cover = albumCover;
+  albumCovers.forEach((cover, idx) => {
+    if (albums[idx]) albums[idx].cover = cover;
+  });
+  const albumCover = albumCovers[0] || "";
 
   const obsession = aggregated.obsession;
   const obsessionMatchesTopTrack =
@@ -816,19 +821,70 @@ function populateStoryList(containerId, items, isTrackOrAlbum) {
       const rank = index + 1;
       const rawSub = item.subtitle ? item.subtitle : `${formatNumber(item.plays)} streams`;
       const rawName = isTrackOrAlbum ? cleanReportTitle(item.title) : item.title;
-      const displayName = truncateWithEllipsis(rawName, 36);
-      const displaySub = truncateWithEllipsis(rawSub, 42);
+      const displayName = truncateWithEllipsis(rawName, 24);
+      const displaySub = truncateWithEllipsis(rawSub, 28);
       return `
-        <div class="story-item-row">
-          <span class="story-item-rank">${rank}</span>
-          <div class="story-item-details">
-            <span class="story-item-name">${escapeHtml(displayName)}</span>
-            <span class="story-item-sub">${escapeHtml(displaySub)}</span>
+        <div class="story-full-row">
+          <span class="story-full-rank">${rank}</span>
+          <div class="story-full-meta">
+            <span class="story-full-name">${escapeHtml(displayName)}</span>
+            <span class="story-full-sub">${escapeHtml(displaySub)}</span>
           </div>
         </div>
       `;
     })
     .join("");
+}
+
+function populateFullGenresList(containerId, genres) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = (genres || [])
+    .slice(0, 3)
+    .map((genre, index) => `
+      <div class="story-full-row">
+        <span class="story-full-rank">${index + 1}</span>
+        <div class="story-full-meta">
+          <span class="story-full-name">${escapeHtml(truncateWithEllipsis(genre.name, 22))}</span>
+          <span class="story-full-sub">${genre.pct}% of year</span>
+        </div>
+      </div>
+    `)
+    .join("");
+}
+
+async function ensureTopAlbumCovers(data, username, limit = 10) {
+  let updated = false;
+  const items = (data.albums || []).slice(0, limit);
+  await Promise.all(
+    items.map(async (item) => {
+      if (item.cover) return;
+      item.cover = await resolveAlbumCover(item.title, item.subtitle, item.caaReleaseMbid, item.caaId);
+      if (item.cover) updated = true;
+    })
+  );
+  if (updated) persistWrappedCache(username, data);
+}
+
+function populateFullCollage(data) {
+  const gridEl = document.getElementById("storyFullCollageGrid");
+  if (!gridEl) return;
+  const albumCovers = (data.albums || []).slice(0, 10).map((al) => al.cover).filter(Boolean);
+  const fallbackCovers = [
+    ...(data.tracks || []).map((t) => t.cover),
+    ...(data.artists || []).map((a) => a.cover),
+    data.heroCover,
+  ].filter(Boolean);
+  const pool = albumCovers.length ? albumCovers : fallbackCovers;
+
+  const tiles = [];
+  for (let i = 0; i < 12; i++) {
+    const src = pool.length ? pool[i % pool.length] : "";
+    tiles.push(
+      `<div class="story-full-tile">${src ? `<img src="${escapeHtml(src)}" alt="" crossorigin="anonymous" />` : ""}</div>`
+    );
+  }
+  gridEl.innerHTML = tiles.join("");
 }
 
 function persistWrappedCache(username, data) {
@@ -1301,8 +1357,10 @@ function initExportModal(username) {
 
     const titleEl = document.getElementById("storyReportTitle");
     const serviceEl = document.getElementById("storyServiceLogo");
+    const periodHeaderEl = document.getElementById("storyPeriodHeader");
     const headingEl = document.getElementById("storyMonthYear");
     const subtitleEl = document.getElementById("storyTotalMinutes");
+    const fullCollageEl = document.getElementById("storyFullCollage");
 
     const fullBody = document.getElementById("storyBody");
     const topChartsBody = document.getElementById("storyTopChartsBody");
@@ -1313,6 +1371,10 @@ function initExportModal(username) {
     [fullBody, topChartsBody, minutesBody, obsessionBody, genresBody].forEach((el) => {
       if (el) el.style.display = "none";
     });
+    periodHeaderEl?.classList.toggle("story-full-period", exportType === "full_recap");
+    if (fullCollageEl) {
+      fullCollageEl.style.display = exportType === "full_recap" ? "block" : "none";
+    }
 
     serviceEl.innerHTML = SERVICE_LOGOS[service] || "";
     let activeBody = fullBody;
@@ -1321,20 +1383,24 @@ function initExportModal(username) {
       if (exportType === "full_recap") {
         titleEl.textContent = "Wrapped";
         headingEl.textContent = currentWrappedData.storyHeading || `${year} WRAPPED`;
-        subtitleEl.textContent = useScrobbles
+        const metricLabel = useScrobbles
           ? `${currentWrappedData.stats.listens} listens`
           : `${currentWrappedData.stats.minutes} minutes`;
+        subtitleEl.innerHTML = `${escapeHtml(metricLabel)} · <span class="story-full-user">@${escapeHtml(username)}</span>`;
 
+        const [, genres] = await Promise.all([
+          ensureTopAlbumCovers(currentWrappedData, username, 10),
+          ensureTopGenres(currentWrappedData, username),
+        ]);
+
+        populateFullCollage(currentWrappedData);
         populateStoryList("storyListArtists", currentWrappedData.artists, false);
         populateStoryList("storyListSongs", currentWrappedData.tracks, true);
         populateStoryList("storyListAlbums", currentWrappedData.albums, true);
+        populateFullGenresList("storyListGenres", genres);
 
-        setStoryImage(document.getElementById("storyImageArtist"), customArtistImage || currentWrappedData.artists[0]?.cover || "");
-        setStoryImage(document.getElementById("storyImageSong"), currentWrappedData.tracks[0]?.cover || "");
-        setStoryImage(document.getElementById("storyImageAlbum"), currentWrappedData.albums[0]?.cover || "");
-
-        fullBody.style.display = "flex";
-        activeBody = fullBody;
+        fullBody.style.display = "grid";
+        activeBody = reportEl;
       } else if (exportType === "top_artists" || exportType === "top_songs" || exportType === "top_albums") {
         titleEl.textContent = `Wrapped ${year}`;
         subtitleEl.textContent = "";

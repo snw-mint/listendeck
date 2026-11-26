@@ -494,43 +494,36 @@
   <div id="storyReportContainer" class="hidden-report-container">
     <div id="storyReport" class="theme-dark">
       <div id="storyReportBackground" class="export-mesh-bg" aria-hidden="true"></div>
+      <div id="storyFullCollage" class="story-full-collage" aria-hidden="true" style="display: none;">
+        <div id="storyFullCollageGrid" class="story-full-collage-grid"></div>
+      </div>
 
       <div class="story-header">
         <div id="storyReportTitle" class="story-title">Wrapped</div>
         <div id="storyServiceLogo" class="story-service-logo"></div>
       </div>
 
-      <div class="story-period-header">
+      <div id="storyPeriodHeader" class="story-period-header">
         <div id="storyMonthYear" class="story-month-year"></div>
         <div id="storyTotalMinutes" class="story-total-minutes"></div>
       </div>
 
-      <div class="story-body" id="storyBody">
-        <div class="story-lists-container">
-          <div class="story-list-block">
-            <h3>Top Artists</h3>
-            <div id="storyListArtists" class="story-items-list"></div>
-          </div>
-          <div class="story-list-block">
-            <h3>Top Songs</h3>
-            <div id="storyListSongs" class="story-items-list"></div>
-          </div>
-          <div class="story-list-block">
-            <h3>Top Albums</h3>
-            <div id="storyListAlbums" class="story-items-list"></div>
-          </div>
+      <div class="story-full-grid" id="storyBody">
+        <div class="story-full-block">
+          <h3>Top Artists</h3>
+          <div id="storyListArtists" class="story-full-list"></div>
         </div>
-
-        <div class="story-images-container">
-          <div class="story-square-image">
-            <img id="storyImageArtist" alt="Top Artist" crossorigin="anonymous" />
-          </div>
-          <div class="story-square-image">
-            <img id="storyImageSong" alt="Top Song" crossorigin="anonymous" />
-          </div>
-          <div class="story-square-image">
-            <img id="storyImageAlbum" alt="Top Album" crossorigin="anonymous" />
-          </div>
+        <div class="story-full-block">
+          <h3>Top Songs</h3>
+          <div id="storyListSongs" class="story-full-list"></div>
+        </div>
+        <div class="story-full-block">
+          <h3>Top Albums</h3>
+          <div id="storyListAlbums" class="story-full-list"></div>
+        </div>
+        <div class="story-full-block">
+          <h3>Top Genres</h3>
+          <div id="storyListGenres" class="story-full-list"></div>
         </div>
       </div>
 
