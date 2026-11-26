@@ -1443,7 +1443,23 @@ function initResultPage() {
   initExportModal(username);
 }
 
+function initPreviewSlideshow() {
+  const deck = document.getElementById("wrappedPreviewDeck");
+  if (!deck) return;
+  const slides = Array.from(deck.querySelectorAll(".preview-slide"));
+  if (slides.length < 2) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  let activeIndex = 0;
+  setInterval(() => {
+    slides[activeIndex].classList.remove("is-active");
+    activeIndex = (activeIndex + 1) % slides.length;
+    slides[activeIndex].classList.add("is-active");
+  }, 3400);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initLandingForm();
+  initPreviewSlideshow();
   initResultPage();
 });
