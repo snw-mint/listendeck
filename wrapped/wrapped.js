@@ -785,21 +785,65 @@ function initExportModal(username) {
   const generationModal = document.getElementById("generationModal");
   const step1 = document.getElementById("step1");
   const step2 = document.getElementById("step2");
+  const step3 = document.getElementById("step3");
   const closeBtn = document.getElementById("closeSettingsModal");
-  const nextBtn = document.getElementById("nextStepBtn");
-  const backBtn = document.getElementById("backStepBtn");
+  const nextToStep2Btn = document.getElementById("nextToStep2Btn");
+  const backToStep1Btn = document.getElementById("backToStep1Btn");
+  const nextToStep3Btn = document.getElementById("nextToStep3Btn");
+  const backToStep2Btn = document.getElementById("backToStep2Btn");
   const confirmBtn = document.getElementById("confirmSettingsBtn");
   const bgPicker = document.getElementById("bgStylePicker");
   const meshBgEl = document.getElementById("storyReportBackground");
+  const exportTypePicker = document.getElementById("exportTypePicker");
 
   if (!openBtn || !settingsModal) return;
 
   const bgControls = initExportBgControls({ pickerEl: bgPicker, targetEl: meshBgEl });
+  const radioRows = Array.from(exportTypePicker?.querySelectorAll(".ld-radio-row") || []);
+
+  const syncRadioIcons = (animateSelected = false) => {
+    radioRows.forEach((row) => {
+      const input = row.querySelector('input[type="radio"]');
+      const icon = row.querySelector("animate-icons");
+      const isSelected = Boolean(input?.checked);
+      row.classList.toggle("is-selected", isSelected);
+      if (!icon) return;
+      const nextName = isSelected ? "circle-dot" : "circle";
+      if (icon.getAttribute("name") !== nextName) {
+        icon.setAttribute("name", nextName);
+      }
+      if (isSelected && animateSelected) {
+        icon.startAnimation?.();
+      }
+    });
+  };
+
+  radioRows.forEach((row) => {
+    const input = row.querySelector('input[type="radio"]');
+    input?.addEventListener("change", () => syncRadioIcons(true));
+    row.addEventListener("mouseenter", () => {
+      row.querySelector("animate-icons")?.startAnimation?.();
+    });
+    row.addEventListener("mouseleave", () => {
+      row.querySelector("animate-icons")?.stopAnimation?.();
+    });
+  });
+
+  const getSelectedExportType = () => {
+    const checked = exportTypePicker?.querySelector('input[name="wrappedExportType"]:checked');
+    return checked?.value || "full_recap";
+  };
+
+  const showStep = (stepNumber) => {
+    if (step1) step1.style.display = stepNumber === 1 ? "block" : "none";
+    if (step2) step2.style.display = stepNumber === 2 ? "block" : "none";
+    if (step3) step3.style.display = stepNumber === 3 ? "block" : "none";
+  };
 
   const openModal = () => {
     if (!currentWrappedData) return;
-    step1.style.display = "block";
-    step2.style.display = "none";
+    syncRadioIcons(false);
+    showStep(1);
     settingsModal.classList.add("show");
   };
 
@@ -814,20 +858,16 @@ function initExportModal(username) {
     if (e.target === settingsModal) closeModal();
   });
 
-  nextBtn?.addEventListener("click", () => {
-    step1.style.display = "none";
-    step2.style.display = "block";
-  });
-
-  backBtn?.addEventListener("click", () => {
-    step2.style.display = "none";
-    step1.style.display = "block";
-  });
+  nextToStep2Btn?.addEventListener("click", () => showStep(2));
+  backToStep1Btn?.addEventListener("click", () => showStep(1));
+  nextToStep3Btn?.addEventListener("click", () => showStep(3));
+  backToStep2Btn?.addEventListener("click", () => showStep(2));
 
   confirmBtn?.addEventListener("click", async () => {
     if (!currentWrappedData) return;
     closeModal();
 
+    const exportType = getSelectedExportType();
     const selectedBg = bgControls.getSelectedStyle();
     const service = document.getElementById("serviceSelect")?.value || "listendeck";
     const isLight = Boolean(document.getElementById("themeToggleCheckbox")?.checked);
@@ -864,13 +904,18 @@ function initExportModal(username) {
       generationModal.classList.add("show");
     }
 
+    const fileName = exportType === "full_recap"
+      ? `listendeck_wrapped_${username}_${WRAPPED_RANGE}.png`
+      : `listendeck_wrapped_${username}_${exportType}.png`;
+
     setTimeout(async () => {
       try {
-        await exportNodeAsPng(reportEl, `listendeck_wrapped_${username}_${WRAPPED_RANGE}.png`);
+        await exportNodeAsPng(reportEl, fileName);
         trackEvent(EVENTS.EXPORT_CARD, {
           tool: "wrapped",
           action: "download",
           format: "story",
+          type: exportType,
           style: selectedBg,
         });
         if (generationModal) {

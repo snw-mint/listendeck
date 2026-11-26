@@ -645,6 +645,60 @@
   cursor: pointer;
 }
 
+.ld-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ld-radio-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  border-radius: calc(var(--radius) - 6px);
+  background-color: var(--color-bg);
+  border: 1px solid transparent;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.ld-radio-row.is-selected {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.ld-radio-row:has(input:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.ld-radio-row input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.ld-radio-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.ld-radio-row.is-selected .ld-radio-icon {
+  color: var(--color-accent);
+}
+
 .ld-switch {
   position: relative;
   width: 44px;

@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronDown,
   CircleCheck,
+  CircleDot,
   Calendar,
   ImagePlus,
   Music,
@@ -26,6 +27,33 @@ import {
   ArrowUpRight,
 } from "@animateicons/vanilla/lucide";
 
+const Circle = {
+  name: "circle",
+  library: "lucide",
+  tag: "svg",
+  attrs: {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    "stroke-width": "2",
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round",
+  },
+  children: [
+    {
+      tag: "circle",
+      attrs: { cx: "12", cy: "12", r: "10" },
+      normal: { scale: 1 },
+      animate: {
+        scale: [1, 0.92, 1.03, 1],
+        transition: { duration: 0.5, ease: "easeInOut", times: [0, 0.35, 0.7, 1] },
+      },
+      style: { transformBox: "view-box", originX: "12px", originY: "12px" },
+    },
+  ],
+};
+
 defineIcons({
   Sun,
   Moon,
@@ -39,7 +67,10 @@ defineIcons({
   Check,
   ChevronLeft,
   ChevronDown,
+  Circle,
   CircleCheck,
+  CircleDot,
+  CircleDot,
   Calendar,
   ImagePlus,
   Music,

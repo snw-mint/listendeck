@@ -324,11 +324,70 @@
       <div id="step1">
         <div class="ld-modal-header">
           <div>
-            <h2 id="settingsModalTitle">Background</h2>
-            <p class="ld-modal-subtitle">Choose a theme for your report</p>
+            <h2 id="settingsModalTitle">Export</h2>
+            <p class="ld-modal-subtitle">Choose what to export</p>
           </div>
           <button type="button" class="ld-icon-btn" id="closeSettingsModal" aria-label="Close">
             <animate-icons name="x" size="20"></animate-icons>
+          </button>
+        </div>
+
+        <div class="ld-radio-group" id="exportTypePicker" role="radiogroup" aria-labelledby="settingsModalTitle">
+          <label class="ld-radio-row is-selected">
+            <input type="radio" name="wrappedExportType" value="full_recap" checked />
+            <span>Full Recap</span>
+            <span class="ld-radio-icon" aria-hidden="true">
+              <animate-icons name="circle-dot" size="18"></animate-icons>
+            </span>
+          </label>
+          <label class="ld-radio-row">
+            <input type="radio" name="wrappedExportType" value="minutes_club" />
+            <span>Minutes &amp; Club</span>
+            <span class="ld-radio-icon" aria-hidden="true">
+              <animate-icons name="circle" size="18"></animate-icons>
+            </span>
+          </label>
+          <label class="ld-radio-row">
+            <input type="radio" name="wrappedExportType" value="top_artists" />
+            <span>Top Artists</span>
+            <span class="ld-radio-icon" aria-hidden="true">
+              <animate-icons name="circle" size="18"></animate-icons>
+            </span>
+          </label>
+          <label class="ld-radio-row">
+            <input type="radio" name="wrappedExportType" value="top_songs" />
+            <span>Top Songs</span>
+            <span class="ld-radio-icon" aria-hidden="true">
+              <animate-icons name="circle" size="18"></animate-icons>
+            </span>
+          </label>
+          <label class="ld-radio-row">
+            <input type="radio" name="wrappedExportType" value="top_albums" />
+            <span>Top Albums</span>
+            <span class="ld-radio-icon" aria-hidden="true">
+              <animate-icons name="circle" size="18"></animate-icons>
+            </span>
+          </label>
+          <label class="ld-radio-row">
+            <input type="radio" name="wrappedExportType" value="obsession" />
+            <span>Obsession</span>
+            <span class="ld-radio-icon" aria-hidden="true">
+              <animate-icons name="circle" size="18"></animate-icons>
+            </span>
+          </label>
+        </div>
+
+        <button type="button" id="nextToStep2Btn" class="ld-btn-primary">Continue</button>
+      </div>
+
+      <div id="step2" style="display: none;">
+        <div class="ld-modal-header">
+          <div>
+            <h2>Background</h2>
+            <p class="ld-modal-subtitle">Choose a theme for your report</p>
+          </div>
+          <button type="button" class="ld-icon-btn" id="backToStep1Btn" aria-label="Back">
+            <animate-icons name="chevron-left" size="20"></animate-icons>
           </button>
         </div>
 
@@ -364,16 +423,16 @@
           </label>
         </div>
 
-        <button type="button" id="nextStepBtn" class="ld-btn-primary">Continue</button>
+        <button type="button" id="nextToStep3Btn" class="ld-btn-primary">Continue</button>
       </div>
 
-      <div id="step2" style="display: none;">
+      <div id="step3" style="display: none;">
         <div class="ld-modal-header">
           <div>
             <h2>Preferences</h2>
             <p class="ld-modal-subtitle">Customize your story card</p>
           </div>
-          <button type="button" class="ld-icon-btn" id="backStepBtn" aria-label="Back">
+          <button type="button" class="ld-icon-btn" id="backToStep2Btn" aria-label="Back">
             <animate-icons name="chevron-left" size="20"></animate-icons>
           </button>
         </div>
