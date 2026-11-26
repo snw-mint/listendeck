@@ -189,6 +189,19 @@ export const listenbrainz = {
       paceListenBrainz: true,
     });
   },
+  getRecordingMetadata(recordingMbids, inc = "tag") {
+    const list = (recordingMbids || []).filter(Boolean).slice(0, 50);
+    if (!list.length) return Promise.resolve({});
+    const query = new URLSearchParams({
+      recording_mbids: list.join(","),
+      inc,
+    });
+    return requestJson(`${LB_BASE}/metadata/recording/?${query.toString()}`, {
+      timeout: 12000,
+      retries: 3,
+      paceListenBrainz: true,
+    });
+  },
 };
 
 export const lrclib = {

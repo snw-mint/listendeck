@@ -179,10 +179,34 @@ function getLongestConsecutiveDays(daySet) {
   return longest;
 }
 
+function resolveListeningClub(hourBuckets) {
+  const entries = [
+    { name: "Night Owl Club", count: hourBuckets.night },
+    { name: "Early Bird Club", count: hourBuckets.morning },
+    { name: "Daytime Club", count: hourBuckets.afternoon },
+    { name: "Sunset Club", count: hourBuckets.evening },
+  ];
+  entries.sort((a, b) => b.count - a.count);
+  return entries[0].count > 0 ? entries[0].name : "Listener Club";
+}
+
+function getPreferredReleaseName(releasesMap) {
+  let preferredRelease = "";
+  let bestCount = 0;
+  for (const [rel, count] of releasesMap.entries()) {
+    if (count > bestCount) {
+      bestCount = count;
+      preferredRelease = rel;
+    }
+  }
+  return preferredRelease;
+}
+
 function aggregateListens(listens, elapsedDays) {
   const artistMap = new Map();
   const trackMap = new Map();
   const albumMap = new Map();
+  const hourBuckets = { night: 0, morning: 0, afternoon: 0, evening: 0 };
   let totalDurationMs = 0;
 
   for (const listen of listens) {
@@ -190,6 +214,14 @@ function aggregateListens(listens, elapsedDays) {
 
     const ts = Number(listen?.listened_at);
     const dayIndex = Number.isFinite(ts) ? getLocalDayIndex(ts) : null;
+    if (Number.isFinite(ts)) {
+      const hour = new Date(ts * 1000).getHours();
+      if (hour >= 5 && hour < 12) hourBuckets.morning += 1;
+      else if (hour >= 12 && hour < 18) hourBuckets.afternoon += 1;
+      else if (hour >= 18 && hour < 22) hourBuckets.evening += 1;
+      else hourBuckets.night += 1;
+    }
+
     const meta = listen?.track_metadata || {};
     const artistName = (meta.artist_name || "Unknown Artist").trim();
     const trackName = (meta.track_name || "").trim();
@@ -212,6 +244,9 @@ function aggregateListens(listens, elapsedDays) {
       if (existing) {
         existing.plays += 1;
         if (dayIndex !== null) existing.days.add(dayIndex);
+        if (!existing.recordingMbid && mapping.recording_mbid) {
+          existing.recordingMbid = mapping.recording_mbid;
+        }
         if (releaseName) {
           existing.releases.set(releaseName, (existing.releases.get(releaseName) || 0) + 1);
         }
@@ -226,6 +261,7 @@ function aggregateListens(listens, elapsedDays) {
           plays: 1,
           days,
           releases,
+          recordingMbid: mapping.recording_mbid || "",
           caaReleaseMbid: mapping.caa_release_mbid || "",
           caaId: mapping.caa_id || "",
           cover: "",
@@ -265,6 +301,9 @@ function aggregateListens(listens, elapsedDays) {
         plays: track.plays,
         title: track.title,
         artist: track.subtitle,
+        releaseName: getPreferredReleaseName(track.releases),
+        caaReleaseMbid: track.caaReleaseMbid,
+        caaId: track.caaId,
       };
     }
   }
@@ -273,34 +312,32 @@ function aggregateListens(listens, elapsedDays) {
   const totalMinutes = Math.round(totalDurationMs / 60000);
   const dailyAvg = Math.round(totalListens / Math.max(1, elapsedDays));
 
-  const topTracks = sortAndSliceTop(trackMap, 10).map((item) => {
-    let preferredRelease = "";
-    let bestCount = 0;
-    for (const [rel, count] of item.releases.entries()) {
-      if (count > bestCount) {
-        bestCount = count;
-        preferredRelease = rel;
-      }
-    }
-    return {
-      title: item.title,
-      subtitle: item.subtitle,
-      plays: item.plays,
-      releaseName: preferredRelease,
-      caaReleaseMbid: item.caaReleaseMbid,
-      caaId: item.caaId,
-      cover: item.cover,
-    };
-  });
+  const topTracks = sortAndSliceTop(trackMap, 10).map((item) => ({
+    title: item.title,
+    subtitle: item.subtitle,
+    plays: item.plays,
+    releaseName: getPreferredReleaseName(item.releases),
+    recordingMbid: item.recordingMbid,
+    caaReleaseMbid: item.caaReleaseMbid,
+    caaId: item.caaId,
+    cover: item.cover,
+  }));
+
+  const topRecordingMbids = sortAndSliceTop(trackMap, 35)
+    .filter((item) => item.recordingMbid)
+    .slice(0, 25)
+    .map((item) => ({ mbid: item.recordingMbid, plays: item.plays }));
 
   return {
     totalListens,
     totalMinutes,
     dailyAvg,
+    club: resolveListeningClub(hourBuckets),
     obsession,
     artists: sortAndSliceTop(artistMap, 10),
     tracks: topTracks,
     albums: sortAndSliceTop(albumMap, 10),
+    topRecordingMbids,
   };
 }
 
@@ -563,18 +600,31 @@ async function fetchWrappedData(username) {
   if (albums[0]) albums[0].cover = albumCover;
 
   const obsession = aggregated.obsession;
+  const obsessionMatchesTopTrack =
+    obsession &&
+    tracks[0] &&
+    obsession.title.toLowerCase() === tracks[0].title.toLowerCase() &&
+    obsession.artist.toLowerCase() === tracks[0].subtitle.toLowerCase();
 
   const data = {
+    year: windowInfo.year,
     storyHeading: windowInfo.storyHeading,
     stats: {
       totalListens: aggregated.totalListens,
       totalMinutes: aggregated.totalMinutes,
+      totalHours: Math.round(aggregated.totalMinutes / 60),
       listens: formatNumber(aggregated.totalListens),
       minutes: formatNumber(aggregated.totalMinutes),
+      club: aggregated.club,
       obsession: obsession ? obsession.title : "—",
       obsessionTrack: obsession ? obsession.title : "",
       obsessionArtist: obsession ? obsession.artist : "",
       obsessionDays: obsession ? obsession.days : 0,
+      obsessionPlays: obsession ? obsession.plays : 0,
+      obsessionReleaseName: obsession ? obsession.releaseName : "",
+      obsessionCaaReleaseMbid: obsession ? obsession.caaReleaseMbid : "",
+      obsessionCaaId: obsession ? obsession.caaId : "",
+      obsessionCover: obsessionMatchesTopTrack ? trackCover : "",
       dailyAvg: formatNumber(aggregated.dailyAvg),
       vibe,
     },
@@ -582,6 +632,8 @@ async function fetchWrappedData(username) {
     artists,
     tracks,
     albums,
+    topRecordingMbids: aggregated.topRecordingMbids,
+    genres: null,
   };
 
   setCache(cacheKey, data, CACHE_TTL_WRAPPED);
@@ -779,6 +831,363 @@ function populateStoryList(containerId, items, isTrackOrAlbum) {
     .join("");
 }
 
+function persistWrappedCache(username, data) {
+  const year = data.year || new Date().getFullYear();
+  const cacheKey = `wrapped:v2:${username.toLowerCase()}:${WRAPPED_RANGE}:${year}`;
+  setCache(cacheKey, data, CACHE_TTL_WRAPPED);
+}
+
+async function ensureTopFiveCovers(type, data, username) {
+  let updated = false;
+  if (type === "top_artists") {
+    const items = data.artists.slice(0, 5);
+    await Promise.all(
+      items.map(async (item) => {
+        if (item.cover) return;
+        item.cover = await resolveArtistCover(item.title);
+        if (item.cover) updated = true;
+      })
+    );
+  } else if (type === "top_songs") {
+    const items = data.tracks.slice(0, 5);
+    await Promise.all(
+      items.map(async (item) => {
+        if (item.cover) return;
+        item.cover = await resolveTrackCover(item);
+        if (item.cover) updated = true;
+      })
+    );
+  } else if (type === "top_albums") {
+    const items = data.albums.slice(0, 5);
+    await Promise.all(
+      items.map(async (item) => {
+        if (item.cover) return;
+        item.cover = await resolveAlbumCover(item.title, item.subtitle, item.caaReleaseMbid, item.caaId);
+        if (item.cover) updated = true;
+      })
+    );
+  }
+  if (updated) persistWrappedCache(username, data);
+}
+
+async function ensureObsessionCover(data, username) {
+  if (data.stats.obsessionCover) return data.stats.obsessionCover;
+  const trackName = data.stats.obsessionTrack || "";
+  const artistName = data.stats.obsessionArtist || "";
+  if (!trackName) return data.tracks[0]?.cover || data.heroCover || "";
+
+  const matched = data.tracks.find(
+    (t) =>
+      t.title.toLowerCase() === trackName.toLowerCase() &&
+      t.subtitle.toLowerCase() === artistName.toLowerCase()
+  );
+  if (matched?.cover) {
+    data.stats.obsessionCover = matched.cover;
+    persistWrappedCache(username, data);
+    return matched.cover;
+  }
+
+  const resolved = await resolveTrackCover({
+    title: trackName,
+    subtitle: artistName,
+    releaseName: data.stats.obsessionReleaseName || matched?.releaseName || "",
+    caaReleaseMbid: data.stats.obsessionCaaReleaseMbid || matched?.caaReleaseMbid || "",
+    caaId: data.stats.obsessionCaaId || matched?.caaId || "",
+  });
+  data.stats.obsessionCover = resolved || data.tracks[0]?.cover || data.heroCover || "";
+  persistWrappedCache(username, data);
+  return data.stats.obsessionCover;
+}
+
+async function resolveAlbumGenres(albumTitle, artistName) {
+  try {
+    const query = `${albumTitle} ${artistName}`.trim();
+    if (!query) return [];
+    const res = await deezer.search("album", query, 1);
+    const albumId = res?.data?.[0]?.id;
+    if (!albumId) return [];
+    const detail = await deezer.getAlbum(albumId);
+    const list = detail?.genres?.data || [];
+    return list.map((g) => (g?.name || "").trim()).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+function normalizeTagKey(tag) {
+  return String(tag || "")
+    .toLowerCase()
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function formatGenreLabel(tag) {
+  return String(tag || "")
+    .trim()
+    .split(/(\s+|-)/)
+    .map((part) => {
+      if (!part || /^[\s-]+$/.test(part)) return part;
+      const lower = part.toLowerCase();
+      if (lower === "r&b" || lower === "edm" || lower === "mpb" || lower === "uk" || lower === "k" || lower === "j") {
+        return lower.toUpperCase();
+      }
+      return lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join("");
+}
+
+function addWeightedTag(tagMap, rawName, weight) {
+  const key = normalizeTagKey(rawName);
+  if (!key || key.length < 2 || key.length > 26 || /^\d+$/.test(key)) return;
+  const existing = tagMap.get(key);
+  if (existing) {
+    existing.weight += weight;
+  } else {
+    tagMap.set(key, { name: formatGenreLabel(rawName), weight });
+  }
+}
+
+async function resolveTopTrackMbids(data, username) {
+  if (Array.isArray(data.topRecordingMbids) && data.topRecordingMbids.length) {
+    return data.topRecordingMbids;
+  }
+  const fromTracks = (data.tracks || [])
+    .filter((t) => t.recordingMbid)
+    .map((t) => ({ mbid: t.recordingMbid, plays: Number(t.plays || 1) }));
+  if (fromTracks.length >= 5) return fromTracks;
+
+  try {
+    const statsRes = await listenbrainz.getUserStatsRecordings(username, {
+      range: WRAPPED_RANGE,
+      count: 25,
+    });
+    const recordings = statsRes?.payload?.recordings || [];
+    const mapped = recordings
+      .filter((r) => r?.recording_mbid)
+      .map((r) => ({ mbid: r.recording_mbid, plays: Number(r.listen_count || 1) }));
+    if (mapped.length) {
+      data.topRecordingMbids = mapped;
+      return mapped;
+    }
+  } catch {
+  }
+  return fromTracks;
+}
+
+async function ensureTopGenres(data, username) {
+  if (Array.isArray(data.genres) && data.genres.length >= 5) {
+    return data.genres;
+  }
+
+  const genreWeights = new Map();
+  const trackMbids = await resolveTopTrackMbids(data, username);
+
+  if (trackMbids.length) {
+    try {
+      const metadata = await listenbrainz.getRecordingMetadata(
+        trackMbids.map((item) => item.mbid),
+        "tag"
+      );
+      for (const { mbid, plays } of trackMbids) {
+        const tagBlock = metadata?.[mbid]?.tag;
+        if (!tagBlock) continue;
+
+        const sources = [
+          { list: tagBlock.recording || [], mult: 1.5 },
+          { list: tagBlock.release_group || [], mult: 1.2 },
+          { list: tagBlock.artist || [], mult: 1.0 },
+        ];
+
+        for (const { list, mult } of sources) {
+          const officialGenres = list.filter((entry) => entry?.genre_mbid && entry?.tag);
+          const candidates = officialGenres.length ? officialGenres : list.filter((entry) => entry?.tag);
+          for (const entry of candidates.slice(0, 6)) {
+            const votes = Math.max(1, Number(entry.count || 1));
+            addWeightedTag(genreWeights, entry.tag, plays * mult * Math.log1p(votes));
+          }
+        }
+      }
+    } catch {
+    }
+  }
+
+  if (genreWeights.size < 5) {
+    const albumSources = data.albums.length
+      ? data.albums.slice(0, 10)
+      : data.tracks.slice(0, 10);
+
+    const results = await Promise.all(
+      albumSources.map(async (entry) => ({
+        plays: Number(entry.plays || 1),
+        genres: await resolveAlbumGenres(entry.releaseName || entry.title, entry.subtitle),
+      }))
+    );
+
+    for (const { plays, genres } of results) {
+      if (!genres.length) continue;
+      const share = plays / genres.length;
+      for (const genreName of genres) {
+        addWeightedTag(genreWeights, genreName, share);
+      }
+    }
+  }
+
+  const sorted = Array.from(genreWeights.values())
+    .sort((a, b) => b.weight - a.weight || a.name.localeCompare(b.name))
+    .slice(0, 5);
+
+  let computed;
+  if (!sorted.length) {
+    computed = [{ name: data.stats.vibe || "Eclectic", pct: 100 }];
+  } else {
+    const totalWeight = sorted.reduce((sum, item) => sum + item.weight, 0);
+    const raw = sorted.map((item) => ({
+      name: item.name,
+      exact: (item.weight / totalWeight) * 100,
+      pct: Math.floor((item.weight / totalWeight) * 100),
+    }));
+    let remainder = 100 - raw.reduce((sum, item) => sum + item.pct, 0);
+    raw
+      .slice()
+      .sort((a, b) => (b.exact - b.pct) - (a.exact - a.pct))
+      .forEach((item) => {
+        if (remainder > 0) {
+          item.pct += 1;
+          remainder -= 1;
+        }
+      });
+    computed = raw.map(({ name, pct }) => ({ name, pct: Math.max(1, pct) }));
+  }
+
+  data.genres = computed;
+  persistWrappedCache(username, data);
+  return computed;
+}
+
+function populateTopChartsCard(items, { squircle = false, showArtist = false, customTopCover = "" } = {}) {
+  const listEl = document.getElementById("storyTopChartsList");
+  if (!listEl) return;
+  listEl.classList.toggle("story-topchart-list--squircle", squircle);
+
+  const top5 = items.slice(0, 5);
+  listEl.innerHTML = top5
+    .map((item, idx) => {
+      const rank = idx + 1;
+      const rawTitle = showArtist ? cleanReportTitle(item.title) : item.title;
+      const displayTitle = truncateWithEllipsis(rawTitle, 28);
+      const playsText = `${formatNumber(item.plays)} plays`;
+      const subText = showArtist && item.subtitle
+        ? `${truncateWithEllipsis(item.subtitle, 22)} · ${playsText}`
+        : playsText;
+      const coverSrc = idx === 0 && customTopCover ? customTopCover : item.cover || "";
+      return `
+        <div class="story-topchart-row">
+          <span class="story-topchart-rank">${rank}</span>
+          <div class="story-topchart-avatar">
+            ${coverSrc ? `<img src="${escapeHtml(coverSrc)}" alt="" crossorigin="anonymous" />` : ""}
+          </div>
+          <div class="story-topchart-meta">
+            <span class="story-topchart-row-title">${escapeHtml(displayTitle)}</span>
+            <span class="story-topchart-row-plays">${escapeHtml(subText)}</span>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function populateMinutesCard(data, { useScrobbles = false } = {}) {
+  const hours = data.stats.totalHours ?? Math.round((data.stats.totalMinutes || 0) / 60);
+  document.getElementById("storyMinutesBigValue").textContent = useScrobbles
+    ? data.stats.listens
+    : data.stats.minutes;
+  document.getElementById("storyMinutesBigUnit").textContent = useScrobbles ? "listens" : "minutes";
+  document.getElementById("storyClubTitle").textContent = data.stats.club || "Listener Club";
+  document.getElementById("storyMetricHours").textContent = formatNumber(hours);
+  document.getElementById("storyMetricListens").textContent = data.stats.listens;
+  document.getElementById("storyMetricDailyAvg").textContent = data.stats.dailyAvg;
+}
+
+function setStoryImage(imgEl, url) {
+  if (!imgEl) return;
+  if (url) {
+    imgEl.style.display = "block";
+    imgEl.src = url;
+  } else {
+    imgEl.removeAttribute("src");
+    imgEl.style.display = "none";
+  }
+}
+
+function populateObsessionCard(data, coverUrl) {
+  setStoryImage(document.getElementById("storyObsessionImage"), coverUrl);
+  const title = data.stats.obsessionTrack || data.stats.obsession || "—";
+  const artist = data.stats.obsessionArtist || "";
+  const matchedTrack = data.tracks.find(
+    (t) =>
+      t.title.toLowerCase() === title.toLowerCase() &&
+      (!artist || t.subtitle.toLowerCase() === artist.toLowerCase())
+  );
+  const plays = Number(data.stats.obsessionPlays || matchedTrack?.plays || 0);
+
+  document.getElementById("storyObsessionTitle").textContent = truncateWithEllipsis(cleanReportTitle(title), 24);
+  document.getElementById("storyObsessionArtist").textContent = truncateWithEllipsis(artist, 32);
+  document.getElementById("storyObsessionPlays").textContent = plays > 0 ? formatNumber(plays) : "—";
+}
+
+function populateGenresCard(genres) {
+  const chartEl = document.getElementById("storyGenresChart");
+  if (!chartEl) return;
+  const maxPct = Math.max(...genres.map((g) => g.pct), 1);
+  chartEl.style.gridTemplateColumns = `repeat(${Math.max(1, genres.length)}, minmax(0, 1fr))`;
+
+  chartEl.innerHTML = genres
+    .map((genre, idx) => {
+      const rank = idx + 1;
+      const colModifier = rank === 1
+        ? " story-genre-col--first"
+        : rank === 2
+          ? " story-genre-col--second"
+          : "";
+      const barHeight = Math.round(30 + (genre.pct / maxPct) * 58);
+      return `
+        <div class="story-genre-col${colModifier}">
+          <span class="story-genre-pct">${genre.pct}%</span>
+          <div class="story-genre-bar" style="height: ${barHeight}%;">
+            <span class="story-genre-rank">#${rank}</span>
+            <span class="story-genre-name">${escapeHtml(genre.name)}</span>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function waitForStoryImages(rootEl, timeoutMs = 2500) {
+  if (!rootEl) return Promise.resolve();
+  const images = Array.from(rootEl.querySelectorAll("img")).filter((img) => img.getAttribute("src"));
+  if (!images.length) return Promise.resolve();
+
+  const waitEach = images.map(
+    (img) =>
+      new Promise((resolve) => {
+        if (img.complete && img.naturalWidth > 0) {
+          resolve();
+          return;
+        }
+        const done = () => resolve();
+        img.addEventListener("load", done, { once: true });
+        img.addEventListener("error", done, { once: true });
+      })
+  );
+
+  return Promise.race([
+    Promise.all(waitEach),
+    new Promise((resolve) => setTimeout(resolve, timeoutMs)),
+  ]);
+}
+
 function initExportModal(username) {
   const openBtn = document.getElementById("export-wrapped-btn");
   const settingsModal = document.getElementById("generationSettingsModal");
@@ -872,29 +1281,7 @@ function initExportModal(username) {
     const service = document.getElementById("serviceSelect")?.value || "listendeck";
     const isLight = Boolean(document.getElementById("themeToggleCheckbox")?.checked);
     const useScrobbles = Boolean(document.getElementById("useScrobblesCheckbox")?.checked);
-
-    const reportEl = document.getElementById("storyReport");
-    reportEl.className = isLight ? "theme-light" : "theme-dark";
-    bgControls.applyCurrentBg();
-
-    document.getElementById("storyReportTitle").textContent = "Wrapped";
-    document.getElementById("storyServiceLogo").innerHTML = SERVICE_LOGOS[service] || "";
-    document.getElementById("storyMonthYear").textContent = currentWrappedData.storyHeading || `${new Date().getFullYear()} WRAPPED`;
-    document.getElementById("storyTotalMinutes").textContent = useScrobbles
-      ? `${currentWrappedData.stats.listens} listens`
-      : `${currentWrappedData.stats.minutes} minutes`;
-
-    populateStoryList("storyListArtists", currentWrappedData.artists, false);
-    populateStoryList("storyListSongs", currentWrappedData.tracks, true);
-    populateStoryList("storyListAlbums", currentWrappedData.albums, true);
-
-    const imgArtist = document.getElementById("storyImageArtist");
-    const imgSong = document.getElementById("storyImageSong");
-    const imgAlbum = document.getElementById("storyImageAlbum");
-
-    if (imgArtist) imgArtist.src = customArtistImage || currentWrappedData.artists[0]?.cover || "";
-    if (imgSong) imgSong.src = currentWrappedData.tracks[0]?.cover || "";
-    if (imgAlbum) imgAlbum.src = currentWrappedData.albums[0]?.cover || "";
+    const year = currentWrappedData.year || new Date().getFullYear();
 
     const stateLoading = document.getElementById("generationStateLoading");
     const stateComplete = document.getElementById("generationStateComplete");
@@ -904,29 +1291,136 @@ function initExportModal(username) {
       generationModal.classList.add("show");
     }
 
-    const fileName = exportType === "full_recap"
-      ? `listendeck_wrapped_${username}_${WRAPPED_RANGE}.png`
-      : `listendeck_wrapped_${username}_${exportType}.png`;
+    const reportEl = document.getElementById("storyReport");
+    reportEl.className = isLight ? "theme-light" : "theme-dark";
+    bgControls.applyCurrentBg();
 
-    setTimeout(async () => {
-      try {
-        await exportNodeAsPng(reportEl, fileName);
-        trackEvent(EVENTS.EXPORT_CARD, {
-          tool: "wrapped",
-          action: "download",
-          format: "story",
-          type: exportType,
-          style: selectedBg,
-        });
-        if (generationModal) {
-          stateLoading.style.display = "none";
-          stateComplete.style.display = "flex";
-          setTimeout(() => generationModal.classList.remove("show"), 900);
+    const meshStyles = getComputedStyle(meshBgEl);
+    reportEl.style.setProperty("--blob-1-color", meshStyles.getPropertyValue("--blob-1-color").trim() || "#7c3aed");
+    reportEl.style.setProperty("--blob-2-color", meshStyles.getPropertyValue("--blob-2-color").trim() || "#4f46e5");
+
+    const titleEl = document.getElementById("storyReportTitle");
+    const serviceEl = document.getElementById("storyServiceLogo");
+    const headingEl = document.getElementById("storyMonthYear");
+    const subtitleEl = document.getElementById("storyTotalMinutes");
+
+    const fullBody = document.getElementById("storyBody");
+    const topChartsBody = document.getElementById("storyTopChartsBody");
+    const minutesBody = document.getElementById("storyMinutesBody");
+    const obsessionBody = document.getElementById("storyObsessionBody");
+    const genresBody = document.getElementById("storyGenresBody");
+
+    [fullBody, topChartsBody, minutesBody, obsessionBody, genresBody].forEach((el) => {
+      if (el) el.style.display = "none";
+    });
+
+    serviceEl.innerHTML = SERVICE_LOGOS[service] || "";
+    let activeBody = fullBody;
+
+    try {
+      if (exportType === "full_recap") {
+        titleEl.textContent = "Wrapped";
+        headingEl.textContent = currentWrappedData.storyHeading || `${year} WRAPPED`;
+        subtitleEl.textContent = useScrobbles
+          ? `${currentWrappedData.stats.listens} listens`
+          : `${currentWrappedData.stats.minutes} minutes`;
+
+        populateStoryList("storyListArtists", currentWrappedData.artists, false);
+        populateStoryList("storyListSongs", currentWrappedData.tracks, true);
+        populateStoryList("storyListAlbums", currentWrappedData.albums, true);
+
+        setStoryImage(document.getElementById("storyImageArtist"), customArtistImage || currentWrappedData.artists[0]?.cover || "");
+        setStoryImage(document.getElementById("storyImageSong"), currentWrappedData.tracks[0]?.cover || "");
+        setStoryImage(document.getElementById("storyImageAlbum"), currentWrappedData.albums[0]?.cover || "");
+
+        fullBody.style.display = "flex";
+        activeBody = fullBody;
+      } else if (exportType === "top_artists" || exportType === "top_songs" || exportType === "top_albums") {
+        titleEl.textContent = `Wrapped ${year}`;
+        subtitleEl.textContent = "";
+        await ensureTopFiveCovers(exportType, currentWrappedData, username);
+
+        if (exportType === "top_artists") {
+          headingEl.textContent = "TOP ARTISTS";
+          populateTopChartsCard(currentWrappedData.artists, {
+            squircle: false,
+            showArtist: false,
+            customTopCover: customArtistImage || "",
+          });
+        } else if (exportType === "top_songs") {
+          headingEl.textContent = "TOP SONGS";
+          populateTopChartsCard(currentWrappedData.tracks, {
+            squircle: true,
+            showArtist: true,
+          });
+        } else {
+          headingEl.textContent = "TOP ALBUMS";
+          populateTopChartsCard(currentWrappedData.albums, {
+            squircle: true,
+            showArtist: true,
+          });
         }
-      } catch {
-        generationModal?.classList.remove("show");
+
+        topChartsBody.style.display = "flex";
+        activeBody = topChartsBody;
+      } else if (exportType === "minutes_club") {
+        titleEl.textContent = `Wrapped ${year}`;
+        headingEl.textContent = "TIME LISTENED";
+        subtitleEl.textContent = "";
+        populateMinutesCard(currentWrappedData, { useScrobbles });
+        minutesBody.style.display = "flex";
+        activeBody = minutesBody;
+      } else if (exportType === "obsession") {
+        titleEl.textContent = `Wrapped ${year}`;
+        headingEl.textContent = "OBSESSION";
+        subtitleEl.textContent = "";
+        const coverUrl = await ensureObsessionCover(currentWrappedData, username);
+        populateObsessionCard(currentWrappedData, coverUrl);
+        obsessionBody.style.display = "flex";
+        activeBody = obsessionBody;
+      } else if (exportType === "top_genres") {
+        titleEl.textContent = `Wrapped ${year}`;
+        headingEl.textContent = "TOP GENRES";
+        const genres = await ensureTopGenres(currentWrappedData, username);
+        const topGenre = genres[0];
+        subtitleEl.textContent = topGenre
+          ? `${topGenre.name} led your year at ${topGenre.pct}%`
+          : "";
+        populateGenresCard(genres);
+        genresBody.style.display = "flex";
+        activeBody = genresBody;
       }
-    }, 350);
+
+      await Promise.all([waitForStoryImages(activeBody), document.fonts?.ready]);
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      const fileName = exportType === "full_recap"
+        ? `listendeck_wrapped_${username}_${WRAPPED_RANGE}.png`
+        : `listendeck_wrapped_${username}_${exportType}.png`;
+
+      await exportNodeAsPng(reportEl, fileName, {
+        filter: (node) => {
+          if (node instanceof HTMLElement && node.style.display === "none") return false;
+          if (node instanceof HTMLImageElement && !node.getAttribute("src")) return false;
+          return true;
+        },
+      });
+      trackEvent(EVENTS.EXPORT_CARD, {
+        tool: "wrapped",
+        action: "download",
+        format: "story",
+        type: exportType,
+        style: selectedBg,
+      });
+      if (generationModal) {
+        stateLoading.style.display = "none";
+        stateComplete.style.display = "flex";
+        setTimeout(() => generationModal.classList.remove("show"), 900);
+      }
+    } catch (err) {
+      console.error("Wrapped export failed:", err);
+      generationModal?.classList.remove("show");
+    }
   });
 }
 

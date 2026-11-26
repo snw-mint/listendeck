@@ -369,6 +369,13 @@
             </span>
           </label>
           <label class="ld-radio-row">
+            <input type="radio" name="wrappedExportType" value="top_genres" />
+            <span>Top Genres</span>
+            <span class="ld-radio-icon" aria-hidden="true">
+              <animate-icons name="circle" size="18"></animate-icons>
+            </span>
+          </label>
+          <label class="ld-radio-row">
             <input type="radio" name="wrappedExportType" value="obsession" />
             <span>Obsession</span>
             <span class="ld-radio-icon" aria-hidden="true">
@@ -516,15 +523,79 @@
 
         <div class="story-images-container">
           <div class="story-square-image">
-            <img id="storyImageArtist" src="" alt="Top Artist" crossorigin="anonymous" />
+            <img id="storyImageArtist" alt="Top Artist" crossorigin="anonymous" />
           </div>
           <div class="story-square-image">
-            <img id="storyImageSong" src="" alt="Top Song" crossorigin="anonymous" />
+            <img id="storyImageSong" alt="Top Song" crossorigin="anonymous" />
           </div>
           <div class="story-square-image">
-            <img id="storyImageAlbum" src="" alt="Top Album" crossorigin="anonymous" />
+            <img id="storyImageAlbum" alt="Top Album" crossorigin="anonymous" />
           </div>
         </div>
+      </div>
+
+      <div class="story-topchart-body" id="storyTopChartsBody" style="display: none;">
+        <div id="storyTopChartsList" class="story-topchart-list"></div>
+      </div>
+
+      <div class="story-spotlight-body" id="storyMinutesBody" style="display: none;">
+        <div class="story-minutes-ring-outer">
+          <div class="story-minutes-ring-mid">
+            <div class="story-minutes-ring-inner">
+              <div id="storyMinutesBigValue" class="story-big-number"></div>
+              <div id="storyMinutesBigUnit" class="story-big-unit">minutes</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-minutes-extra">
+          <div class="story-club-block">
+            <span class="story-club-kicker">Your Listening Club</span>
+            <div id="storyClubTitle" class="story-club-title"></div>
+          </div>
+          <div class="story-minutes-metrics">
+            <div class="story-metric-item">
+              <span id="storyMetricHours" class="story-metric-value"></span>
+              <span class="story-metric-label">Hours</span>
+            </div>
+            <div class="story-metric-item">
+              <span id="storyMetricListens" class="story-metric-value"></span>
+              <span class="story-metric-label">Listens</span>
+            </div>
+            <div class="story-metric-item">
+              <span id="storyMetricDailyAvg" class="story-metric-value"></span>
+              <span class="story-metric-label">Daily Avg</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-spotlight-body" id="storyObsessionBody" style="display: none;">
+        <div class="story-minutes-ring-outer">
+          <div class="story-minutes-ring-mid">
+            <div class="story-minutes-ring-inner story-obsession-ring-inner">
+              <img id="storyObsessionImage" alt="Obsession Track" crossorigin="anonymous" />
+            </div>
+          </div>
+        </div>
+
+        <div class="story-minutes-extra">
+          <div class="story-club-block">
+            <span class="story-club-kicker">Most Consecutive Days</span>
+            <div id="storyObsessionTitle" class="story-club-title"></div>
+            <div id="storyObsessionArtist" class="story-obsession-artist"></div>
+          </div>
+          <div class="story-minutes-metrics story-obsession-metrics">
+            <div class="story-metric-item">
+              <span id="storyObsessionPlays" class="story-metric-value"></span>
+              <span class="story-metric-label">Plays</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-genres-body" id="storyGenresBody" style="display: none;">
+        <div id="storyGenresChart" class="story-genres-chart"></div>
       </div>
 
       <div class="story-footer">
